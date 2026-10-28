@@ -265,6 +265,8 @@ button,input{font:inherit;color:inherit}
 .shrinkbar{margin-left:auto;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .shrinkbar b{display:block;font-size:15px}
 .shrinkbar.on b{color:#e07a64}
+.shrinkbar small{display:block}
+.shrinkbar .frog-left{color:#8fd17a}
 #players{display:flex;flex-direction:column;gap:10px}
 .pcard{padding:13px 15px;display:flex;flex-direction:column;gap:9px;position:relative}
 .pcard.active{border-color:var(--hair-strong)}
@@ -784,7 +786,7 @@ const A = {
   loneV: 1.1, loneM: 1.1, loneR: 1.1, trainN: 3,
   curveA: 15 * Math.PI / 180, curveB: 30 * Math.PI / 180, thriceV: 1.15, thriceK: 1.15, brandK: 1.25, iceF: 0.4,
   glutR: 1.06, glutM: 1.06, glutV: 1.03, glutN: 4, bountyN: 5, bountyIn: 2 * GAP, bountyH: 0.6,
-  yiN: 3, sqrV: 1.3, sqrN: 2, heavenRow: 3 * GAP, vortexN: 3, vortexR: 2.5 * GAP, vortexPull: 0.75 * GAP, vortexH: 0.5, ikiN: 3, pajukN: 2, holeR: 4.5 * GAP, holePull: 1 * GAP, holeKill: 0.5 * GAP, lianV: 0.75, landW: 0.9 * GAP, landF: 4.5, passK: 0.75, passF: 5
+  yiN: 3, frogEvery: 5, frogAir: 0.55, frogBox: 1.5 * GAP, frogPush: GAP, sqrV: 1.3, sqrN: 2, heavenRow: 3 * GAP, vortexN: 3, vortexR: 2.5 * GAP, vortexPull: 0.75 * GAP, vortexH: 0.5, ikiN: 3, pajukN: 2, holeR: 4.5 * GAP, holePull: 1 * GAP, holeKill: 0.5 * GAP, lianV: 0.75, landW: 0.9 * GAP, landF: 4.5, passK: 0.75, passF: 5
 };
 /* tier odds per pick: [silver, gold, prism]; always silver > gold > prism, a little richer on later picks */
 const TIER_ODDS = [[60, 30, 10], [50, 33, 17], [45, 35, 20]];
@@ -802,7 +804,7 @@ const MAPS = {
 MAPS.boost = { id: 'boost', name: '용오름', short: '판 양쪽 가장자리 가까이의 바람문(가로 2칸·세로 1칸)을 지나는 돌은 빨라지고, 쓰인 문은 2수 동안 닫힙니다',
   obs: [], pads: [{ kind: 'rect', gate: true, x: L(3), y: CY, hw: GAP, hh: 0.5 * GAP }, { kind: 'rect', gate: true, x: L(15), y: CY, hw: GAP, hh: 0.5 * GAP }], shrinkMax: CX - 1.5 * GAP };
 /* 연못: 판 양쪽의 두 연못. 흑백 가리지 않고 빠진 돌은 떨어집니다 */
-MAPS.pond = { id: 'pond', name: '연못', short: '판 양쪽 연못에 빠진 돌은 흑백 가리지 않고 떨어집니다', obs: [], shrinkMax: CX - 1.5 * GAP,
+MAPS.pond = { id: 'pond', name: '연못', short: '판 양쪽 연못에 빠진 돌은 떨어지고, 5수마다 연못에서 개구리가 뛰어나와 둘레 돌을 밀어냅니다', frog: true, obs: [], shrinkMax: CX - 1.5 * GAP,
   ponds: [{ x: L(2.75), y: CY, r: 0.85 * GAP }, { x: L(15.25), y: CY, r: 0.85 * GAP }] };
 const MAP_IDS = ['flat', 'diamond', 'siege', 'boost', 'pond'];
 for (const m of MAP_IDS) MAPS[m].obs.forEach((o, i) => { o.oi = i; });
@@ -866,7 +868,7 @@ const AUG = {
   lone:      { name: '외길', seal: '徑', tier: 1, max: 1, short: () => `증강을 더 받지 않음 · 힘 +${pct(A.loneV - 1)}% · 무게 ×${f1(A.loneM)} · 크기 +${pct(A.loneR - 1)}%`,
     desc: () => `이번 국에서 증강을 더 받지 않는 대신 내 돌이 모두 힘 +${pct(A.loneV - 1)}%, 무게 ×${f1(A.loneM)}, 크기 +${pct(A.loneR - 1)}%가 됩니다. 이번 국에 증강을 한 번 이상 더 받을 수 있을 때만 나옵니다.` },
   train:     { name: '수련', seal: '修', tier: 1, max: 1, quest: true, short: () => `상대 기본 돌 ${A.trainN}개 떨어뜨리면 골드 1장`,
-    desc: () => `고를 때는 효과가 없고, 내 샷으로 상대 기본 돌을 ${A.trainN}개(분열 조각은 반 개) 떨어뜨리면 골드 증강 3장 가운데 하나를 더 고릅니다. 상대 기본 돌이 ${A.trainN + 1}개 이상일 때만 나옵니다. 상대가 제 샷으로 스스로 떨어뜨린 돌도 내가 떨어뜨린 것으로 셉니다.` },
+    desc: () => `고를 때는 효과가 없고, 내 샷으로 상대 기본 돌을 ${A.trainN}개(분열 조각은 반 개) 떨어뜨리면 골드 증강 3장 가운데 하나를 더 고릅니다. 상대 기본 돌이 ${A.trainN + 1}개 이상일 때만 나옵니다. 상대가 스스로 떨어뜨린 돌, 판 줄어듦·개구리로 떨어진 상대 돌도 내가 떨어뜨린 것으로 셉니다.` },
   /* ---- gold ---- */
   combo:     { name: '연타', seal: '連', tier: 2, max: 1, short: () => `떨어뜨리면 한 번 더 (${A.comboRound}회)`,
     desc: () => `내 샷으로 상대 돌을 떨어뜨리면 한 번 더 칩니다. 한 차례에 한 번, 이번 국에 ${A.comboRound}번까지 됩니다.` },
@@ -909,9 +911,9 @@ const AUG = {
   glut:      { name: '탐식', seal: '貪', tier: 2, max: 1, short: () => `떨어뜨릴 때마다 쏜 돌이 자람 (최대 ${A.glutN}번)`,
     desc: () => `내 샷으로 상대 돌을 떨어뜨릴 때마다 쏜 그 돌이 크기 +${pct(A.glutR - 1)}%, 무게 ×${f1(A.glutM)}, 힘 +${pct(A.glutV - 1)}%씩 자랍니다(최대 ${A.glutN}번). 그 돌이 떨어지면 쌓인 것도 사라집니다.` },
   bounty:    { name: '현상금', seal: '賞', tier: 2, max: 1, quest: true, short: () => `표시된 상대 돌을 ${A.bountyN}샷 안에 떨어뜨리면 프리즘 1장`,
-    desc: () => `고르는 즉시 가장자리에서 ${f1(A.bountyIn / GAP)}칸 이상 안쪽에 있는 상대 돌 가운데 내 돌에 가까운 돌 하나에 현상금이 걸립니다(상대도 봅니다). 현상금이 걸린 돌은 내 샷에 맞을 때 방어력이 ×${f1(A.bountyH)}로 떨어집니다. 내 샷 ${A.bountyN}번 안에 내 샷으로 그 돌을 떨어뜨리면 프리즘 증강 3장 가운데 하나를 더 고르고, 못 하면 현상금은 사라집니다. 상대 기본 돌이 2개 이상일 때만 나옵니다. 상대가 제 샷으로 스스로 떨어뜨린 돌도 내가 떨어뜨린 것으로 셉니다.` },
+    desc: () => `고르는 즉시 가장자리에서 ${f1(A.bountyIn / GAP)}칸 이상 안쪽에 있는 상대 돌 가운데 내 돌에 가까운 돌 하나에 현상금이 걸립니다(상대도 봅니다). 현상금이 걸린 돌은 내 샷에 맞을 때 방어력이 ×${f1(A.bountyH)}로 떨어집니다. 내 샷 ${A.bountyN}번 안에 내 샷으로 그 돌을 떨어뜨리면 프리즘 증강 3장 가운데 하나를 더 고르고, 못 하면 현상금은 사라집니다. 상대 기본 돌이 2개 이상일 때만 나옵니다. 상대가 스스로 떨어뜨린 돌, 판 줄어듦·개구리로 떨어진 상대 돌도 내가 떨어뜨린 것으로 셉니다.` },
   iki:       { name: '일기당천', seal: '騎', tier: 2, max: 1, quest: true, short: () => `돌 하나로 상대 기본 돌 ${A.ikiN}개 떨어뜨리면 초월 1장`,
-    desc: () => `고를 때는 효과가 없고, 내 돌 하나로 쏜 샷들에서 상대 기본 돌을 모두 ${A.ikiN}개(분열 조각은 반 개) 떨어뜨리면 초월 증강 2장 가운데 하나를 고릅니다. 돌마다 따로 세어 돌 위에 별로 보이고, 그 돌이 떨어지면 그 돌의 기록은 0이 됩니다. 상대 기본 돌이 5개 이상이고 아직 초월이 없을 때만 나옵니다. 상대가 제 샷으로 스스로 떨어뜨린 돌도 내가 떨어뜨린 것으로 셉니다.` },
+    desc: () => `고를 때는 효과가 없고, 내 돌 하나로 쏜 샷들에서 상대 기본 돌을 모두 ${A.ikiN}개(분열 조각은 반 개) 떨어뜨리면 초월 증강 2장 가운데 하나를 고릅니다. 돌마다 따로 세어 돌 위에 별로 보이고, 그 돌이 떨어지면 그 돌의 기록은 0이 됩니다. 상대 기본 돌이 5개 이상이고 아직 초월이 없을 때만 나옵니다. 상대가 스스로 떨어뜨린 돌, 판 줄어듦·개구리로 떨어진 상대 돌도 내가 떨어뜨린 것으로 셉니다.` },
   /* ---- prism ---- */
   revive:    { name: '부활', seal: '復', tier: 3, max: 1, short: () => `떨어진 자리로 복귀 (${A.revive}회)`,
     desc: () => `이번 국에 내 돌이 떨어지면 떨어진 자리(판 가장자리 안쪽)로 되돌아옵니다. ${A.revive}번까지 됩니다.` },
@@ -954,7 +956,7 @@ const AUG = {
   bundle:    { name: '보따리', seal: '褓', tier: 3, max: 1, short: () => '무작위 골드 1장 + 실버 1장',
     desc: () => '고르는 즉시 무작위 골드 증강 1장과 실버 증강 1장을 함께 얻습니다. 퀘스트와 외길은 나오지 않습니다.' },
   pajuk:     { name: '파죽지세', seal: '竹', tier: 3, max: 1, quest: true, short: () => `돌 하나로 상대 기본 돌 ${A.pajukN}개 떨어뜨리면 초월 1장`,
-    desc: () => `고를 때는 효과가 없고, 내 돌 하나로 쏜 샷들에서 상대 기본 돌을 모두 ${A.pajukN}개(분열 조각은 반 개) 떨어뜨리면 초월 증강 2장 가운데 하나를 고릅니다. 돌마다 따로 세어 돌 위에 별로 보이고, 그 돌이 떨어지면 그 돌의 기록은 0이 됩니다. 상대 기본 돌이 4개 이상이고 아직 초월이 없을 때만 나옵니다. 상대가 제 샷으로 스스로 떨어뜨린 돌도 내가 떨어뜨린 것으로 셉니다.` },
+    desc: () => `고를 때는 효과가 없고, 내 돌 하나로 쏜 샷들에서 상대 기본 돌을 모두 ${A.pajukN}개(분열 조각은 반 개) 떨어뜨리면 초월 증강 2장 가운데 하나를 고릅니다. 돌마다 따로 세어 돌 위에 별로 보이고, 그 돌이 떨어지면 그 돌의 기록은 0이 됩니다. 상대 기본 돌이 4개 이상이고 아직 초월이 없을 때만 나옵니다. 상대가 스스로 떨어뜨린 돌, 판 줄어듦·개구리로 떨어진 상대 돌도 내가 떨어뜨린 것으로 셉니다.` },
   pass:      { name: '관통', seal: '貫', tier: 3, max: 1, short: () => `첫 상대 돌을 뚫고 힘 ${pct(A.passK)}%로 계속 (한 샷 2개)`,
     desc: () => `내 샷이 처음 맞힌 상대 돌을 튕겨 낸 뒤에도 멈추지 않고, 맞히기 전 빠르기의 ${pct(A.passK)}%로 그대로 뚫고 나가 다음 돌을 맞힙니다. 뚫고 나간 뒤에는 금방 멈추고, 한 샷에 두 개까지 맞힙니다.` },
   /* ---- 초월: 퀘스트(일기당천·파죽지세) 보상으로만, 한 국에 한 사람당 1장 ---- */
@@ -1862,13 +1864,13 @@ function doSplit(w, X) {
 function questCredit(w, sp, s, ss, self) {
   if (cnt(sp, 'train') && (w.trn[sp.id] || 0) < A.trainN) {
     w.trn[sp.id] = (w.trn[sp.id] || 0) + s.bw;
-    emit(w, { type: 'trainStep', pid: sp.id, n: Math.min(A.trainN, w.trn[sp.id]), self: !!self });
+    emit(w, { type: 'trainStep', pid: sp.id, n: Math.min(A.trainN, w.trn[sp.id]), self: self || '' });
     if (w.trn[sp.id] >= A.trainN) { w.trn[sp.id] = 99; grantBonus(w, sp.id, 2, 'train'); }
   }
   if (!w.tq[sp.id] && (cnt(sp, 'iki') || cnt(sp, 'pajuk')) && ss && ss.owner === sp.id) {
     ss.kq = (ss.kq || 0) + s.bw;
     const need = cnt(sp, 'pajuk') ? A.pajukN : A.ikiN;
-    emit(w, { type: 'kqStep', pid: sp.id, n: ss.kq, need, x: ss.x, y: ss.y, self: !!self });
+    emit(w, { type: 'kqStep', pid: sp.id, n: ss.kq, need, x: ss.x, y: ss.y, self: self || '' });
     if (ss.kq >= need) { w.tq[sp.id] = 1; grantBonus(w, sp.id, 4, cnt(sp, 'pajuk') ? 'pajuk' : 'iki'); }
   }
 }
@@ -1902,14 +1904,15 @@ function handleFall(w, s) {
   countLoss(w, s); onLose(w, s);
   const sh = w.shot;
   /* 수련·일기당천·파죽지세: 내 샷으로 떨어뜨린 상대 기본 돌. 상대가 제 샷으로 스스로 떨어뜨린 돌도 퀘스트에 넣음 (일부러 퀘스트를 깨지 못하게) */
-  if (sh && !sh.shrinking && s.bw && s.home === s.owner) {
-    const sp = w.players[sh.shooter];
-    if (s.team !== sp.team) questCredit(w, sp, s, sh.yi ? null : byId(w, sh.stoneId));
+  /* 판 줄어듦·개구리로 떨어진 돌은 그 돌 주인이 스스로 떨어진 것으로 셈 */
+  if (sh && s.bw && s.home === s.owner) {
+    const sp = w.players[sh.shooter], why = sh.frogged ? 'frog' : sh.shrinking ? 'shrink' : 'self';
+    if (!sh.shrinking && s.team !== sp.team) questCredit(w, sp, s, sh.yi ? null : byId(w, sh.stoneId));
     else for (const q of w.players) if (q.team !== s.team) {
       const lh = s.lastHit != null ? byId(w, s.lastHit) : null;
       const mine = w.stones.filter(o => live(o) && o.owner === q.id);
       const best = lh && lh.owner === q.id && live(lh) ? lh : mine.sort((a, b) => (b.kq || 0) - (a.kq || 0))[0];
-      questCredit(w, q, s, best || null, true);
+      questCredit(w, q, s, best || null, why);
     }
   }
   /* 역천: 떨어진 내 기본 돌의 처음 자리 */
@@ -1920,7 +1923,7 @@ function handleFall(w, s) {
     for (const o of w.stones) if (o.bounty === bp) o.bounty = -1;
     if ((w.bty[bp] || 0) > 0) {
       w.bty[bp] = 0;
-      if (sh && !sh.shrinking) grantBonus(w, bp, 3, 'bounty');   /* 내 샷이든 상대가 스스로 떨어뜨렸든 성공 */
+      if (sh) grantBonus(w, bp, 3, 'bounty');   /* 내 샷이든 상대가 스스로 떨어졌든(판 줄어듦·개구리 포함) 성공 */
       else emit(w, { type: 'bountyFail', pid: bp, x: s.x, y: s.y });
     }
   }
@@ -2011,6 +2014,33 @@ function tide(w, sh) {
   if (any) emit(w, { type: 'tide', pid: sh.shooter });
   return any;
 }
+/* 개구리: 판 안에 남은 연못에서, 판 안쪽으로 연못 가장자리에서 1~2칸 떨어진 곳에 착지 (떨어질 수 있는 연못에서 2칸 안). 난수 대신 수 번호로 정해 온라인·CPU 예측이 같게 */
+function frogPlan(w) {
+  const lo = w.shrink, hi = S - w.shrink;
+  const ponds = w.holes.filter(h => h.pond && h.x > lo && h.x < hi && h.y > lo && h.y < hi);
+  if (!ponds.length) return null;
+  const k = Math.floor(w.shots / A.frogEvery), hsh = n => { const v = Math.sin(n * 12.9898 + k * 78.233) * 43758.5453; return v - Math.floor(v); };
+  const h = ponds[k % ponds.length];
+  const base = Math.atan2(CY - h.y, CX - h.x), ang = base + (hsh(1) - 0.5) * 1.5, d = h.r + GAP * (1 + hsh(2));
+  const x = clamp(h.x + Math.cos(ang) * d, lo + 0.6 * GAP, hi - 0.6 * GAP), y = clamp(h.y + Math.sin(ang) * d, lo + 0.6 * GAP, hi - 0.6 * GAP);
+  return { fx: h.x, fy: h.y, x, y, px: h.x, py: h.y };
+}
+function frogLand(w, sh, f) {
+  const B = A.frogBox;
+  let n = 0;
+  for (const s of w.stones) {
+    if (!live(s) || anchored(w, s) || Math.abs(s.x - f.x) > B || Math.abs(s.y - f.y) > B) continue;
+    let dx = s.x - f.x, dy = s.y - f.y, d = hyp(dx, dy);
+    if (d < 2) { dx = f.x - f.px; dy = f.y - f.py; d = hyp(dx, dy) || 1; }   /* 바로 밑의 돌은 연못 반대쪽으로 */
+    const v = speedFor(A.frogPush, s.fric);
+    s.vx += dx / d * v; s.vy += dy / d * v; n++;
+  }
+  emit(w, { type: 'frogLand', x: f.x, y: f.y, n });
+  if (!n) return false;
+  sh.shrinking = true; sh.frogged = true;   /* 개구리에 밀려 떨어진 돌은 판 줄어듦처럼 셈 (그 돌 주인이 스스로 떨어진 것) */
+  sh.t = Math.min(sh.t, P.timeout - 4);
+  return true;
+}
 function snapshot(w) {
   return { stones: w.stones.filter(s => !s.dead).map(s => Object.assign({}, s)), reviveLeft: Object.assign({}, w.reviveLeft),
     buddyLeft: Object.assign({}, w.buddyLeft), lost: Object.assign({}, w.lost), wallSave: w.wallSave.slice(), nextId: w.nextId,
@@ -2098,6 +2128,15 @@ function updatePhase(w) {
       }
       if (any) return;
     }
+  }
+  /* 연못: 5수마다 개구리가 뛰어나와 착지한 자리 둘레 3×3 칸의 돌을 1칸씩 밀어냄 */
+  if (!sh.frogDone) {
+    if (!sh.frogAt) {
+      const f = MAPS[w.map].frog && w.shots > 0 && w.shots % A.frogEvery === 0 ? frogPlan(w) : null;
+      if (!f) sh.frogDone = true;
+      else { sh.frogAt = f; sh.frogWait = A.frogAir; emit(w, { type: 'frog', fx: f.fx, fy: f.fy, x: f.x, y: f.y, t: A.frogAir }); return; }
+    } else if (sh.frogWait > 0) { sh.frogWait -= DT; return; }
+    else { sh.frogDone = true; if (frogLand(w, sh, sh.frogAt)) return; }
   }
   if (sh.snapOn && !sh.rewindChecked) { sh.rewindChecked = true; if (tryRewind(w, sh)) return; }
   sh.phase = 'done';
@@ -2704,7 +2743,7 @@ const RULE_GROUPS = [
     '흑요석 제단의 바위, 철옹성의 성벽에 맞은 돌은 힘을 잃지 않고 튕겨 나옵니다.',
     `흑요석 바위는 세게 ${K.P.rockHits}번 맞으면 깨지며 둘레 돌을 밀어냅니다.`,
     `용오름: 판 양쪽 가장자리 가까이에 바람문(가로 2칸 · 세로 1칸)이 둘 있습니다. 흑·백 누구의 샷이든 열린 문을 지나는 돌은 한 샷에 한 번 빨라지고, 쓰인 문은 ${K.P.gateCool}수 동안 닫힙니다. 처음 자리에서 바로 상대 돌을 떨어뜨릴 만큼 세지는 않습니다.`,
-    '연못: 판 양쪽 두 연못에 돌의 가운데가 들어가면 흑백 가리지 않고 떨어집니다.',
+    '연못: 판 양쪽 두 연못에 돌의 가운데가 들어가면 흑백 가리지 않고 떨어집니다. 5수마다 연못에서 개구리가 뛰어나와 연못 가장자리에서 1~2칸 안쪽에 착지하고, 착지한 자리 둘레 3×3 칸의 돌을 모두 1칸씩 밀어낸 뒤 사라집니다. 판 줄어듦·개구리로 떨어진 돌은 그 돌 주인이 스스로 떨어진 것으로 셉니다(상대 퀘스트에 들어감).',
     `'판 줄어듦'을 '있음'으로 고르면 ${K.P.shrinkStart}수 뒤부터 한 수마다 판이 반 칸씩 좁아지고, 바깥 돌은 떨어집니다. 쌍발·연타·연환·이이제이처럼 한 차례에 더 치는 샷은 그 차례에 한 번만 좁아집니다.`
   ]],
   ['그 밖에', [
@@ -3571,9 +3610,10 @@ function renderMapCard() {
   const shots = w ? w.shots : 0, left = K.P.shrinkStart - shots;
   const shrinkTxt = w && w.shrink > 0 ? '<b>판이 줄어드는 중</b><small>한 수마다 반 칸씩</small>'
     : w && w.noShrink ? `<b>${shots}수</b><small>판 줄어듦 없음</small>` : `<b>${shots}수</b><small>수축까지 ${Math.max(0, left)}수</small>`;
+  const frogTxt = w && m.frog ? `<small class="frog-left">개구리까지 ${K.A.frogEvery - (shots % K.A.frogEvery)}수</small>` : '';
   $('mapCard').innerHTML = `<canvas width="88" height="88" data-map="${m.id}" style="width:44px;height:44px;border-radius:3px"></canvas>
     <div><b>${m.name}</b><small>${m.short}</small></div>
-    <div class="shrinkbar${w && w.shrink > 0 ? ' on' : ''}">${shrinkTxt}</div>`;
+    <div class="shrinkbar${w && w.shrink > 0 ? ' on' : ''}">${shrinkTxt}${frogTxt}</div>`;
   drawMapThumb($('mapCard').querySelector('canvas'), m.id);
 }
 function renderStrip() {
@@ -4007,6 +4047,14 @@ function drainEvents() {
       case 'gain': setTimeout(bgmTick, 0); if (!e.via) statSnd(e.id); addLog(`${pLabel(p)} · ${e.via === 'bundle' ? '보따리에서 ' : ''}${AUG[e.id].name} 획득`, p.team, !!AUG[e.id].quest); panel = true; if (e.id === 'wall') { G.wallRise[p.team] = 0.001; G.wallGlow[p.team] = 1; sfx(220, 0.6, 0.4); } break;
       case 'spawn': fxEnso(e.x, e.y, 56, C.goldHi, { w: 9, life: 0.9 }); panel = true; break;
       case 'trap': addLog(e.center ? `함정 · 판이 줄어드는 때라 판 가운데 가까이 함정 ${e.n}개를 팠습니다` : `함정 · ${teamName(1 - e.team)} 진영 앞에 함정 ${e.n}개를 팠습니다`, e.team); break;
+      case 'frog':
+        pushFx({ k: 'frog', fx: e.fx, fy: e.fy, x: e.x, y: e.y, a: 0, life: e.t });
+        { const t0 = [523, 784, 1047]; t0.forEach((f, i) => setTimeout(() => sfx(f, 0.16, 0.06), 60 * i)); }
+        addLog('연못 · 개구리가 뛰어나왔습니다'); break;
+      case 'frogLand':
+        pushFx({ k: 'frogSplash', x: e.x, y: e.y, a: 0, life: 0.8 });
+        sfx(130, 0.5, 0.18); sfx(260, 0.25, 0.12); G.shake = Math.max(G.shake, 0.1);
+        if (e.n) addLog(`개구리 · 착지한 둘레 3×3 칸의 돌 ${e.n}개를 1칸 밀어냈습니다`); break;
       case 'pit':
         if (e.pond) { fxRing(e.x, e.y, '#9fd6d0', 10, 120, 0.7); fxRing(e.x, e.y, '#d8f0ec', 20, 90, 0.5); fxStamp(e.x, e.y - 100, '池', '연못에 빠짐', { size: 66 }); sfx(240, 0.5, 0.3); }
         else { fxInk(e.x, e.y, 80, { n: 10 }); fxStamp(e.x, e.y - 90, '陷', '숨은 함정', { size: 66 }); }
@@ -4067,7 +4115,7 @@ function drainEvents() {
         [659, 880, 1175].forEach((f, i) => setTimeout(() => bell(f, 0.2, 1.4), i * 110));
         addLog(`${qn[1]} 달성 · ${josa(pLabel(p), '이/가')} ${TIER[e.tier]} 증강 1장을 더 고릅니다`, p.team, true); panel = true; break;
       }
-      case 'kqStep': if (e.self) addLog(`퀘스트 · 상대가 스스로 떨어뜨린 돌도 ${pLabel(p)}의 기록에 들어갑니다`, p.team, true); fxStamp(e.x, e.y - 90, '★', `${Math.round(e.n * 10) / 10}/${e.need}`, { size: 54, quiet: true, col: '#7a5a10' }); panel = true; break;
+      case 'kqStep': if (e.self) addLog(`퀘스트 · ${WHY_TXT[e.self] || WHY_TXT.self}도 ${pLabel(p)}의 기록에 들어갑니다`, p.team, true); fxStamp(e.x, e.y - 90, '★', `${Math.round(e.n * 10) / 10}/${e.need}`, { size: 54, quiet: true, col: '#7a5a10' }); panel = true; break;
       case 'decree':
         fxStamp(CX, CY - 40, '命', '어명', { size: 120, big: true }); bell(147, 0.4, 2); G.shake = 0.2;
         addLog(`어명 · ${josa(pLabel(p), '이/가')} ${G.players[e.from].name}의 ${josa(AUG[e.id].name, '을/를')} 빼앗았습니다`, p.team); panel = true; break;
@@ -4083,7 +4131,7 @@ function drainEvents() {
       }
       case 'holePull': sfx(140, 0.22, 0.6); break;
       case 'holeEat': fxInk(e.x, e.y, 80, { n: 10, col: '60,10,30', peak: 0.7 }); fxStamp(e.x, e.y - 84, '黑', '삼켜짐', { size: 60, quiet: true }); sfx(90, 0.6, 0.5); break;
-      case 'trainStep': addLog(`수련 · ${pLabel(p)} ${Math.round(e.n * 10) / 10}/${K.A.trainN}${e.self ? ' (상대가 스스로 떨어뜨림)' : ''}`, p.team, true); panel = true; break;
+      case 'trainStep': addLog(`수련 · ${pLabel(p)} ${Math.round(e.n * 10) / 10}/${K.A.trainN}${e.self ? ` (${WHY_TXT[e.self] || WHY_TXT.self})` : ''}`, p.team, true); panel = true; break;
       case 'bountySet':
         fxEnso(e.x, e.y, 60, '#e8b02a', { w: 10 }); fxStamp(e.x, e.y - 90, '賞', '현상금', { size: 66 });
         addLog(`현상금 · ${josa(pLabel(p), '이/가')} 상대 돌 하나에 현상금을 걸었습니다 (내 샷 ${K.A.bountyN}번 안에)`, p.team, true); panel = true; break;
@@ -4639,6 +4687,21 @@ function drawAim(s, pw, ang, pull, shaky, now, p, o) {
   powerBadge(lx, ly, shaky ? '??' : Math.round(pw * 100) + '%', !shaky && pw >= 0.995);
 }
 
+/* ---------- 개구리 ---------- */
+function drawFrog(x, y, sc, ang) {
+  ctx.save(); ctx.translate(x, y); ctx.scale(sc, sc);
+  ctx.fillStyle = '#3f8a3a'; ctx.strokeStyle = '#1d3d1a'; ctx.lineWidth = 3;
+  for (const sx of [-1, 1]) { ctx.beginPath(); ctx.ellipse(sx * 22, 12, 14, 8, sx * 0.5, 0, TAU); ctx.fill(); ctx.stroke(); }   /* 뒷다리 */
+  ctx.beginPath(); ctx.ellipse(0, 0, 26, 20, 0, 0, TAU); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#9fd27f'; ctx.beginPath(); ctx.ellipse(0, 6, 15, 10, 0, 0, TAU); ctx.fill();
+  for (const sx of [-1, 1]) {
+    ctx.fillStyle = '#3f8a3a'; ctx.beginPath(); ctx.arc(sx * 12, -16, 8, 0, TAU); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#fffbe8'; ctx.beginPath(); ctx.arc(sx * 12, -17, 5, 0, TAU); ctx.fill();
+    ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(sx * 12 + Math.cos(ang) * 1.5, -17 + Math.sin(ang) * 1.5, 2.6, 0, TAU); ctx.fill();
+  }
+  ctx.strokeStyle = '#1d3d1a'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(0, -2, 9, 0.2 * Math.PI, 0.8 * Math.PI); ctx.stroke();
+  ctx.restore();
+}
 /* ---------- 판 가장자리(떨어지는 선) ---------- */
 /* 돌의 가운데가 이 선을 넘으면 떨어짐: 바깥은 어둡게, 선은 밝게 또렷이 */
 function drawEdge(w) {
@@ -4977,6 +5040,7 @@ function stampShape(f, alpha, scale) {
   ctx.fillText(f.ch, 0, f.size * 0.04);
   ctx.restore();
 }
+const WHY_TXT = { self: '상대가 스스로 떨어뜨린 돌', shrink: '판 줄어듦으로 떨어진 돌', frog: '개구리에 밀려 떨어진 돌' };
 function drawFx(f) {
   const u = f.a / f.life;
   ctx.save();
@@ -5081,6 +5145,21 @@ function drawFx(f) {
       ctx.globalAlpha = al * 0.85; ctx.strokeStyle = 'rgba(19,16,14,1)'; ctx.lineWidth = 22; ctx.stroke();
       ctx.globalAlpha = al; ctx.strokeStyle = C.goldHi; ctx.lineWidth = 9; ctx.stroke();
       ctx.strokeStyle = '#fffbe8'; ctx.lineWidth = 3; ctx.stroke();
+      break;
+    }
+    case 'frog': {   /* 연못에서 튀어 올라 착지 */
+      const e2 = u * u * (3 - 2 * u), x = f.fx + (f.x - f.fx) * e2, y = f.fy + (f.y - f.fy) * e2 - Math.sin(Math.PI * u) * 1.8 * GAP, sc = 1 + 0.45 * Math.sin(Math.PI * u);
+      ctx.globalAlpha = 0.35; ctx.fillStyle = '#000'; ctx.beginPath(); ctx.ellipse(f.fx + (f.x - f.fx) * e2, f.fy + (f.y - f.fy) * e2, 26 / sc, 12 / sc, 0, 0, TAU); ctx.fill();
+      ctx.globalAlpha = 1; drawFrog(x, y, sc, Math.atan2(f.y - f.fy, f.x - f.fx));
+      break;
+    }
+    case 'frogSplash': {   /* 착지: 밀려나는 3×3 칸과 물결 */
+      const B = K.A.frogBox, al = 1 - u;
+      ctx.globalAlpha = al; ctx.strokeStyle = '#8fd17a'; ctx.lineWidth = 5; ctx.setLineDash([14, 8]);
+      ctx.strokeRect(f.x - B, f.y - B, 2 * B, 2 * B); ctx.setLineDash([]);
+      ctx.fillStyle = `rgba(143,209,122,${0.18 * al})`; ctx.fillRect(f.x - B, f.y - B, 2 * B, 2 * B);
+      ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(f.x, f.y, 20 + u * B * 1.3, 0, TAU); ctx.stroke();
+      if (u < 0.35) { ctx.globalAlpha = 1 - u / 0.35; drawFrog(f.x, f.y, 1, 0); }
       break;
     }
     case 'edgeFlash': {
@@ -5737,7 +5816,7 @@ const INTRO = {
       if (t > 3.4) miniLabel(g, 0.36, 0.42, `쓴 문은 ${K.P.gateCool}수 동안 닫힘`, seg(t, 3.4, 3.6), 13, '#ffd6c8');
     } }
 };
-INTRO.pond = { d: 5.6, lines: ['판 양쪽에 연못이 둘 있습니다.', '돌의 가운데가 연못에 들어가면 흑백 가리지 않고 떨어집니다.', '상대 돌은 연못 쪽으로 몰고, 내 돌은 연못에서 떨어뜨려 두세요.'], at: [0, 1.4, 3.4],
+INTRO.pond = { d: 6.8, lines: ['판 양쪽에 연못이 둘 있습니다.', '돌의 가운데가 연못에 들어가면 흑백 가리지 않고 떨어집니다.', '상대 돌은 연못 쪽으로 몰고, 내 돌은 연못에서 떨어뜨려 두세요.', '5수마다 개구리가 뛰어나와 착지한 둘레 3×3 칸의 돌을 1칸씩 밀어냅니다.'], at: [0, 1.4, 3.4, 4.6],
   draw(g, t) {
     miniBase(g);
     for (const px of [0.15, 0.85]) {
