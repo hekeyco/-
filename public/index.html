@@ -600,6 +600,11 @@ legend{font-size:11.5px;letter-spacing:.22em;color:var(--gold);margin-bottom:8px
 .syn-tag.on{border-style:solid;border-color:var(--teal);background:rgba(127,195,201,.12);color:var(--ivory)}
 .syn-list{display:flex;flex-wrap:wrap;gap:6px}
 .syn-chip b{font-weight:600}
+.syn-chip{cursor:help}
+.syn-chip:hover,.syn-chip:focus{background:rgba(127,195,201,.28);outline:none}
+.syn-parts{list-style:none;margin:6px 0;padding:0;display:grid;gap:4px;font-size:12.5px}
+.syn-parts li{display:flex;gap:6px;align-items:baseline}
+.tip-note{font-size:11.5px;color:var(--muted)}
 /* 퀘스트 증강: 노란 꼬리표 */
 .quest-tag{display:inline-block;vertical-align:middle;margin-left:7px;padding:1px 8px;border-radius:2px;background:#f2c94c;color:#2a1d00;font-family:var(--font-body,inherit);font-size:11px;font-weight:800;letter-spacing:.12em;line-height:1.6;-webkit-text-fill-color:#2a1d00}
 .quest-tag.log{margin:0 6px 0 0}
@@ -916,7 +921,7 @@ MAPS.pond = { id: 'pond', name: '연못', short: '판 양쪽 연못에 빠진 �
   ponds: [{ x: L(2.75), y: CY, r: 0.85 * GAP }, { x: L(15.25), y: CY, r: 0.85 * GAP }] };
 MAPS.dim = { id: 'dim', name: '차원', short: '판 네 귀퉁이에 ㄱ자 차원 벽(3×3칸): 들어간 돌은 마주 보는 대각선 귀퉁이로 나옵니다 (판이 줄어도 가장자리를 따라옴)', obs: [], portals: true, shrinkMax: CX - 1.5 * GAP };
 MAPS.rev = { id: 'rev', name: '리버스', short: '가운데 4×4칸 구멍에 들어가면 떨어지고, 판 둘레는 흰 밧줄이라 튕겨 나옵니다. 25수부터 구멍이 2번 커지고 밧줄이 3번 좁혀진 뒤 멈춥니다', obs: [], ropes: true, revHole: true, noTengen: true, shrinkMax: CX - 1.5 * GAP };
-MAPS.lab = { id: 'lab', name: '훈련장', short: '실험실: 증강을 마음대로 넣고 빼며 연습하는 판 (증강 고르기·판 줄어듦 없음)', obs: [], lab: true, noShrinkMap: true, shrinkMax: CX - 1.5 * GAP };
+MAPS.lab = { id: 'lab', name: '훈련장', short: '실험실: 증강을 마음대로 넣고 빼며 연습하는 판 (증강 고르기 없음 · 단판 · 판 줄어듦 있음)', obs: [], lab: true, shrinkMax: CX - 1.5 * GAP };
 const MAP_IDS = ['flat', 'diamond', 'siege', 'boost', 'pond', 'dim', 'rev'];   /* 훈련장(lab)은 무작위·대전 지형에 넣지 않음 */
 for (const m of MAP_IDS) MAPS[m].obs.forEach((o, i) => { o.oi = i; });
 
@@ -1058,14 +1063,14 @@ const AUG = {
     desc: () => `고르는 즉시 판 가운데에 가장 가까운 내 돌이 주춧돌로 묶여 쏠 수 없게 됩니다. 대신 한 수가 지날 때마다 크기 +${f1((A.pillarR - 1) * 100)}%, 무게 +${f1((A.pillarM - 1) * 100)}%, 힘 +${f1((A.pillarV - 1) * 100)}%씩 자랍니다(${A.pillarCap}수까지, 최대 크기 +${pct(Math.pow(A.pillarR, A.pillarCap) - 1)}% · 무게 ×${f1(Math.pow(A.pillarM, A.pillarCap))} · 힘 +${pct(Math.pow(A.pillarV, A.pillarCap) - 1)}%). 묶여 있어도 상대나 내 돌에 밀려날 수 있어, 자라기 전에 떨어질 수도 있습니다. 우리 돌이 ${A.pillarFree}개 떨어지거나 다른 돌이 하나도 남지 않으면 풀려, 자란 그대로 쏠 수 있습니다. 효과를 받을 돌은 내 차례에 직접 고릅니다(CPU는 판 가운데에 가까운 돌).` },
   tide:      { name: '밀물', seal: '潮', tier: 3, max: 1, short: () => `내 샷마다 상대 돌 ${Math.round(A.tideD / GAP * 10) / 10}칸 밀어냄`,
     desc: () => `내 샷이 끝날 때마다 상대 돌을 모두 가장 가까운 가장자리 쪽으로 ${Math.round(A.tideD / GAP * 10) / 10}칸씩 밀어냅니다.` },
-  yi:        { name: '이이제이', seal: '夷', tier: 3, max: 1, ctrl: true, short: () => `상대 돌을 내가 쏘고 한 번 더 (${A.yiN}회)`,
-    desc: () => `이번 국에 ${A.yiN}번, 내 차례에 판 위 단추를 누르고 상대 돌 하나를 골라 내 힘으로 쏩니다. 쏜 상대 돌이 스스로 떨어지면 원래 자리로 돌아오고, 그 돌에 맞아 떨어진 다른 돌만 인정됩니다. 내 돌도 맞아 떨어질 수 있습니다. 쏜 뒤에는 내 돌로 한 번 더 칩니다.` },
+  yi:        { name: '이이제이', seal: '夷', tier: 3, max: 1, ctrl: true, short: () => `${A.yiN}차례 동안 상대 돌을 내가 쏨 (처음 한 번은 한 번 더)`,
+    desc: () => `고르는 즉시 효과가 켜져, 다음 내 차례 ${A.yiN}번 동안 차례마다 한 번씩 판 위 단추를 누르고 상대 돌 하나를 골라 내 힘으로 쏠 수 있습니다(쓰지 않아도 차례는 줄어듦). 쏜 상대 돌이 스스로 떨어지면 원래 자리로 돌아오고, 그 돌에 맞아 떨어진 다른 돌만 인정됩니다. 내 돌도 맞아 떨어질 수 있습니다. 처음 쓸 때만 쏜 뒤 내 돌로 한 번 더 칩니다. 이번 국 마지막으로 받는 증강으로는 나오지 않습니다.` },
   squirrel:  { name: '행복한 다람쥐', seal: '鼠', tier: 3, max: 1, short: () => `상대 돌을 떨어뜨리면 ${A.sqrN}수 동안 모든 돌 힘 +${pct(A.sqrV - 1)}%`,
     desc: () => `내 돌로 쏜 샷에 상대 돌이 하나라도 떨어지면, 그다음 내 샷 ${A.sqrN}번 동안 내 모든 돌의 힘이 +${pct(A.sqrV - 1)}%가 됩니다. 그동안 또 떨어뜨리면 다시 ${A.sqrN}번으로 채워집니다.` },
   vortex:    { name: '소용돌이', seal: '渦', tier: 3, max: 1, ctrl: true, short: () => `쏜 돌이 멈춘 자리에 소용돌이 (${A.vortexN}회, 사라지지 않음)`,
     desc: () => `이번 국에 ${A.vortexN}번, 판 위 단추를 켜고 쏘면 내 돌이 멈춘 자리에 반경 ${f1(A.vortexR / GAP)}칸의 소용돌이가 생겨 국이 끝날 때까지 남습니다. 한 수가 끝날 때마다 그 안의 상대 돌만 소용돌이 가운데로 ${f1(A.vortexPull / GAP)}칸씩 끌려오고, 소용돌이 안의 상대 돌은 방어력이 ×${f1(A.vortexH)}로 떨어집니다.` },
-  land:      { name: '땅따먹기', seal: '地', tier: 3, max: 1, team: true, short: () => `판 둘레 바깥 ${f1(A.landW / GAP)}칸이 우리 땅`,
-    desc: () => `판 둘레 바깥에 ${f1(A.landW / GAP)}칸 폭의 우리 땅이 생깁니다. 우리 돌은 판 밖으로 밀려도 우리 땅 안에서 멈추면 살아남고, 다음 차례에 거기서 쏠 수 있습니다. 상대 돌은 그대로 떨어집니다. 판이 줄어들면 우리 땅도 함께 안으로 들어옵니다.` },
+  land:      { name: '땅따먹기', seal: '地', tier: 3, max: 1, team: true, short: () => `판 둘레 바깥(리버스는 구멍 테두리) ${f1(A.landW / GAP)}칸이 우리 땅`,
+    desc: () => `판 둘레 바깥에 ${f1(A.landW / GAP)}칸 폭의 우리 땅이 생깁니다. 우리 돌은 판 밖으로 밀려도 우리 땅 안에서 멈추면 살아남고, 다음 차례에 거기서 쏠 수 있습니다. 상대 돌은 그대로 떨어집니다. 판이 줄어들면 우리 땅도 함께 안으로 들어옵니다. 리버스 지형에서는 거꾸로, 가운데 구멍 안쪽 테두리 ${f1(A.landW / GAP)}칸이 우리 땅이 되어 구멍을 메워 줍니다(우리 돌만 그 위에서 멈춰 살아남음).` },
   bundle:    { name: '보따리', seal: '褓', tier: 3, max: 1, short: () => '무작위 금 1장 + 은 1장',
     desc: () => '고르는 즉시 무작위 금 증강 1장과 은 증강 1장을 함께 얻습니다. 퀘스트와 외길은 나오지 않습니다.' },
   pajuk:     { name: '파죽지세', seal: '竹', tier: 3, max: 1, quest: true, short: () => `돌 하나로 상대 기본 돌 ${A.pajukN}개 떨어뜨리면 초월 1장`,
@@ -1217,12 +1222,12 @@ function segObs(x0, y0, x1, y1, o, pad) {
 
 /* ===== world ===== */
 const COUNTERS = ['reviveLeft', 'buddyLeft', 'rewindLeft', 'comboRound', 'boltCount', 'lost', 'picks', 'splitLeft', 'mom', 'ctr', 'fsd', 'koLeft', 'koArm', 'bdx', 'plk',
-  'grt', 'thr', 'trn', 'bonus', 'fq', 'bty', 'yiLeft', 'sqr', 'vtxLeft', 'tq', 'dcr', 'hvU', 'fl', 'syn', 'orl', 'tpl', 'rr', 'brk', 'bsel'];
+  'grt', 'thr', 'trn', 'bonus', 'fq', 'bty', 'yiLeft', 'yiX', 'sqr', 'vtxLeft', 'tq', 'dcr', 'hvU', 'fl', 'syn', 'orl', 'tpl', 'rr', 'brk', 'bsel'];
 function blankWorld(players, mode, mapId) {
   const map = MAPS[mapId];
   const w = { lab: !!map.lab, vh: map.revHole ? A.revH0 : 0, players, mode, map: mapId, obs: map.obs, stones: [], walls: { top: false, bottom: false }, nextId: 1,
     reviveLeft: {}, buddyLeft: {}, rewindLeft: {}, comboRound: {}, boltCount: {}, lost: {}, picks: {}, splitLeft: {}, mom: {}, ctr: {}, fsd: {}, koLeft: {}, koArm: {}, bdx: {}, plk: {},
-    grt: {}, thr: {}, trn: {}, bonus: {}, fq: {}, bty: {}, yiLeft: {}, sqr: {}, vtxLeft: {}, tq: {}, dcr: {}, hvU: {}, fl: {}, syn: {}, orl: {}, tpl: {}, rr: {}, brk: {}, bsel: {}, shards: [], vortex: [], ice: null, land: [false, false], noYi: -1, bh: [], lian: null, lianUsed: false,
+    grt: {}, thr: {}, trn: {}, bonus: {}, fq: {}, bty: {}, yiLeft: {}, yiX: {}, sqr: {}, vtxLeft: {}, tq: {}, dcr: {}, hvU: {}, fl: {}, syn: {}, orl: {}, tpl: {}, rr: {}, brk: {}, bsel: {}, shards: [], vortex: [], ice: null, land: [false, false], noYi: -1, bh: [], lian: null, lianUsed: false,
     wallSave: [0, 0], holes: (map.ponds || []).map(p => ({ x: p.x, y: p.y, r: p.r, team: -1, seen: true, pond: true })), mark: [], pads: (map.pads || []).map(p => Object.assign({}, p, { cd: 0 })), obsHits: map.obs.map(() => 0), dbl: null,
     comboLeft: A.combo, doubleUsed: false, shot: null, events: [], sim: false, shots: 0, shrink: 0, snap: null };
   for (const p of players) for (const k of COUNTERS) w[k][p.id] = 0;
@@ -1697,6 +1702,7 @@ function canTake(w, p, id) {
   if (id === 'thief' && teamCount(w, 1 - p.team) <= A.thief) return false;   /* 도둑: 상대 돌이 빼앗을 수보다 많을 때만 */
   if (id === 'pillar' && teamCount(w, p.team) < A.pillarFree + 1) return false;   /* 주춧돌: 묶일 돌 말고도 우리 돌이 넉넉할 때만 */
   if (id === 'orleans' && !morePicks(w, p)) return false;
+  if ((id === 'crack' || id === 'yi') && !morePicks(w, p)) return false;   /* 이이제이도 마지막 증강으로는 나오지 않음 */
   if (id === 'crack' && !morePicks(w, p)) return false;   /* 균열: 이번 국 마지막으로 받는 증강으로는 나오지 않음 */
   if (id === 'buddy' && (teamCount(w, 1 - p.team) <= 2 || teamCount(w, p.team) <= 1)) return false;   /* 길동무: 한 번 데려가면 바로 승부가 갈릴 때는 나오지 않음 */
   if (id === 'late' && (w.shots || 0) >= P.shrinkStart - 3) return false;   /* 늦바람: 대가(약한 앞부분)가 남아 있을 때만 — 곧 강해지는 때에는 나오지 않음 */   /* 다음 증강을 받을 수 있을 때만 */   /* 상대 돌이 2개 이하면 봉인은 나오지 않음 */
@@ -1831,7 +1837,7 @@ function step(w) {
       const sp = Math.sqrt(s.vx * s.vx + s.vy * s.vy);
       let ef = 1;
       if (w.ice && s.team !== w.ice.team && !(sh && s.id === sh.stoneId) && iceAt(w.ice, s.x, s.y)) ef *= A.iceF;   /* 빙판길: 밀리는 상대 돌만 미끄러짐 */
-      if (s.x < lo || s.x > hi || s.y < lo || s.y > hi) ef *= A.landF;   /* 땅따먹기: 판 밖 우리 땅에서는 빨리 멈춤 */
+      if (s.x < lo || s.x > hi || s.y < lo || s.y > hi || inHole(w, s)) ef *= A.landF;   /* 땅따먹기: 판 밖(리버스는 구멍 테두리) 우리 땅에서는 빨리 멈춤 */
       const ns = Math.max(0, sp - (P.decel + P.drag * sp) * s.fric * ef * (sh && s.id === sh.stoneId ? sh.fk : 1) * (shT >= 0 && s.team !== shT && sh.grip[s.owner] ? A.grip : 1) * DT);
       const k = ns / sp;
       s.vx *= k; s.vy *= k;
@@ -1989,7 +1995,7 @@ function step(w) {
     if (!live(s)) continue;
     if (s._mv) portalStep(w, s);
     if (ropes && s._mv) ropeStep(w, s);
-    if (w.vh && Math.abs(s.x - CX) < w.vh && Math.abs(s.y - CY) < w.vh) { emit(w, { type: 'revFall', x: s.x, y: s.y }); handleFall(w, s); continue; }   /* 리버스: 가운데 구멍에 빠짐 */
+    if (inHole(w, s) && !inHoleLand(w, s)) { emit(w, { type: 'revFall', x: s.x, y: s.y }); handleFall(w, s); continue; }   /* 리버스: 가운데 구멍에 빠짐 */
     if ((s.x < lo || s.x > hi || s.y < lo || s.y > hi) && !inLand(w, s, lo, hi)) {
       handleFall(w, s);
       continue;
@@ -2024,8 +2030,11 @@ function padWait(w) {
   const k = (n - P.padStart) % (P.padOn + P.padOff);
   return k < P.padOn ? 0 : P.padOn + P.padOff - k;
 }
+/* 땅따먹기 (리버스): 판 둘레 대신 가운데 구멍 안쪽 테두리가 우리 땅 — 구멍을 메워 줌 */
+const inHole = (w, s) => !!w.vh && Math.abs(s.x - CX) < w.vh && Math.abs(s.y - CY) < w.vh;
+const inHoleLand = (w, s) => inHole(w, s) && !!(w.land && w.land[s.team]) && Math.max(Math.abs(s.x - CX), Math.abs(s.y - CY)) >= w.vh - A.landW;
 /* 땅따먹기: 판 둘레 바깥의 우리 땅 */
-const inLand = (w, s, lo, hi) => !!(w.land && w.land[s.team]) && s.x > lo - A.landW && s.x < hi + A.landW && s.y > lo - A.landW && s.y < hi + A.landW;
+const inLand = (w, s, lo, hi) => !w.vh && !!(w.land && w.land[s.team]) && s.x > lo - A.landW && s.x < hi + A.landW && s.y > lo - A.landW && s.y < hi + A.landW;
 /* 빙판길: 24px 칸으로 나눈 얼음 */
 const ICE = 24, iceKey = (ix, iy) => (ix + 64) * 1024 + (iy + 64);
 const iceAt = (ice, x, y) => ice.cells.has(iceKey(Math.floor(x / ICE), Math.floor(y / ICE)));
@@ -2360,7 +2369,10 @@ function shardStep(w, s) {
   }
 }
 /* 1수 제한 시간이 다 되어 쏘지 않고 차례를 넘김 */
+/* 이이제이: 내 차례가 끝날 때마다 남은 차례 하나 줄어듦 (쓰지 않아도) */
+function yiTick(w, pid) { if ((w.yiLeft[pid] || 0) > 0) w.yiLeft[pid]--; if (w.noYi === pid) w.noYi = -1; }
 function passTurn(w, pid) {
+  yiTick(w, pid);
   w.comboLeft = A.combo; w.doubleUsed = false; w.lianUsed = false; w.dbl = null; w.lian = null; w.xtra = 0;
   emit(w, { type: 'pass', pid });
 }
@@ -2422,7 +2434,7 @@ function snapshot(w) {
     buddyLeft: Object.assign({}, w.buddyLeft), lost: Object.assign({}, w.lost), wallSave: w.wallSave.slice(), nextId: w.nextId,
     mark: w.mark.slice(), obs: w.obs, obsHits: (w.obsHits || []).slice(), vh: w.vh || 0, rvn: w.rvn || 0, shards: (w.shards || []).slice(), fish: (w.fish || []).map(f => Object.assign({}, f)), pads: w.pads.map(p => p.cd || 0),
     trn: Object.assign({}, w.trn), bonus: Object.assign({}, w.bonus), fq: Object.assign({}, w.fq), bty: Object.assign({}, w.bty),
-    yiLeft: Object.assign({}, w.yiLeft), vtxLeft: Object.assign({}, w.vtxLeft), vortex: w.vortex, fl: Object.assign({}, w.fl), tq: Object.assign({}, w.tq) };
+    yiLeft: Object.assign({}, w.yiLeft), yiX: Object.assign({}, w.yiX), vtxLeft: Object.assign({}, w.vtxLeft), vortex: w.vortex, fl: Object.assign({}, w.fl), tq: Object.assign({}, w.tq) };
 }
 function tryRewind(w, sh) {
   const T = w.players[sh.shooter].team, E = 1 - T;
@@ -2440,7 +2452,7 @@ function tryRewind(w, sh) {
   if (sn.vh != null) w.vh = sn.vh;
   if (sn.rvn != null) w.rvn = sn.rvn;
   (sn.pads || []).forEach((cd, i) => { if (w.pads[i]) w.pads[i].cd = cd; });
-  for (const k of ['trn', 'bonus', 'fq', 'bty', 'yiLeft', 'vtxLeft', 'fl', 'tq']) if (sn[k]) Object.assign(w[k], sn[k]);
+  for (const k of ['trn', 'bonus', 'fq', 'bty', 'yiLeft', 'yiX', 'vtxLeft', 'fl', 'tq']) if (sn[k]) Object.assign(w[k], sn[k]);
   if (sn.vortex) w.vortex = sn.vortex;
   w.rewindLeft[q.id]--;
   sh.fell = [0, 0]; sh.shrunk = [0, 0]; sh.rewound = q.id;
@@ -2495,7 +2507,7 @@ function updatePhase(w) {
         w.vh = w.vh + A.revStep;
         emit(w, { type: 'revGrow', vh: w.vh, left: A.revGrowN - w.rvn });
         let anyR = false;
-        for (const s of w.stones.slice()) if (live(s) && Math.abs(s.x - CX) < w.vh && Math.abs(s.y - CY) < w.vh) { handleFall(w, s); anyR = true; }
+        for (const s of w.stones.slice()) if (live(s) && inHole(w, s) && !inHoleLand(w, s)) { handleFall(w, s); anyR = true; }
         if (anyR) return;
       } else {
         w.shrink += P.shrinkStep;
@@ -2567,8 +2579,7 @@ function startShot(w, pid, stoneId, vx, vy, opt) {
   const sh = w.shot;
   /* 이이제이: 상대 돌을 내가 쏨 — 쏜 돌에 붙는 증강 효과는 빠짐 */
   sh.yi = !!(o.yi && s.team !== p.team && (w.yiLeft[pid] || 0) > 0 && cnt(p, 'yi') && w.noYi !== pid);
-  if (!sh.yi && w.noYi === pid) w.noYi = -1;
-  if (sh.yi) { w.yiLeft[pid]--; sh.marks = false; sh.pierce = false; sh.hammer = false; sh.firstK = false; }
+  if (sh.yi) { w.noYi = pid; sh.marks = false; sh.pierce = false; sh.hammer = false; sh.firstK = false; }
   sh.vortex = !!(o.vx && !sh.yi && cnt(p, 'vortex') && (w.vtxLeft[pid] || 0) > 0);
   if (sh.vortex) w.vtxLeft[pid]--;
   sh.cvRate = 0; sh.noCurve = false; sh.cv = 0;
@@ -2725,10 +2736,11 @@ function afterShot0(w) {
   const ds = byId(w, sh.stoneId);
   if (cnt(sp, 'double') && !w.doubleUsed && ds && live(ds) && ds.owner === sp.id && !ds.sealed) { w.doubleUsed = true; w.dbl = [sp.id, ds.id]; return { again: true, double: true }; }
   if (cnt(sp, 'lian') && !w.lianUsed && hasStones(w, sp.id)) { w.lianUsed = true; w.lian = [sp.id, sh.stoneId]; return { again: true, lian: true }; }
-  if (sh.yi && hasStones(w, sp.id)) { w.noYi = sp.id; return { again: true, yi: true }; }   /* 이이제이: 상대 돌로 친 뒤 내 돌로 한 번 더 */
+  if (sh.yi && !w.yiX[sp.id] && hasStones(w, sp.id)) { w.yiX[sp.id] = 1; w.noYi = sp.id; return { again: true, yi: true }; }   /* 이이제이: 처음 쓸 때만 상대 돌로 친 뒤 내 돌로 한 번 더 */
   if (w.bdx[sp.id] && hasStones(w, sp.id)) { w.bdx[sp.id] = 0; return { again: true, buddy: true }; }
   if (w.koArm[sp.id] && w.koLeft[sp.id] > 0 && hasStones(w, sp.id)) { w.koArm[sp.id] = 0; w.koLeft[sp.id]--; return { again: true, ko: true }; }
   w.comboLeft = A.combo; w.doubleUsed = false; w.lianUsed = false;
+  yiTick(w, sp.id);
   return { next: true };
 }
 /* 이이제이로 쏠 수 있는 상대 돌 */
@@ -2866,7 +2878,7 @@ function scoreSim(c, p, w0) {
   }
   if (w0) {
     if ((c.bonus[p.id] || 0) > (w0.bonus[p.id] || 0)) sc += 80;   /* 퀘스트 보상 */
-    if ((w0.yiLeft[p.id] || 0) > (c.yiLeft[p.id] || 0)) sc -= 25;   /* 이이제이를 쓴 값 */
+    if ((w0.yiLeft[p.id] || 0) > (c.yiLeft[p.id] || 0)) sc -= 6;   /* 이이제이를 쓴 값 */
   }
   const E = threats(c, op), T = threats(c, me);
   if (E > 0) sc -= 75 + 18 * (E - 1);
@@ -3164,7 +3176,7 @@ const RULE_GROUPS = [
     '국이 끝나면 결과 화면에서 다음 지형을 바꿀 수 있습니다. 새 지형은 짧은 소개가 나오고, 건너뛸 수 있습니다.',
     '<b>온라인</b> — 방을 만든 사람이 흑, 방 이름으로 들어온 사람이 백입니다. 국 시작 증강은 두 사람이 함께 고릅니다.',
     '<b>소리</b> — 머리줄이나 첫 화면의 소리 단추에서 효과음·배경음을 따로 조절하고, 배경음을 고를 수 있습니다.',
-    '<b>훈련장</b> — 지형 고르기의 \'훈련장\'은 증강 고르기·판 줄어듦·시간 제한이 없는 실험실입니다. 오른쪽 실험실 칸에서 흑·백 아무에게나 모든 증강을 넣고 뺄 수 있습니다(혼자·같은 화면에서만).',
+    '<b>훈련장</b> — 지형 고르기의 \'훈련장\'은 증강 고르기·시간 제한이 없는 실험실입니다. 승리 조건은 단판, 판 줄어듦은 있음으로 고정되고, 무작위 지형에는 나오지 않습니다. 오른쪽 실험실 칸에서 흑·백 아무에게나 모든 증강을 넣고 뺄 수 있습니다(혼자·같은 화면에서만).',
     '첫 화면 오른쪽 위 물음표 단추에서 조작을 그림으로 배울 수 있습니다. 기객은 겉모습과 이야기만 다르고 능력치는 같습니다.'
   ]]
 ];
@@ -3311,10 +3323,12 @@ function newMatch() {
   G.cpu = !G.online && G.mode === '1v1' && document.querySelector('input[name="opp"]:checked').value === 'cpu';
   G.cpuLevel = (document.querySelector('input[name="lvl"]:checked') || {}).value || 'normal';
   G.target = +document.querySelector('input[name="target"]:checked').value;
+  const isLab = document.querySelector('input[name="map"]:checked').value === 'lab';
   G.mapSet = document.querySelector('input[name="map"]:checked').value;
   if (G.online && G.mapSet === 'lab') G.mapSet = 'flat';   /* 훈련장은 혼자·같은 화면에서만 */
   G.mapSeq = G.mapSet === 'random' ? rollMapSeq() : null;
   G.noShrink = (document.querySelector('input[name="shrink"]:checked') || {}).value === 'off';
+  if (isLab && !G.online) { G.target = 1; G.noShrink = false; }   /* 훈련장: 단판 · 판 줄어듦 있음 고정 */
   G.players = makePlayers(G.mode, G.cpu);
   if (G.online) {
     netMarkSeats();
@@ -3336,7 +3350,7 @@ function startDraft() {
   G.alone = [false, false];
   G.world = K.newWorld(G.players, G.mode, mapFor(G.round)); G.world.noShrink = !!G.noShrink; G.world.trapManual = true;
   G.pickQueue = G.players.map(p => p.id);
-  if (G.world.lab) { G.world.noShrink = true; G.pickQueue = []; }   /* 훈련장: 증강 고르기·판 줄어듦 없음, 오른쪽 실험실 칸에서 넣고 뺌 */
+  if (G.world.lab) { G.world.noShrink = false; G.pickQueue = []; }   /* 훈련장: 증강 고르기 없음 · 판 줄어듦 있음, 오른쪽 실험실 칸에서 넣고 뺌 */
   G.after = 'start';
   renderAll();
   mapIntro();
@@ -3753,12 +3767,10 @@ function renderNetPanel() {
     el.innerHTML = `<p>방을 만들면 다섯 글자 방 이름이 나옵니다. 상대가 그 이름으로 들어오면 백을 잡습니다.</p>
       <div class="row"><button class="btn-ghost" id="netCreate" type="button">방 만들기</button>
       <input class="code-in" id="netCode" maxlength="5" placeholder="방 이름 입력" autocomplete="off" aria-label="방 이름"><button class="btn-ghost" id="netEnter" type="button">입장</button></div>
-      ${saved ? `<div class="row"><button class="btn-ghost" id="netRe" type="button">이전 방 ${saved.code.toUpperCase()} 다시 들어가기</button></div>` : ''}
       ${NET.status === 'denied' ? `<p class="net-msg">${WEB ? '방이 가득 찼습니다. 다른 방 이름으로 들어가 주세요.' : '이 계정으로는 온라인 방에 들어갈 수 없습니다. 공유 창에서 전자우편으로 초대받았는지 확인해 주세요.'}</p>` : ''}
       ${NET.status === 'error' ? '<p class="net-msg">방에 들어가지 못했습니다. 잠시 뒤에 다시 시도해 주세요.</p>' : ''}`;
     $('netCreate').onclick = () => netJoin(newCode(), 0);
     $('netEnter').onclick = () => { const c = $('netCode').value.trim().toLowerCase(); if (/^[a-z0-9]{5}$/.test(c)) netJoin(c, 1); else $('netCode').focus(); };
-    if ($('netRe')) $('netRe').onclick = () => netJoin(saved.code, saved.seat);
     if (netMode()) { $('btnStart').disabled = true; $('btnStart').textContent = '대국 시작'; }
     return;
   }
@@ -3843,10 +3855,10 @@ const STATS = () => { const A = K.A, P = K.P; return {
   ice: [['쏜 돌이 지난 길의 상대 돌', '마찰', `−${pc(1 - A.iceF)}%`, 'foe']],
   glut: [['떨어뜨린 쏜 돌', '크기', `+${pc(A.glutR - 1)}%`, 'up'], ['떨어뜨린 쏜 돌', '무게', `×${fx(A.glutM)}`, 'up'], ['떨어뜨린 쏜 돌', '힘', `+${pc(A.glutV - 1)}%`, 'up']],
   bounty: [['조건', '현상금 돌', `${A.bountyN}샷 안에`, 'up'], ['현상금 돌', '방어력', `×${fx(A.bountyH)}`, 'foe'], ['보상', '옥', '1장 더', 'up']],
-  yi: [['상대 돌', '내가 쏘기', `${A.yiN}회`, 'foe'], ['그 뒤', '한 번 더', '샷 +1', 'up']],
+  yi: [['다음 내 차례', '상대 돌 쏘기', `${A.yiN}차례`, 'foe'], ['처음 쓸 때만', '한 번 더', '샷 +1', 'up']],
   squirrel: [['상대 돌을 떨어뜨리면', '모든 돌 힘', `+${pc(A.sqrV - 1)}%`, 'up'], ['지속', '내 샷', `${A.sqrN}번`, 'up']],
   vortex: [['멈춘 자리', '소용돌이', `${cell(A.vortexR)}칸 · ${A.vortexN}회`, 'foe'], ['한 수마다', '상대 돌 끌어옴', `${cell(A.vortexPull)}칸`, 'foe'], ['소용돌이 안 상대 돌', '방어력', `×${fx(A.vortexH)}`, 'foe']],
-  land: [['판 둘레 바깥', '우리 땅', `${cell(A.landW)}칸`, 'up']],
+  land: [['판 둘레 바깥', '우리 땅', `${cell(A.landW)}칸`, 'up'], ['리버스: 구멍 안쪽 테두리', '우리 땅', `${cell(A.landW)}칸`, 'up']],
   bundle: [['바로', '금', '1장', 'up'], ['바로', '은', '1장', 'up']],
   pass: [['첫 상대 돌', '뚫고 나감', `빠르기 ${pc(A.passK)}%`, 'up'], ['한 샷', '맞히는 돌', '2개', 'up']],
   iki: [['조건', '한 돌로 떨어뜨린 기본 돌', `${A.ikiN}개`, 'up'], ['보상', '초월', '2장 중 1장', 'up']],
@@ -4161,7 +4173,7 @@ function renderSkills() {
   }
   if (cnt(p, 'yi')) {
     const left = w.yiLeft[p.id] || 0, on = mine && G.opt.yi;
-    parts.push(`<button type="button" class="sk${on ? ' on' : ''}" data-sk="yi"${mine && left > 0 ? '' : ' disabled'}>${sl('夷')}${on ? '상대 돌 고르는 중' : '상대 돌로 쏘기'} <small>${left}회</small></button>`);
+    parts.push(`<button type="button" class="sk${on ? ' on' : ''}" data-sk="yi"${mine && left > 0 && w.noYi !== p.id ? '' : ' disabled'}>${sl('夷')}${on ? '상대 돌 고르는 중' : '상대 돌로 쏘기'} <small>${left}차례${w.yiX[p.id] ? '' : ' · 한 번 더'}</small></button>`);
   }
   if (cnt(p, 'vortex')) {
     const left = w.vtxLeft[p.id] || 0, on = mine && G.opt.vx;
@@ -4316,7 +4328,7 @@ $('labCard').addEventListener('click', e => {
   } else if (b.dataset.labact === 'reset') {
     const keep = G.players.map(q => q.augs.slice());
     for (const q of G.players) q.augs = [];
-    G.world = K.newWorld(G.players, G.mode, w.map); G.world.noShrink = true; G.world.trapManual = true;
+    G.world = K.newWorld(G.players, G.mode, w.map); G.world.noShrink = false; G.world.trapManual = true;
     for (const q of G.players) for (const id of keep[q.id]) K.gainAug(G.world, q.id, id);
     G.aim = null; G.sel = null; drainEvents(); renderAll(); return beginTurn(false);
   }
@@ -4335,7 +4347,7 @@ function renderPlayers() {
     return `<div class="pcard card${active ? ' active' : ''}">
       <div class="pcard-head">${avatar(p)}<span class="pcard-who"><span class="pcard-name">${esc(pSelf(p))}</span><small>${teamName(p.team)} · ${charOf(p).title}</small></span>${p.cpu ? `<span class="chip">CPU ${LVL_NAME[G.cpuLevel] || ''}</span>` : ''}${active ? '<span class="chip turn">차례</span>' : ''}<span class="pcount">돌 ${n}</span></div>
       ${items ? `<ul class="aug-list">${items}</ul>` : '<p class="empty">아직 증강이 없습니다</p>'}
-      ${K.synOf(p).length ? `<div class="syn-list">${K.synOf(p).map(y => `<span class="syn-chip"><b>${y.name}</b> · ${y.desc}</span>`).join('')}</div>` : ''}
+      ${K.synOf(p).length ? `<div class="syn-list">${K.synOf(p).map(y => `<span class="syn-chip" data-syn="${y.id}" tabindex="0">조합 <b>${y.name}</b></span>`).join('')}</div>` : ''}
       ${G.started && w ? `<div class="pmeta">${pmeta(w, p)}</div>` : ''}
     </div>`;
   }).join('');
@@ -4351,7 +4363,7 @@ function pmeta(w, p) {
   if (cnt(p, 'grit') && w.grt[p.id]) out.push(`오기 <b>힘 +${Math.round(K.A.gritStep * w.grt[p.id] * 100)}%</b>`);
   if (cnt(p, 'squirrel') && (w.sqr[p.id] || 0) > 0) out.push(`행복한 다람쥐 <b>힘 +${Math.round((K.A.sqrV - 1) * 100)}% · ${w.sqr[p.id]}샷</b>`);
   for (const q of ['iki', 'pajuk']) if (cnt(p, q)) out.push(w.tq[p.id] ? `<b>${AUG[q].name} 끝</b>` : `${AUG[q].name} 최고 <b>${Math.round(Math.max(0, ...w.stones.filter(s => live(s) && s.owner === p.id).map(s => s.kq || 0)) * 10) / 10}/${q === 'iki' ? K.A.ikiN : K.A.pajukN}</b>`);
-  const ch = [['부활', w.reviveLeft[p.id]], ['길동무', w.buddyLeft[p.id]], ['되감기', w.rewindLeft[p.id]], ['연타', cnt(p, 'combo') ? w.comboRound[p.id] : 0], ['이이제이', w.yiLeft[p.id]], ['소용돌이', w.vtxLeft[p.id]]];
+  const ch = [['부활', w.reviveLeft[p.id]], ['길동무', w.buddyLeft[p.id]], ['되감기', w.rewindLeft[p.id]], ['연타', cnt(p, 'combo') ? w.comboRound[p.id] : 0], ['이이제이 남은 차례', w.yiLeft[p.id]], ['소용돌이', w.vtxLeft[p.id]]];
   if (cnt(p, 'wall')) ch.push(['철벽 되돌리기', w.wallSave[p.team]]);
   if (cnt(p, 'bolt')) ch.push(['번개까지 샷', K.A.boltEvery - (w.boltCount[p.id] % K.A.boltEvery)]);
   if (cnt(p, 'ko')) ch.push(['패', w.koLeft[p.id]]);
@@ -4365,21 +4377,27 @@ function augTipHTML(id, p) {
   const a = AUG[id], c = p ? cnt(p, id) : 1;
   return `<div class="tip-h"><span class="seal seal-xs">${a.seal}</span><b>${a.name}${c > 1 ? ` ×${c}` : ''}</b><span class="tier-${a.tier}"><i class="tier-dot">${TIER[a.tier]}</i></span>${a.quest ? '<span class="quest-tag">퀘스트</span>' : ''}</div>${statHTML(id)}<p>${a.desc()}</p>${bookSyn(id)}`;
 }
+/* 조합 자세히 보기: 두 증강과 덤 효과 */
+function synTipHTML(sid) {
+  const y = K.SYN.find(x => x.id === sid); if (!y) return '';
+  const part = id => `<li><span class="seal seal-xs">${AUG[id].seal}</span><b class="tier-${AUG[id].tier}"><i class="tier-dot">${TIER[AUG[id].tier]}</i>${AUG[id].name}</b> — ${AUG[id].short()}</li>`;
+  return `<div class="tip-h"><b>조합 · ${y.name}</b></div><ul class="syn-parts">${part(y.a)}${part(y.b)}</ul><p><b>덤 효과</b> — ${y.desc}</p><p class="tip-note">두 증강을 함께 가지고 있는 동안 늘 켜져 있고, 둘 중 하나를 잃으면 사라집니다.</p>`;
+}
 function showAugTip(li) {
-  const tip = $('augTip'), id = li.dataset.aug, pc = li.closest('.pcard');
+  const tip = $('augTip'), id = li.dataset.aug || li.dataset.syn, pc = li.closest('.pcard');
   const idx = [...document.querySelectorAll('#players .pcard')].indexOf(pc), list = G.started ? G.players : [];
-  tip.innerHTML = augTipHTML(id, list[idx]); tip.hidden = false;
+  tip.innerHTML = li.dataset.syn ? synTipHTML(li.dataset.syn) : augTipHTML(id, list[idx]); tip.hidden = false;
   const r = li.getBoundingClientRect(), tw = tip.offsetWidth, th = tip.offsetHeight;
   let x = r.left - tw - 10; if (x < 16) x = Math.min(innerWidth - tw - 16, r.left);
   let y = x === r.left - tw - 10 ? r.top : r.bottom + 8; if (y + th > innerHeight - 12) y = Math.max(12, r.top - th - 8);
   tip.style.left = Math.round(x) + 'px'; tip.style.top = Math.round(y) + 'px';
 }
 const hideAugTip = () => { $('augTip').hidden = true; };
-$('players').addEventListener('mouseover', e => { const li = e.target.closest('li[data-aug]'); if (li) showAugTip(li); });
-$('players').addEventListener('mouseout', e => { const li = e.target.closest('li[data-aug]'); if (li && !li.contains(e.relatedTarget)) hideAugTip(); });
-$('players').addEventListener('focusin', e => { const li = e.target.closest('li[data-aug]'); if (li) showAugTip(li); });
+$('players').addEventListener('mouseover', e => { const li = e.target.closest('li[data-aug], [data-syn]'); if (li) showAugTip(li); });
+$('players').addEventListener('mouseout', e => { const li = e.target.closest('li[data-aug], [data-syn]'); if (li && !li.contains(e.relatedTarget)) hideAugTip(); });
+$('players').addEventListener('focusin', e => { const li = e.target.closest('li[data-aug], [data-syn]'); if (li) showAugTip(li); });
 $('players').addEventListener('focusout', hideAugTip);
-$('players').addEventListener('click', e => { const li = e.target.closest('li[data-aug]'); if (!li) return; e.stopPropagation(); if (!$('augTip').hidden && $('augTip').dataset.id === li.dataset.aug) { hideAugTip(); return; } showAugTip(li); $('augTip').dataset.id = li.dataset.aug; });
+$('players').addEventListener('click', e => { const li = e.target.closest('li[data-aug], [data-syn]'); if (!li) return; e.stopPropagation(); const key = li.dataset.aug || li.dataset.syn; if (!$('augTip').hidden && $('augTip').dataset.id === key) { hideAugTip(); return; } showAugTip(li); $('augTip').dataset.id = key; });
 document.addEventListener('click', hideAugTip);
 addEventListener('scroll', hideAugTip, { passive: true });
 function renderAll() { renderScore(); renderStrip(); renderMapCard(); renderLab(); renderPlayers(); renderLog(); }
@@ -5622,6 +5640,7 @@ const teamRGB = t => (t === 0 ? '30,30,36' : '246,240,228');
 /* 땅따먹기: 판 둘레 바깥의 우리 땅 */
 function drawLand(w, now) {
   if (!w.land || !(w.land[0] || w.land[1])) return;
+  if (w.vh) return drawHoleLand(w);   /* 리버스: 거꾸로 가운데 구멍 테두리를 메움 */
   const lo = w.shrink, hi = S - w.shrink, L = K.A.landW;
   for (const t of [0, 1]) {
     if (!w.land[t]) continue;
@@ -5634,6 +5653,22 @@ function drawLand(w, now) {
     ctx.restore();
     ctx.save(); ctx.strokeStyle = t === 0 ? 'rgba(232,205,142,.8)' : 'rgba(255,255,255,.85)'; ctx.lineWidth = 3; ctx.setLineDash([14, 9]);
     ctx.strokeRect(lo - L, lo - L, hi - lo + 2 * L, hi - lo + 2 * L); ctx.restore();
+  }
+}
+/* 땅따먹기 (리버스): 가운데 구멍 안쪽 테두리를 우리 땅으로 메움 */
+function drawHoleLand(w) {
+  const v = w.vh, L = Math.min(K.A.landW, v), a = CX - v, b = CX - v + L;
+  for (const t of [0, 1]) {
+    if (!w.land[t]) continue;
+    ctx.save();
+    ctx.beginPath(); ctx.rect(a, a, 2 * v, 2 * v); ctx.rect(b, b, 2 * (v - L), 2 * (v - L));
+    ctx.fillStyle = t === 0 ? 'rgba(74,64,48,.9)' : 'rgba(214,202,178,.75)'; ctx.fill('evenodd');
+    ctx.clip('evenodd');
+    ctx.strokeStyle = t === 0 ? 'rgba(232,205,142,.4)' : 'rgba(255,255,255,.55)'; ctx.lineWidth = 3;
+    for (let k = a - 2 * v; k < a + 2 * v; k += 22) { ctx.beginPath(); ctx.moveTo(k, a); ctx.lineTo(k + 2 * v, a + 2 * v); ctx.stroke(); }
+    ctx.restore();
+    ctx.save(); ctx.strokeStyle = t === 0 ? 'rgba(232,205,142,.85)' : 'rgba(255,255,255,.9)'; ctx.lineWidth = 3; ctx.setLineDash([12, 8]);
+    ctx.strokeRect(b, b, 2 * (v - L), 2 * (v - L)); ctx.restore();
   }
 }
 /* 빙판길: 얼어붙은 길 */
@@ -6541,7 +6576,7 @@ const GUIDE = {
   boost: { marks: [{ x: 3 / 18, y: 0.5, r: 0.07, text: '바람문', tx: 0.3, ty: 0.3 }, { x: 15 / 18, y: 0.5, r: 0.07, text: '바람문', tx: 0.7, ty: 0.7 }] },
   pond: { marks: [{ x: 2.75 / 18, y: 0.5, r: 0.09, text: '연못', tx: 0.3, ty: 0.3 }, { x: 15.25 / 18, y: 0.5, r: 0.09, text: '연못', tx: 0.7, ty: 0.7 }] },
   dim: { marks: [{ x: 0.4 / 18, y: 0.4 / 18, r: 0.1, text: '甲', tx: 0.24, ty: 0.2 }, { x: 17.6 / 18, y: 17.6 / 18, r: 0.1, text: '甲', tx: 0.76, ty: 0.8 }, { x: 17.6 / 18, y: 0.4 / 18, r: 0.1, text: '乙', tx: 0.76, ty: 0.2 }, { x: 0.4 / 18, y: 17.6 / 18, r: 0.1, text: '乙', tx: 0.24, ty: 0.8 }] },
-  lab: { lines: ['증강 고르기와 판 줄어듦이 없는 연습 판입니다.', '오른쪽 실험실 칸에서 흑·백 아무에게나 모든 증강을 넣고 뺄 수 있습니다.'], marks: [{ x: 0.5, y: 0.5, text: '실험실', tx: 0.5, ty: 0.5 }] },
+  lab: { lines: ['증강 고르기·시간 제한이 없는 연습 판입니다 (단판 · 판 줄어듦 있음 고정, 무작위에 나오지 않음).', '오른쪽 실험실 칸에서 흑·백 아무에게나 모든 증강을 넣고 뺄 수 있습니다.'], marks: [{ x: 0.5, y: 0.5, text: '실험실', tx: 0.5, ty: 0.5 }] },
   rev: { marks: [{ x: 0.5, y: 0.5, r: 0.08, text: '가운데 구멍', tx: 0.5, ty: 0.32 }, { x: -0.04, y: 0.5, text: '둘레 밧줄', tx: 0.2, ty: 0.68 }] },
   random: { lines: ['국마다 일곱 지형 가운데 하나가 무작위로 나옵니다.', '같은 지형이 연달아 나오지는 않습니다.'] }
 };
@@ -6841,7 +6876,19 @@ function renderGuide() {
   };
   guideRaf = requestAnimationFrame(frame);
 }
-document.querySelectorAll('input[name="map"]').forEach(r => r.addEventListener('change', renderGuide));
+document.querySelectorAll('input[name="map"]').forEach(r => r.addEventListener('change', () => { renderGuide(); syncLabLock(); }));
+/* 훈련장은 단판 · 판 줄어듦 있음으로 고정 (다른 지형을 고르면 원래대로) */
+function syncLabLock() {
+  const lab = (document.querySelector('input[name="map"]:checked') || {}).value === 'lab';
+  const els = [...document.querySelectorAll('input[name="target"], input[name="shrink"]')];
+  if (lab) {
+    for (const el of els) if (!el.dataset.was) el.dataset.was = el.checked ? '1' : '0';   /* 먼저 모두 기억 */
+    for (const el of els) { if (el.id === 'tgt1' || el.id === 'shrOn') el.checked = true; el.disabled = true; }
+  } else {
+    for (const el of els) { if (el.dataset.was === '1') el.checked = true; delete el.dataset.was; el.disabled = false; }
+  }
+}
+syncLabLock();
 renderGuide();
 function mapIntro() {
   const m = curMap();
