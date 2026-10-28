@@ -44,13 +44,31 @@ const server = http.createServer((req, res) => {
 const DATA_DIR = path.join(__dirname, 'data'), MATCH_FILE = path.join(DATA_DIR, 'matches.json'), MAX_MATCHES = 2000;
 let matches = [];
 try { matches = JSON.parse(fs.readFileSync(MATCH_FILE, 'utf8')); if (!Array.isArray(matches)) matches = []; } catch (e) { matches = []; }
+/* 전적을 오래 남기기: 환경 변수 UPSTASH_REDIS_REST_URL · UPSTASH_REDIS_REST_TOKEN 을 넣으면
+   서버를 다시 배포하거나 재시작해도 지워지지 않는 Upstash(무료 Redis)에 함께 저장합니다. 없으면 파일에만 저장합니다. */
+const KV_URL = process.env.UPSTASH_REDIS_REST_URL, KV_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN, KV_KEY = 'alk:matches';
+const kv = async cmd => {
+  const r = await fetch(KV_URL, { method: 'POST', headers: { authorization: 'Bearer ' + KV_TOKEN, 'content-type': 'application/json' }, body: JSON.stringify(cmd) });
+  if (!r.ok) throw new Error('kv ' + r.status);
+  return (await r.json()).result;
+};
+let ready = Promise.resolve();
+if (KV_URL && KV_TOKEN) {
+  ready = kv(['GET', KV_KEY]).then(v => {
+    const saved = v ? JSON.parse(v) : [];
+    if (Array.isArray(saved) && saved.length >= matches.length) matches = saved;   /* 오래 남긴 쪽을 기준으로 */
+  }).catch(e => console.error('전적 불러오기 실패:', e.message));
+}
 let saveTimer = null;
-const saveMatches = () => { clearTimeout(saveTimer); saveTimer = setTimeout(() => { try { fs.mkdirSync(DATA_DIR, { recursive: true }); fs.writeFileSync(MATCH_FILE, JSON.stringify(matches)); } catch (e) {} }, 500); };
+const saveMatches = () => { clearTimeout(saveTimer); saveTimer = setTimeout(() => {
+  try { fs.mkdirSync(DATA_DIR, { recursive: true }); fs.writeFileSync(MATCH_FILE, JSON.stringify(matches)); } catch (e) {}
+  if (KV_URL && KV_TOKEN) kv(['SET', KV_KEY, JSON.stringify(matches)]).catch(e => console.error('전적 저장 실패:', e.message));
+}, 500); };
 const NICK = v => typeof v === 'string' && v.trim().length > 0 && v.length <= 20 && !/[<>"'`&\\\u0000-\u001f]/.test(v);
 const postBudget = new Map();   // ip -> { n, at } : 1분에 10번까지
 function matchesApi(req, res) {
   const send = (code, obj) => { res.writeHead(code, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' }); res.end(JSON.stringify(obj)); };
-  if (req.method === 'GET') return send(200, { matches: matches.slice(-400).reverse() });
+  if (req.method === 'GET') return ready.then(() => send(200, { matches: matches.slice(-400).reverse() }));
   if (req.method !== 'POST') return send(405, { error: 'method' });
   const ip = String(req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim(), now = Date.now();
   const b = postBudget.get(ip) || { n: 0, at: now };
@@ -59,7 +77,8 @@ function matchesApi(req, res) {
   postBudget.set(ip, b);
   let body = '';
   req.on('data', c => { body += c; if (body.length > 2000) req.destroy(); });
-  req.on('end', () => {
+  req.on('end', async () => {
+    await ready;
     let m; try { m = JSON.parse(body); } catch (e) { return send(400, { error: 'json' }); }
     if (!m || !NICK(m.a) || !NICK(m.b) || !NICK(m.w) || (m.w !== m.a && m.w !== m.b) || m.a === m.b) return send(400, { error: 'fields' });
     const rec = { a: m.a, b: m.b, w: m.w, s: String(m.s || '').slice(0, 7), m: String(m.m || '').slice(0, 12), t: Number(m.t) || 1, at: now };
