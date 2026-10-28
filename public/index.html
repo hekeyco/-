@@ -348,6 +348,24 @@ button,input{font:inherit;color:inherit}
 #log li:first-child{color:var(--ivory)}
 #log .stone-ico{width:9px;height:9px;transform:translateY(1px)}
 .rules{border-top:1px solid var(--hair);padding-top:12px}
+/* 훈련장 실험실 칸 */
+.lab-card{padding:12px 14px;border-color:#5fe0d0 !important;background:linear-gradient(180deg,rgba(20,60,58,.35),rgba(19,16,14,.6)) !important}
+.lab-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.lab-head b{font-family:var(--font-display);letter-spacing:.12em;color:#bff3ec}
+.lab-head small{color:var(--muted);font-size:11.5px}
+.lab-who{display:flex;gap:6px;margin-bottom:8px}
+.lab-who button,.lab-act button{flex:1;padding:6px 8px;border:1px solid var(--hair);background:transparent;color:var(--ivory);border-radius:2px;cursor:pointer;font:inherit;font-size:12.5px}
+.lab-who button.on{border-color:#5fe0d0;color:#bff3ec;background:rgba(95,224,208,.12)}
+.lab-tier{font-size:11.5px;color:var(--muted);margin:8px 0 4px;letter-spacing:.06em}
+.lab-chips{display:flex;flex-wrap:wrap;gap:4px}
+.lab-chips button{padding:3px 8px;border:1px solid rgba(201,164,92,.25);border-radius:12px;background:transparent;color:#cfc6b5;font:inherit;font-size:12px;cursor:pointer}
+.lab-chips button.on{background:rgba(95,224,208,.18);border-color:#5fe0d0;color:#e6fffb}
+.lab-chips button:hover{border-color:#5fe0d0}
+.lab-act{display:flex;gap:6px;margin-top:10px}
+/* 규칙 창 */
+#ovRules{z-index:40}
+.rules-card{max-width:640px;width:calc(100% - 32px)}
+.rules-card .rule-card{margin-top:12px}
 /* 온라인 순위표 (닉네임 기준 기초 전적) */
 #ovRank{z-index:40}
 .rank-card{max-width:560px;width:calc(100% - 32px)}
@@ -717,6 +735,7 @@ legend{font-size:11.5px;letter-spacing:.22em;color:var(--gold);margin-bottom:8px
   </section>
   <aside class="panel">
     <div class="mapcard card" id="mapCard"></div>
+    <div class="lab-card card" id="labCard" hidden></div>
     <div id="players"></div>
     <section class="card logbox">
       <h2 class="box-title">대국 기록</h2>
@@ -746,6 +765,7 @@ legend{font-size:11.5px;letter-spacing:.22em;color:var(--gold);margin-bottom:8px
 <div class="overlay" id="ovProfile" hidden></div>
 <div class="overlay" id="ovBook" hidden></div>
 <div class="overlay" id="ovRank" hidden></div>
+<div class="overlay" id="ovRules" hidden></div>
 <div class="aug-tip rank-tip" id="rankTip" role="tooltip" hidden></div>
 <div class="overlay" id="ovTut" hidden>
   <div class="ov-card mini-card" role="dialog" aria-modal="true" aria-labelledby="tutTitle">
@@ -779,6 +799,7 @@ legend{font-size:11.5px;letter-spacing:.22em;color:var(--gold);margin-bottom:8px
       <div class="menu-tools">
         <button class="tut-btn" id="btnRank" type="button" aria-label="온라인 순위표"><span class="tut-ico" style="font-size:20px">榜</span><span>순위</span></button>
         <button class="tut-btn" id="btnSound2" type="button" aria-label="소리 설정" aria-controls="sndPanel" aria-expanded="false"><span class="tut-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg></span><span>소리</span></button>
+        <button class="tut-btn" id="btnRules" type="button" aria-label="규칙 보기"><span class="tut-ico" style="font-size:20px">則</span><span>규칙</span></button>
         <button class="tut-btn" id="btnTut" type="button" aria-label="조작 배우기"><span class="tut-ico">?</span><span>조작 배우기</span></button>
       </div>
     </div>
@@ -873,7 +894,7 @@ const A = {
   loneV: 1.1, loneM: 1.1, loneR: 1.1, trainN: 3,
   curveA: 30 * Math.PI / 180, curveB: 60 * Math.PI / 180, thriceV: 1.15, thriceK: 1.15, brandK: 1.25, iceF: 0.4,
   glutR: 1.06, glutM: 1.06, glutV: 1.03, glutN: 4, bountyN: 5, bountyIn: 2 * GAP, bountyH: 0.6,
-  yiN: 3, shardHs: 0.3 * GAP, portalZ: 3 * GAP, tengenH: 1.6, revH0: 2 * GAP, revStep: 0.5 * GAP, revMax: 5 * GAP, ropeRest: 0.9, crackMax: 2, crackR: 2 * GAP, crackF: 1400, shardN: 3, shardR: 0.3 * GAP, shardBack: 0.85, frogEvery: 5, frogAir: 1.1, fishHops: 2, frogBox: 1.5 * GAP, frogPush: GAP, sqrV: 1.3, sqrN: 2, heavenRow: 3 * GAP, vortexN: 3, vortexR: 2.5 * GAP, vortexPull: 0.75 * GAP, vortexH: 0.5, ikiN: 3, pajukN: 2, holeR: 4.5 * GAP, holePull: 1 * GAP, holeKill: 0.5 * GAP, lianV: 0.75, landW: 0.9 * GAP, landF: 4.5, passK: 0.75, passF: 5
+  yiN: 3, shardHs: 0.3 * GAP, portalZ: 3 * GAP, tengenH: 1.6, revH0: 2 * GAP, revStep: 0.5 * GAP, revMax: 5 * GAP, ropeRest: 1.8, ropePushK: 1.5, ropeMaxV: 2200, revGrowN: 2, revShrinkN: 3, crackMax: 1, crackR: 2 * GAP, crackF: 1400, shardN: 3, shardR: 0.3 * GAP, shardBack: 0.85, frogEvery: 5, frogAir: 1.1, fishHops: 2, frogBox: 1.5 * GAP, frogPush: GAP, sqrV: 1.3, sqrN: 2, heavenRow: 3 * GAP, vortexN: 3, vortexR: 2.5 * GAP, vortexPull: 0.75 * GAP, vortexH: 0.5, ikiN: 3, pajukN: 2, holeR: 4.5 * GAP, holePull: 1 * GAP, holeKill: 0.5 * GAP, lianV: 0.75, landW: 0.9 * GAP, landF: 4.5, passK: 0.75, passF: 5
 };
 /* tier odds per pick: [silver, gold, prism]; always silver > gold > prism, a little richer on later picks */
 const TIER_ODDS = [[60, 30, 10], [50, 33, 17], [45, 35, 20]];
@@ -894,8 +915,9 @@ MAPS.boost = { id: 'boost', name: '용오름', short: '판 양쪽 가장자리 �
 MAPS.pond = { id: 'pond', name: '연못', short: '판 양쪽 연못에 빠진 돌은 떨어지고, 5수마다 두 연못에서 금붕어가 나와 두 번 뛰어오르며 둘레 돌을 밀어냅니다', frog: true, obs: [], shrinkMax: CX - 1.5 * GAP,
   ponds: [{ x: L(2.75), y: CY, r: 0.85 * GAP }, { x: L(15.25), y: CY, r: 0.85 * GAP }] };
 MAPS.dim = { id: 'dim', name: '차원', short: '판 네 귀퉁이에 ㄱ자 차원 벽(3×3칸): 들어간 돌은 마주 보는 대각선 귀퉁이로 나옵니다 (판이 줄어도 가장자리를 따라옴)', obs: [], portals: true, shrinkMax: CX - 1.5 * GAP };
-MAPS.rev = { id: 'rev', name: '리버스', short: '가운데 사각 구멍에 들어가면 떨어지고, 판 둘레는 밧줄이라 튕겨 나옵니다. 판이 줄어드는 대신 구멍이 커집니다', obs: [], ropes: true, revHole: true, noTengen: true, shrinkMax: CX - 1.5 * GAP };
-const MAP_IDS = ['flat', 'diamond', 'siege', 'boost', 'pond', 'dim', 'rev'];
+MAPS.rev = { id: 'rev', name: '리버스', short: '가운데 4×4칸 구멍에 들어가면 떨어지고, 판 둘레는 흰 밧줄이라 튕겨 나옵니다. 25수부터 구멍이 2번 커지고 밧줄이 3번 좁혀진 뒤 멈춥니다', obs: [], ropes: true, revHole: true, noTengen: true, shrinkMax: CX - 1.5 * GAP };
+MAPS.lab = { id: 'lab', name: '훈련장', short: '실험실: 증강을 마음대로 넣고 빼며 연습하는 판 (증강 고르기·판 줄어듦 없음)', obs: [], lab: true, noShrinkMap: true, shrinkMax: CX - 1.5 * GAP };
+const MAP_IDS = ['flat', 'diamond', 'siege', 'boost', 'pond', 'dim', 'rev'];   /* 훈련장(lab)은 무작위·대전 지형에 넣지 않음 */
 for (const m of MAP_IDS) MAPS[m].obs.forEach((o, i) => { o.oi = i; });
 
 /* rows counted from the team's own back edge side: black uses rows as-is (bottom), white mirrors */
@@ -1030,8 +1052,8 @@ const AUG = {
     desc: () => `상대 샷에 내 돌이 떨어지면, 다음 내 차례에 한 번 더 칩니다. 이번 국에 ${A.ko}번까지 됩니다.` },
   orleans:   { name: '오를레앙의 최윤재', seal: '旗', tier: 2, max: 1, short: () => '다음 증강은 옥 확정',
     desc: () => '고르는 즉시 효과는 없고, 다음에 받는 증강 고르기가 반드시 옥 등급 3장으로 나옵니다. 이번 국에 증강을 한 번 이상 더 받을 수 있을 때만 나옵니다.' },
-  crack:     { name: '균열', seal: '裂', tier: 2, max: 1, short: () => `친 상대 돌에 금 · 금 간 돌을 또 치면 깨짐 (${A.crackMax}개까지)`,
-    desc: () => `내가 쏜 돌로 상대 돌을 치면 금이 갑니다. 금 간 돌을 다시 치면 깨져 사라지고(떨어진 것으로 셉니다), 튀는 파편이 ${f1(A.crackR / GAP)}칸 안의 상대 돌을 밀어내며 ${A.shardN}개가 상대 돌 둘레에 박힙니다. 이번 국에 ${A.crackMax}개까지 깰 수 있습니다. 상대가 쏜 돌이 파편을 밟으면 뒤로 튕겨 나고, 그 파편은 사라집니다.` },
+  crack:     { name: '균열', seal: '裂', tier: 2, max: 1, short: () => `친 상대 돌에 금 · 금 간 돌을 또 치면 깨짐 (${A.crackMax}개)`,
+    desc: () => `내가 쏜 돌로 상대 돌을 치면 금이 갑니다. 금 간 돌을 다시 치면 깨져 사라지고(떨어진 것으로 셉니다), 튀는 파편이 ${f1(A.crackR / GAP)}칸 안의 상대 돌을 밀어내며 ${A.shardN}개가 상대 돌 둘레에 박힙니다. 이번 국에 ${A.crackMax}개만 깰 수 있고, 깨고 나면 다른 돌의 금은 사라집니다. 이번 국에 증강을 더 받을 수 있을 때만 나옵니다. 상대가 쏜 돌이 파편을 밟으면 뒤로 튕겨 나고, 그 파편은 사라집니다.` },
   pillar:    { name: '주춧돌', seal: '礎', tier: 3, max: 1, short: () => `가운데 돌이 묶여 한 수마다 자람 · ${A.pillarFree}개 잃으면 풀림`,
     desc: () => `고르는 즉시 판 가운데에 가장 가까운 내 돌이 주춧돌로 묶여 쏠 수 없게 됩니다. 대신 한 수가 지날 때마다 크기 +${f1((A.pillarR - 1) * 100)}%, 무게 +${f1((A.pillarM - 1) * 100)}%, 힘 +${f1((A.pillarV - 1) * 100)}%씩 자랍니다(${A.pillarCap}수까지, 최대 크기 +${pct(Math.pow(A.pillarR, A.pillarCap) - 1)}% · 무게 ×${f1(Math.pow(A.pillarM, A.pillarCap))} · 힘 +${pct(Math.pow(A.pillarV, A.pillarCap) - 1)}%). 묶여 있어도 상대나 내 돌에 밀려날 수 있어, 자라기 전에 떨어질 수도 있습니다. 우리 돌이 ${A.pillarFree}개 떨어지거나 다른 돌이 하나도 남지 않으면 풀려, 자란 그대로 쏠 수 있습니다. 효과를 받을 돌은 내 차례에 직접 고릅니다(CPU는 판 가운데에 가까운 돌).` },
   tide:      { name: '밀물', seal: '潮', tier: 3, max: 1, short: () => `내 샷마다 상대 돌 ${Math.round(A.tideD / GAP * 10) / 10}칸 밀어냄`,
@@ -1198,7 +1220,7 @@ const COUNTERS = ['reviveLeft', 'buddyLeft', 'rewindLeft', 'comboRound', 'boltCo
   'grt', 'thr', 'trn', 'bonus', 'fq', 'bty', 'yiLeft', 'sqr', 'vtxLeft', 'tq', 'dcr', 'hvU', 'fl', 'syn', 'orl', 'tpl', 'rr', 'brk', 'bsel'];
 function blankWorld(players, mode, mapId) {
   const map = MAPS[mapId];
-  const w = { vh: map.revHole ? A.revH0 : 0, players, mode, map: mapId, obs: map.obs, stones: [], walls: { top: false, bottom: false }, nextId: 1,
+  const w = { lab: !!map.lab, vh: map.revHole ? A.revH0 : 0, players, mode, map: mapId, obs: map.obs, stones: [], walls: { top: false, bottom: false }, nextId: 1,
     reviveLeft: {}, buddyLeft: {}, rewindLeft: {}, comboRound: {}, boltCount: {}, lost: {}, picks: {}, splitLeft: {}, mom: {}, ctr: {}, fsd: {}, koLeft: {}, koArm: {}, bdx: {}, plk: {},
     grt: {}, thr: {}, trn: {}, bonus: {}, fq: {}, bty: {}, yiLeft: {}, sqr: {}, vtxLeft: {}, tq: {}, dcr: {}, hvU: {}, fl: {}, syn: {}, orl: {}, tpl: {}, rr: {}, brk: {}, bsel: {}, shards: [], vortex: [], ice: null, land: [false, false], noYi: -1, bh: [], lian: null, lianUsed: false,
     wallSave: [0, 0], holes: (map.ponds || []).map(p => ({ x: p.x, y: p.y, r: p.r, team: -1, seen: true, pond: true })), mark: [], pads: (map.pads || []).map(p => Object.assign({}, p, { cd: 0 })), obsHits: map.obs.map(() => 0), dbl: null,
@@ -1659,6 +1681,7 @@ function picksOwed(w, pid) {
   return Math.floor(w.lost[pid] / P.lossPerPick) + 1 + (w.bonus[pid] || 0) - w.picks[pid];
 }
 function pendingPick(w) {
+  if (w.lab) return null;   /* 훈련장: 증강은 직접 넣고 뺌 */
   for (const p of w.players) {
     if (!w.stones.some(s => live(s) && s.owner === p.id)) continue;
     if (cnt(p, 'lone') || cnt(p, 'heaven')) continue;   /* 외길·역천: 이번 국에는 증강을 더 받지 않음 */
@@ -1674,6 +1697,7 @@ function canTake(w, p, id) {
   if (id === 'thief' && teamCount(w, 1 - p.team) <= A.thief) return false;   /* 도둑: 상대 돌이 빼앗을 수보다 많을 때만 */
   if (id === 'pillar' && teamCount(w, p.team) < A.pillarFree + 1) return false;   /* 주춧돌: 묶일 돌 말고도 우리 돌이 넉넉할 때만 */
   if (id === 'orleans' && !morePicks(w, p)) return false;
+  if (id === 'crack' && !morePicks(w, p)) return false;   /* 균열: 이번 국 마지막으로 받는 증강으로는 나오지 않음 */
   if (id === 'buddy' && (teamCount(w, 1 - p.team) <= 2 || teamCount(w, p.team) <= 1)) return false;   /* 길동무: 한 번 데려가면 바로 승부가 갈릴 때는 나오지 않음 */
   if (id === 'late' && (w.shots || 0) >= P.shrinkStart - 3) return false;   /* 늦바람: 대가(약한 앞부분)가 남아 있을 때만 — 곧 강해지는 때에는 나오지 않음 */   /* 다음 증강을 받을 수 있을 때만 */   /* 상대 돌이 2개 이하면 봉인은 나오지 않음 */
   if (id === 'train' && baseLeft(w, 1 - p.team) < A.trainN + 1) return false;   /* 수련: 상대 기본 돌 4개 이상 */
@@ -2317,6 +2341,7 @@ function breakStones(w, sh) {
       const f = (A.crackF * (1 - Math.min(d, A.crackR) / A.crackR) + A.crackF * 0.25) / Math.sqrt(o.m);
       o.vx += dx / d * f; o.vy += dy / d * f; o.lastHit = s.id;
     }
+    if (w.brk[pid] >= A.crackMax) for (const o of w.stones) if (o.crack === pid) o.crack = -1;   /* 다 깼으면 금 간 돌은 원래 모습으로 */
     emit(w, { type: 'shatter', x: bx, y: by, pid, shards: made.map(m => [m.x, m.y]), left: A.crackMax - w.brk[pid] });
     handleFall(w, s);
   }
@@ -2341,18 +2366,61 @@ function passTurn(w, pid) {
 }
 /* 리버스: 판 둘레 밧줄 — 돌이 닿으면 튕겨 나옴 */
 function ropeStep(w, s) {
-  const lo = 0, hi = S;
+  const lo = w.shrink, hi = S - w.shrink, sh = w.shot;
+  /* 쏜 돌이 직접 닿으면 그대로, 밀려 온 다른 돌이 닿으면 1.5배 더 세게 튕김 */
+  const k = A.ropeRest * (sh && sh.stoneId === s.id ? 1 : A.ropePushK);
   let hit = 0;
-  if (s.x - s.r < lo && s.vx < 0) { s.x = lo + s.r; s.vx = -s.vx * A.ropeRest; hit = 1; }
-  if (s.x + s.r > hi && s.vx > 0) { s.x = hi - s.r; s.vx = -s.vx * A.ropeRest; hit = 1; }
-  if (s.y - s.r < lo && s.vy < 0) { s.y = lo + s.r; s.vy = -s.vy * A.ropeRest; hit = 1; }
-  if (s.y + s.r > hi && s.vy > 0) { s.y = hi - s.r; s.vy = -s.vy * A.ropeRest; hit = 1; }
-  if (hit) emit(w, { type: 'rope', x: s.x, y: s.y, v: hyp(s.vx, s.vy) });
+  if (s.x - s.r < lo && s.vx < 0) { s.x = lo + s.r; s.vx = -s.vx * k; hit = 1; }
+  if (s.x + s.r > hi && s.vx > 0) { s.x = hi - s.r; s.vx = -s.vx * k; hit = 1; }
+  if (s.y - s.r < lo && s.vy < 0) { s.y = lo + s.r; s.vy = -s.vy * k; hit = 1; }
+  if (s.y + s.r > hi && s.vy > 0) { s.y = hi - s.r; s.vy = -s.vy * k; hit = 1; }
+  if (hit) {
+    const v = hyp(s.vx, s.vy);   /* 밧줄 반동은 들어온 빠르기의 2배 가까이, 너무 빨라지지 않게 위를 막음 */
+    if (v > A.ropeMaxV) { s.vx *= A.ropeMaxV / v; s.vy *= A.ropeMaxV / v; }
+    emit(w, { type: 'rope', x: s.x, y: s.y, v: hyp(s.vx, s.vy), push: !(sh && sh.stoneId === s.id) });
+  }
+}
+/* 훈련장: 가진 증강 하나를 뺌 (고를 때 생긴 효과도 되돌림) */
+function removeAug(w, pid, id) {
+  const p = w.players[pid], i = p.augs.lastIndexOf(id);
+  if (i < 0) return false;
+  p.augs.splice(i, 1);
+  const team = p.team;
+  if (!cnt(p, id)) {
+    const k = STEAL_KEYS[id]; if (k && w[k]) w[k][pid] = 0;
+    const mine = w.stones.filter(s => s.owner === pid);
+    switch (id) {
+      case 'king': for (const s of mine) if (s.king) { s.king = false; s.kr /= A.kingR; s.km /= A.kingM; s.kv /= A.kingV; } break;
+      case 'big': for (const s of mine) if (s.big) { s.big = false; s.kr /= A.bigR; s.km /= A.bigM; s.kv /= A.bigV; } break;
+      case 'dense': for (const s of mine) if (s.small) { s.small = false; s.kr /= A.denseR; s.km /= A.denseM; s.kv /= A.denseV; } break;
+      case 'pillar': for (const s of mine) if (s.pillar) { s.pillar = false; s.locked = false; } break;
+      case 'seal': for (const s of w.stones) if (s.team !== team && s.sealed) s.sealed = false; break;
+      case 'wall': w.walls[team === 0 ? 'bottom' : 'top'] = false; break;
+      case 'land': w.land[team] = false; break;
+      case 'hole': w.bh = (w.bh || []).filter(b => b.pid !== pid); break;
+      case 'vortex': w.vortex = (w.vortex || []).filter(v => v.pid !== pid); break;
+      case 'bounty': for (const s of w.stones) if (s.bounty === pid) s.bounty = -1; w.bty[pid] = 0; break;
+      case 'crack': for (const s of w.stones) if (s.crack === pid) s.crack = -1; w.brk[pid] = 0; break;
+      case 'brand': for (const s of w.stones) if (s.brand === pid) s.brand = -1; break;
+      case 'press': for (const s of w.stones) if (s.press === pid) s.press = -1; break;
+      case 'ice': if (w.ice && w.ice.pid === pid) w.ice = null; break;
+      case 'orleans': w.orl[pid] = 0; break;
+      case 'squirrel': w.sqr[pid] = 0; break;
+      case 'decree': w.dcr[pid] = 0; break;
+      case 'heaven': w.hvU[pid] = 0; break;
+    }
+    const code = { king: 'K', big: 'B', dense: 'D', pillar: 'P' }[id];
+    if (code && w.bsel[pid]) w.bsel[pid] = String(w.bsel[pid]).split(code).join('');
+    if ((AUG[id] || {}).tier === 4 && !p.augs.some(x => AUG[x].tier === 4)) w.tq[pid] = 0;
+  }
+  restatAll(w);
+  emit(w, { type: 'labOff', pid, id });
+  return true;
 }
 function snapshot(w) {
   return { stones: w.stones.filter(s => !s.dead).map(s => Object.assign({}, s)), reviveLeft: Object.assign({}, w.reviveLeft),
     buddyLeft: Object.assign({}, w.buddyLeft), lost: Object.assign({}, w.lost), wallSave: w.wallSave.slice(), nextId: w.nextId,
-    mark: w.mark.slice(), obs: w.obs, obsHits: (w.obsHits || []).slice(), vh: w.vh || 0, shards: (w.shards || []).slice(), fish: (w.fish || []).map(f => Object.assign({}, f)), pads: w.pads.map(p => p.cd || 0),
+    mark: w.mark.slice(), obs: w.obs, obsHits: (w.obsHits || []).slice(), vh: w.vh || 0, rvn: w.rvn || 0, shards: (w.shards || []).slice(), fish: (w.fish || []).map(f => Object.assign({}, f)), pads: w.pads.map(p => p.cd || 0),
     trn: Object.assign({}, w.trn), bonus: Object.assign({}, w.bonus), fq: Object.assign({}, w.fq), bty: Object.assign({}, w.bty),
     yiLeft: Object.assign({}, w.yiLeft), vtxLeft: Object.assign({}, w.vtxLeft), vortex: w.vortex, fl: Object.assign({}, w.fl), tq: Object.assign({}, w.tq) };
 }
@@ -2370,6 +2438,7 @@ function tryRewind(w, sh) {
   if (sn.fish) w.fish = sn.fish.map(f => Object.assign({}, f));
   if (sn.shards) w.shards = sn.shards.slice();
   if (sn.vh != null) w.vh = sn.vh;
+  if (sn.rvn != null) w.rvn = sn.rvn;
   (sn.pads || []).forEach((cd, i) => { if (w.pads[i]) w.pads[i].cd = cd; });
   for (const k of ['trn', 'bonus', 'fq', 'bty', 'yiLeft', 'vtxLeft', 'fl', 'tq']) if (sn[k]) Object.assign(w[k], sn[k]);
   if (sn.vortex) w.vortex = sn.vortex;
@@ -2418,13 +2487,22 @@ function updatePhase(w) {
     for (const pd of w.pads) if (pd.cd > 0 && --pd.cd === 0) emit(w, { type: 'padback', x: pd.x, y: pd.y });
     const smax = MAPS[w.map].shrinkMax;
     /* 리버스: 판이 줄어드는 대신 가운데 구멍이 커짐 (한 차례에 한 번) */
-    if (MAPS[w.map].revHole && !w.xtra && w.shots >= P.shrinkStart && w.vh < A.revMax) {
-      w.vh = Math.min(A.revMax, w.vh + A.revStep);
+    /* 리버스: 가운데 구멍이 2번 커지고, 그다음 밧줄(가장자리)이 3번 좁혀진 뒤 멈춤 */
+    if (MAPS[w.map].revHole && !w.xtra && w.shots >= P.shrinkStart && (w.rvn || 0) < A.revGrowN + A.revShrinkN) {
+      w.rvn = (w.rvn || 0) + 1;
       sh.shrinking = true;
-      emit(w, { type: 'revGrow', vh: w.vh });
-      let anyR = false;
-      for (const s of w.stones.slice()) if (live(s) && Math.abs(s.x - CX) < w.vh && Math.abs(s.y - CY) < w.vh) { handleFall(w, s); anyR = true; }
-      if (anyR) return;
+      if (w.rvn <= A.revGrowN) {
+        w.vh = w.vh + A.revStep;
+        emit(w, { type: 'revGrow', vh: w.vh, left: A.revGrowN - w.rvn });
+        let anyR = false;
+        for (const s of w.stones.slice()) if (live(s) && Math.abs(s.x - CX) < w.vh && Math.abs(s.y - CY) < w.vh) { handleFall(w, s); anyR = true; }
+        if (anyR) return;
+      } else {
+        w.shrink += P.shrinkStep;
+        const lo = w.shrink, hi = S - w.shrink;
+        for (const s of w.stones) if (live(s)) { s.x = clamp(s.x, lo + s.r, hi - s.r); s.y = clamp(s.y, lo + s.r, hi - s.r); }   /* 밧줄 밖 돌은 안으로 밀려 들어옴 */
+        emit(w, { type: 'revRope', amount: w.shrink, left: A.revGrowN + A.revShrinkN - w.rvn });
+      }
     }
     if (!w.noShrink && !MAPS[w.map].ropes && !w.xtra && w.shots >= P.shrinkStart && w.shrink < smax) {   /* 쌍발·연타·연환처럼 한 차례에 더 치는 샷은 판을 다시 줄이지 않음 (한 차례 = 한 번) */
       w.shrink = Math.min(smax, w.shrink + P.shrinkStep);
@@ -2522,7 +2600,7 @@ function packWorld(w) {
   const r1 = v => Math.round(v * 10) / 10;
   const c = {};
   for (const k of COUNTERS) c[k] = Object.assign({}, w[k]);
-  return { map: w.map, mode: w.mode, vh: r1(w.vh || 0), ns: w.noShrink ? 1 : 0, xt: w.xtra ? 1 : 0, nid: w.nextId, sh: w.shots, sk: r1(w.shrink), og: MAPS[w.map].obs.reduce((m, o) => (w.obs.includes(o) ? m : m | (1 << o.oi)), 0), oh: (w.obsHits || []).slice(), db: w.dbl ? w.dbl.slice() : 0,
+  return { map: w.map, mode: w.mode, vh: r1(w.vh || 0), rv: w.rvn || 0, ns: w.noShrink ? 1 : 0, xt: w.xtra ? 1 : 0, nid: w.nextId, sh: w.shots, sk: r1(w.shrink), og: MAPS[w.map].obs.reduce((m, o) => (w.obs.includes(o) ? m : m | (1 << o.oi)), 0), oh: (w.obsHits || []).slice(), db: w.dbl ? w.dbl.slice() : 0,
     wl: [w.walls.top ? 1 : 0, w.walls.bottom ? 1 : 0], ws: w.wallSave.slice(), cl: w.comboLeft, du: w.doubleUsed ? 1 : 0,
     h: w.holes.map(h => [r1(h.x), r1(h.y), r1(h.r), h.team, h.seen ? 1 : 0]), sd: w.obs.filter(q => q.kind === 'shard').map(q => [r1(q.cx), r1(q.cy)]), shd: (w.shards || []).map(m => [r1(m.x), r1(m.y), m.team]), fs: (w.fish || []).map(f => [r1(f.x), r1(f.y), f.px, f.py, f.left]), tm: w.trapManual ? 1 : 0, mk: w.mark.slice(), c, pd: w.pads.map(p => p.cd || 0),
     bh: (w.bh || []).map(b => [b.team, b.pid]), ln: w.lian ? w.lian.slice() : 0, lu: w.lianUsed ? 1 : 0, ny: w.noYi == null ? -1 : w.noYi, vt: w.vortex.map(v => [r1(v.x), r1(v.y), v.team, v.pid]), ic: w.ice ? { p: w.ice.pid, t: w.ice.team, c: [...w.ice.cells] } : 0, ld: [w.land[0] ? 1 : 0, w.land[1] ? 1 : 0],
@@ -2533,7 +2611,7 @@ function unpackWorld(o, players) {
   const w = blankWorld(players, o.mode, o.map);
   w.nextId = o.nid; w.shots = o.sh; w.shrink = o.sk; w.noShrink = !!o.ns; w.xtra = o.xt ? 1 : 0; if (o.cr) w.obs = []; if (o.og) w.obs = MAPS[o.map].obs.filter(x => !((o.og >> x.oi) & 1)); if (o.oh) w.obsHits = o.oh.slice(); w.dbl = o.db ? o.db.slice() : null;
   if (o.sd && o.sd.length) w.obs = w.obs.filter(q => q.kind !== 'shard').concat(o.sd.map(([x, y]) => mkShard(x, y)));
-  w.trapManual = !!o.tm; w.vh = o.vh || 0; w.shards = (o.shd || []).map(([x, y, team]) => ({ x, y, team })); w.fish = (o.fs || []).map(([x, y, px, py, left]) => ({ x, y, px, py, left }));
+  w.trapManual = !!o.tm; w.vh = o.vh || 0; w.rvn = o.rv || 0; w.shards = (o.shd || []).map(([x, y, team]) => ({ x, y, team })); w.fish = (o.fs || []).map(([x, y, px, py, left]) => ({ x, y, px, py, left }));
   w.walls = { top: !!o.wl[0], bottom: !!o.wl[1] }; w.wallSave = o.ws.slice(); w.comboLeft = o.cl; w.doubleUsed = !!o.du;
   (o.pd || []).forEach((cd, i) => { if (w.pads[i] && typeof cd === 'number') w.pads[i].cd = cd; });
   w.holes = o.h.map(([x, y, r, team, seen]) => ({ x, y, r, team, seen: !!seen, pond: team === -1 })); w.mark = (o.mk || []).slice();
@@ -2762,7 +2840,7 @@ function edgeDist(w, s) {
 function cloneWorld(w) {
   const c = { players: w.players, mode: w.mode, map: w.map, obs: w.obs, stones: w.stones.filter(s => !s.dead).map(s => Object.assign({}, s)),
     walls: Object.assign({}, w.walls), nextId: w.nextId, wallSave: w.wallSave.slice(), holes: w.holes, mark: w.mark.slice(),
-    comboLeft: w.comboLeft, doubleUsed: w.doubleUsed, dbl: w.dbl, obsHits: (w.obsHits || []).slice(), fish: (w.fish || []).map(f => Object.assign({}, f)), shards: (w.shards || []).slice(), vh: w.vh || 0, dt: PLAN_DT, shot: null, events: [], sim: true, shots: w.shots, shrink: w.shrink, noShrink: !!w.noShrink, snap: null };
+    comboLeft: w.comboLeft, doubleUsed: w.doubleUsed, dbl: w.dbl, obsHits: (w.obsHits || []).slice(), fish: (w.fish || []).map(f => Object.assign({}, f)), shards: (w.shards || []).slice(), vh: w.vh || 0, rvn: w.rvn || 0, dt: PLAN_DT, shot: null, events: [], sim: true, shots: w.shots, shrink: w.shrink, noShrink: !!w.noShrink, snap: null };
   for (const k of COUNTERS) c[k] = Object.assign({}, w[k]);
   c.pads = w.pads.map(p => Object.assign({}, p));
   c.vortex = w.vortex || []; c.ice = w.ice || null; c.land = w.land || [false, false]; c.noYi = w.noYi; c.bh = w.bh || []; c.lian = w.lian; c.lianUsed = w.lianUsed;
@@ -2997,7 +3075,7 @@ return { N, GAP, INSET, S, BASE_R, DT, FALL_T, TAU, CX, CY, L, P, A, MAPS, MAP_I
   setRandom, cnt, hasA, live, maxV, vmaxOf, statsFor, augAllowed, newWorld, gainAug, pendingPick, picksOwed, rollOffer, tierOdds, pityOn, canTake,
   unsealIfStuck, step, updatePhase, startShot, fire, fireExact, packWorld, unpackWorld, runShot, afterShot, onTengen, byId, teamAlive, hasStones, knocked, cpuPlan,
   predictPath, travel, reachRay, threats, teamCount, obsLocal, markRemove, cpuMark, CPU_LEVEL, canShoot, padWait, restatAll,
-  SYN, hasSyn, synOf, portalsOf, nearStar, nearEdge, inDragon, canYi, iceAt, thriceOn, baseLeft, morePicks, ICE, decreeOptions, rerollOffer, canReroll, passTurn, buffOK, buffStone, autoBuff, buffNext, BUFF_NAME, trapOK, placeTrapAt, autoTraps, stealAug, resolveDecree, heaven, heavenOK, fallenBase, holeRock };
+  SYN, hasSyn, synOf, portalsOf, nearStar, nearEdge, inDragon, canYi, iceAt, thriceOn, baseLeft, morePicks, ICE, decreeOptions, removeAug, rerollOffer, canReroll, passTurn, buffOK, buffStone, autoBuff, buffNext, BUFF_NAME, trapOK, placeTrapAt, autoTraps, stealAug, resolveDecree, heaven, heavenOK, fallenBase, holeRock };
 })();
 if (typeof module !== 'undefined') module.exports = CORE;
 
@@ -3078,7 +3156,7 @@ const RULE_GROUPS = [
     `<b>용오름</b> — 양쪽 가장자리 가까이의 바람문(가로 3칸·세로 1칸)을 지나는 돌은 한 샷에 한 번 빨라집니다. 쓰인 문은 ${K.P.gateCool}수 동안 닫힙니다.`,
     `<b>연못</b> — 돌의 가운데가 연못에 들어가면 흑백 가리지 않고 떨어집니다. ${K.A.frogEvery}수마다 두 연못에서 금붕어가 한 마리씩 나와 두 번(이번 수와 다음 수) 뛰어오르고 연못으로 돌아갑니다. 착지할 때마다 둘레 3×3 칸의 돌을 1칸씩 밀어냅니다.`,
     '<b>차원</b> — 판 네 귀퉁이에 가장자리를 따라 ㄱ자 모양 차원 벽(3×3 칸)이 있습니다. 돌이 들어가면 맞은편 대각선 귀퉁이(甲↔甲, 乙↔乙)로 나와 같은 방향으로 계속 갑니다. 판이 줄어들어도 차원은 가장자리를 따라와 그대로 남습니다.',
-    `<b>리버스</b> — 가운데 4×4칸 사각 구멍에 돌의 가운데가 들어가면 떨어지고, 판 둘레는 밧줄이라 튕겨 나옵니다. 판이 줄어드는 대신 ${K.P.shrinkStart}수부터 한 수마다 구멍이 반 칸씩 커집니다.`,
+    `<b>리버스</b> — 가운데 4×4칸 사각 구멍에 돌의 가운데가 들어가면 떨어지고, 판 둘레는 흰 밧줄이라 세게 튕겨 나옵니다(쏜 돌이 직접 닿으면 1.8배, 밀려 온 돌이 닿으면 그 1.5배). ${K.P.shrinkStart}수부터 한 수마다 가운데 구멍이 반 칸씩 2번 커지고, 이어서 밧줄이 반 칸씩 3번 좁혀진 뒤 멈춥니다.`,
     `<b>판 줄어듦</b>(기본 켬) — ${K.P.shrinkStart}수부터 한 수마다 판이 반 칸씩 좁아지고, 바깥 돌은 떨어집니다. 한 차례에 여러 번 치는 증강을 써도 그 차례에는 한 번만 좁아집니다. 판 줄어듦·금붕어로 떨어진 돌은 주인이 스스로 떨어진 것으로 셉니다.`
   ]],
   ['그 밖에', [
@@ -3086,6 +3164,7 @@ const RULE_GROUPS = [
     '국이 끝나면 결과 화면에서 다음 지형을 바꿀 수 있습니다. 새 지형은 짧은 소개가 나오고, 건너뛸 수 있습니다.',
     '<b>온라인</b> — 방을 만든 사람이 흑, 방 이름으로 들어온 사람이 백입니다. 국 시작 증강은 두 사람이 함께 고릅니다.',
     '<b>소리</b> — 머리줄이나 첫 화면의 소리 단추에서 효과음·배경음을 따로 조절하고, 배경음을 고를 수 있습니다.',
+    '<b>훈련장</b> — 지형 고르기의 \'훈련장\'은 증강 고르기·판 줄어듦·시간 제한이 없는 실험실입니다. 오른쪽 실험실 칸에서 흑·백 아무에게나 모든 증강을 넣고 뺄 수 있습니다(혼자·같은 화면에서만).',
     '첫 화면 오른쪽 위 물음표 단추에서 조작을 그림으로 배울 수 있습니다. 기객은 겉모습과 이야기만 다르고 능력치는 같습니다.'
   ]]
 ];
@@ -3233,6 +3312,7 @@ function newMatch() {
   G.cpuLevel = (document.querySelector('input[name="lvl"]:checked') || {}).value || 'normal';
   G.target = +document.querySelector('input[name="target"]:checked').value;
   G.mapSet = document.querySelector('input[name="map"]:checked').value;
+  if (G.online && G.mapSet === 'lab') G.mapSet = 'flat';   /* 훈련장은 혼자·같은 화면에서만 */
   G.mapSeq = G.mapSet === 'random' ? rollMapSeq() : null;
   G.noShrink = (document.querySelector('input[name="shrink"]:checked') || {}).value === 'off';
   G.players = makePlayers(G.mode, G.cpu);
@@ -3256,6 +3336,7 @@ function startDraft() {
   G.alone = [false, false];
   G.world = K.newWorld(G.players, G.mode, mapFor(G.round)); G.world.noShrink = !!G.noShrink; G.world.trapManual = true;
   G.pickQueue = G.players.map(p => p.id);
+  if (G.world.lab) { G.world.noShrink = true; G.pickQueue = []; }   /* 훈련장: 증강 고르기·판 줄어듦 없음, 오른쪽 실험실 칸에서 넣고 뺌 */
   G.after = 'start';
   renderAll();
   mapIntro();
@@ -3380,7 +3461,7 @@ function markThenTurn(newTurn) {
 /* 1수 60초: 차례(추가 샷 포함)가 시작될 때마다 새로 셈. 내 차례에 다 지나면 쏘지 않고 상대에게 넘김 */
 function turnClock(now) {
   const el = $('turnTimer'), w = G.world, p = G.started && w ? G.players[G.current] : null;
-  const run = p && (G.state === 'aim' || (G.state === 'remote' && NET.waitKind === 'aim')) && !coinBusy() && !G.cpuAnim && !p.cpu;
+  const run = p && !w.lab && (G.state === 'aim' || (G.state === 'remote' && NET.waitKind === 'aim')) && !coinBusy() && !G.cpuAnim && !p.cpu;
   if (!run) { if (!el.hidden) el.hidden = true; if (G.state !== 'aim' && G.state !== 'remote') G.turnKey = null; return; }
   const key = `${G.round}|${w.shots}|${G.current}|${G.state === 'aim' ? 'a' : 'r'}|${G.turnSeq || 0}`;
   if (G.turnKey !== key) { G.turnKey = key; G.turnT0 = now; }
@@ -3499,7 +3580,7 @@ function endRound(winTeam, reason) {
   G.result = { winTeam, reason };
   addLog(`제${G.round}국 · ${teamLabel(winTeam)} 승리 (${G.score[0]}:${G.score[1]})`, winTeam);
   fxPetals(CX, CY - 40, 28); fxStamp(CX, CY - 40, '勝', `${teamLabel(winTeam)} 승리`, { size: 190, life: 2.4, big: true });
-  winChord(G.score[winTeam] >= G.target);
+  winChord(G.score[winTeam] >= G.target); myResultSound(winTeam);
   netSync('result', -1);
   renderAll();
   const tk = G.token;
@@ -3608,7 +3689,7 @@ function netAdopt(st) {
     }
     NET.waitKind = 'pick2'; NET.waitPid = 1 - me; G.state = 'remote'; return renderAll();
   }
-  if (st.ph === 'result' && G.result) { if (G.state !== 'roundEnd' && G.state !== 'matchEnd') winChord(G.score[G.result.winTeam] >= G.target); G.state = 'roundEnd'; renderAll(); showResult(G.result.winTeam, G.result.reason); return; }
+  if (st.ph === 'result' && G.result) { if (G.state !== 'roundEnd' && G.state !== 'matchEnd') { winChord(G.score[G.result.winTeam] >= G.target); myResultSound(G.result.winTeam); } G.state = 'roundEnd'; renderAll(); showResult(G.result.winTeam, G.result.reason); return; }
   const mine = st.ctl === NET.seat;
   if (st.ph === 'pick') { if (mine) return showPick(st.ctl); NET.waitKind = 'pick'; NET.waitPid = st.ctl; G.state = 'remote'; return renderAll(); }
   if (st.ph === 'aim') roundTitle();
@@ -3728,7 +3809,7 @@ const STATS = () => { const A = K.A, P = K.P; return {
   pierce: [['첫 타격', '힘', '모두 실음', 'up'], ['쏜 돌', '멈춤', '그 자리', 'down']],
   thorns: [['나와 부딪힌 상대 돌', '타격', `${pc(A.thorns)}% 되돌림`, 'foe']],
   orleans: [['다음 고르기', '옥 등급', '확정', 'up']],
-  crack: [['친 상대 돌', '금', '1번째', 'foe'], ['금 간 돌', '깨짐', `${A.crackMax}개까지`, 'foe'], ['파편', '상대 돌 튕김', `${A.shardN}개씩`, 'foe']],
+  crack: [['친 상대 돌', '금', '1번째', 'foe'], ['금 간 돌', '깨짐', `${A.crackMax}개`, 'foe'], ['파편', '상대 돌 튕김', `${A.shardN}개`, 'foe']],
   double: [['매 차례', '샷', '2번', 'up'], ['내 돌', '힘', `−${pc(1 - A.doubleV)}%`, 'down']],
   gust: [['가까운 상대 돌', '밀어냄', `${cell(A.gustD)}칸`, 'foe']],
   hammer: [['쏜 돌', '무게', `×${fx(A.hamM)}`, 'up']],
@@ -4011,7 +4092,7 @@ function renderScore() {
 function renderMapCard() {
   const w = G.world, m = MAPS[curMap()];
   const shots = w ? w.shots : 0, left = K.P.shrinkStart - shots;
-  const shrinkTxt = w && m.revHole ? (w.shots >= K.P.shrinkStart ? `<b>${shots}수</b><small>가운데 구멍이 커지는 중</small>` : `<b>${shots}수</b><small>구멍 커지기까지 ${Math.max(0, left)}수</small>`)
+  const shrinkTxt = w && m.revHole ? ((w.rvn || 0) >= K.A.revGrowN + K.A.revShrinkN ? `<b>${shots}수</b><small>판 바뀜 끝 (멈춤)</small>` : w.shots >= K.P.shrinkStart ? `<b>${shots}수</b><small>${(w.rvn || 0) < K.A.revGrowN ? '구멍이 커지는 중' : '밧줄이 좁혀지는 중'} · ${w.rvn || 0}/${K.A.revGrowN + K.A.revShrinkN}</small>` : `<b>${shots}수</b><small>구멍 커지기까지 ${Math.max(0, left)}수</small>`)
     : w && w.shrink > 0 ? '<b>판이 줄어드는 중</b><small>한 수마다 반 칸씩</small>'
     : w && w.noShrink ? `<b>${shots}수</b><small>판 줄어듦 없음</small>` : `<b>${shots}수</b><small>수축까지 ${Math.max(0, left)}수</small>`;
   const frogTxt = w && m.frog ? (w.fish && w.fish.length ? '<small class="frog-left">금붕어가 한 번 더 뜀</small>' : `<small class="frog-left">금붕어까지 ${K.A.frogEvery - (shots % K.A.frogEvery)}수</small>`) : '';
@@ -4205,6 +4286,42 @@ async function recordOnlineMatch() {
   const m = { a: clip(a.name), b: clip(b.name), w: clip(G.players.find(p => p.team === wt).name), s: `${G.score[0]}:${G.score[1]}`, m: clip(MAPS[G.world.map].name), t: G.target, at: Date.now() };
   try { const src = await rankSrc(); if (src) { await src.add(m); loadRanks(true); } } catch (e) { addLog('순위표에 이번 대국을 남기지 못했습니다'); }
 }
+/* ---------- 훈련장: 흑·백 누구에게든 아무 증강이나 넣고 빼기 ---------- */
+G.labWho = 0;
+function renderLab() {
+  const el = $('labCard'), w = G.world;
+  const on = G.started && w && w.lab;
+  if (!on) { if (!el.hidden) { el.hidden = true; el.innerHTML = ''; } return; }
+  el.hidden = false;
+  const p = G.players[G.labWho] || G.players[0];
+  const tiers = [1, 2, 3, 4].map(t => `<div class="lab-tier">${TIER[t]}</div><div class="lab-chips">${K.AUG_IDS.filter(id => AUG[id].tier === t).map(id => `<button type="button" data-lab="${id}" class="${cnt(p, id) ? 'on' : ''}" title="${esc(AUG[id].short())}">${AUG[id].name}${cnt(p, id) > 1 ? ' ×' + cnt(p, id) : ''}</button>`).join('')}</div>`).join('');
+  const html = `<div class="lab-head"><span class="seal seal-xs">實</span><b>실험실</b><small>누르면 넣고, 다시 누르면 뺍니다</small></div>
+    <div class="lab-who">${G.players.map(q => `<button type="button" data-labwho="${q.id}" class="${q.id === p.id ? 'on' : ''}">${teamName(q.team)} · ${esc(q.name)}</button>`).join('')}</div>
+    ${tiers}
+    <div class="lab-act"><button type="button" data-labact="reset">판 다시 놓기</button><button type="button" data-labact="clear">${teamName(p.team)} 증강 모두 빼기</button></div>`;
+  if (el.dataset.h !== html) { el.dataset.h = html; el.innerHTML = html; }
+}
+$('labCard').addEventListener('click', e => {
+  const w = G.world; if (!w || !w.lab) return;
+  const b = e.target.closest('button'); if (!b) return;
+  ensureAudio(); stoneTap(0.1, 1900);
+  if (b.dataset.labwho != null) { G.labWho = +b.dataset.labwho; return renderLab(); }
+  const p = G.players[G.labWho] || G.players[0];
+  if (b.dataset.lab) {
+    const id = b.dataset.lab;
+    if (cnt(p, id)) K.removeAug(w, p.id, id);
+    else { K.gainAug(w, p.id, id); if (w.dcr[p.id] && localHuman(p)) { drainEvents(); renderAll(); return showDecree(p, () => { renderAll(); }); } if (w.dcr[p.id]) K.resolveDecree(w, p.id); }
+  } else if (b.dataset.labact === 'clear') {
+    for (const id of uniq(p.augs)) while (cnt(p, id)) K.removeAug(w, p.id, id);
+  } else if (b.dataset.labact === 'reset') {
+    const keep = G.players.map(q => q.augs.slice());
+    for (const q of G.players) q.augs = [];
+    G.world = K.newWorld(G.players, G.mode, w.map); G.world.noShrink = true; G.world.trapManual = true;
+    for (const q of G.players) for (const id of keep[q.id]) K.gainAug(G.world, q.id, id);
+    G.aim = null; G.sel = null; drainEvents(); renderAll(); return beginTurn(false);
+  }
+  drainEvents(); renderAll();
+});
 function renderPlayers() {
   const w = G.world;
   const list = G.started ? G.players : makePlayers('1v1', false);
@@ -4265,7 +4382,7 @@ $('players').addEventListener('focusout', hideAugTip);
 $('players').addEventListener('click', e => { const li = e.target.closest('li[data-aug]'); if (!li) return; e.stopPropagation(); if (!$('augTip').hidden && $('augTip').dataset.id === li.dataset.aug) { hideAugTip(); return; } showAugTip(li); $('augTip').dataset.id = li.dataset.aug; });
 document.addEventListener('click', hideAugTip);
 addEventListener('scroll', hideAugTip, { passive: true });
-function renderAll() { renderScore(); renderStrip(); renderMapCard(); renderPlayers(); renderLog(); }
+function renderAll() { renderScore(); renderStrip(); renderMapCard(); renderLab(); renderPlayers(); renderLog(); }
 
 /* ---------- sound ---------- */
 let AC = null, NOISE = null, muted = false, lastHitT = 0;
@@ -4430,6 +4547,34 @@ function slackSnd() {
 /* 내 차례가 왔을 때 짧은 목탁 소리 */
 function turnCue() { wood(660, 0.14); setTimeout(() => wood(990, 0.09), 90); }
 /* 국 승리 · 대국 승리 화음 */
+/* 밧줄 반동: 띠용~ (스프링처럼 위아래로 떨리며 올라갔다 내려옴) */
+function boing(k = 1, push) {
+  if (!AC || muted) return;
+  const t = AC.currentTime, o = AC.createOscillator(), g = AC.createGain(), lfo = AC.createOscillator(), lg = AC.createGain();
+  const f0 = (push ? 150 : 180) * (0.9 + 0.2 * Math.min(1.6, k));
+  o.type = 'triangle'; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f0 * 2.6, t + 0.07); o.frequency.exponentialRampToValueAtTime(f0 * 1.2, t + 0.42);
+  lfo.frequency.setValueAtTime(26, t); lfo.frequency.linearRampToValueAtTime(9, t + 0.42); lg.gain.setValueAtTime(f0 * 0.18, t); lg.gain.linearRampToValueAtTime(f0 * 0.04, t + 0.42);
+  lfo.connect(lg); lg.connect(o.frequency);
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(Math.min(0.32, 0.16 * k), t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.48);
+  o.connect(g); g.connect(sfxOut()); o.start(t); lfo.start(t); o.stop(t + 0.5); lfo.stop(t + 0.5);
+}
+/* 승리·패배: 내 쪽이 이기면 밝게 올라가고, 지면 낮게 내려가는 짧은 소리 */
+function resultJingle(win) {
+  if (!AC || muted) return;
+  const notes = win ? [[523, 0], [659, 0.09], [784, 0.18], [1047, 0.3]] : [[392, 0], [349, 0.16], [294, 0.34]];
+  for (const [f, d] of notes) setTimeout(() => {
+    if (!AC) return;
+    const t = AC.currentTime, o = AC.createOscillator(), g = AC.createGain();
+    o.type = win ? 'square' : 'triangle'; o.frequency.setValueAtTime(f, t); if (!win) o.frequency.exponentialRampToValueAtTime(f * 0.94, t + 0.25);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(win ? 0.07 : 0.12, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + (win ? 0.22 : 0.32));
+    o.connect(g); g.connect(sfxOut()); o.start(t); o.stop(t + 0.35);
+  }, d * 1000);
+}
+/* 이 화면의 '나' 기준으로 이겼는지 (같은 화면 두 사람이면 늘 이긴 소리) */
+function myResultSound(winTeam) {
+  const mine = G.online && NET.seat != null && G.players[NET.seat] ? G.players[NET.seat].team : G.cpu ? (G.players.find(p => !p.cpu) || {}).team : null;
+  resultJingle(mine == null ? true : mine === winTeam);
+}
 function winChord(big) {
   const fs = big ? [523, 659, 784, 1047, 1319] : [587, 740, 880];
   fs.forEach((f, i) => setTimeout(() => bell(f, big ? 0.2 : 0.16, big ? 2.2 : 1.5), 380 + i * (big ? 120 : 100)));
@@ -4598,9 +4743,11 @@ function drainEvents() {
       case 'shardHit':
         fxRing(e.x, e.y, '#d6c9f2', 8, 60, 0.4); sfx(1800, 0.3, 0.07); addLog('파편 · 밟은 돌이 뒤로 튕겼습니다'); break;
       case 'pass': addLog(`시간 초과 · ${pLabel(p)} 차례를 넘깁니다`, p.team); sfx(220, 0.4, 0.3); break;
-      case 'rope': if (e.v > 120) { sfx(160 + Math.min(200, e.v / 6), 0.25, 0.12); fxRing(e.x, e.y, '#d9b06a', 8, 50, 0.3); } break;
+      case 'rope': if (e.v > 80) { boing(Math.min(1.6, 0.6 + e.v / 1800), e.push); fxRing(e.x, e.y, '#ffffff', 8, e.push ? 80 : 60, 0.35); } break;
       case 'revFall': fxRing(e.x, e.y, '#ff6a4a', 40, 6, 0.5); sfx(110, 0.4, 0.35); break;
+      case 'labOff': addLog(`훈련장 · ${pLabel(p)}의 ${AUG[e.id].name} 뺌`, p.team); panel = true; break;
       case 'revGrow': sfx(90, 0.6, 0.45); G.shake = Math.max(G.shake, 0.15); addLog('리버스 · 가운데 구멍이 커졌습니다'); panel = true; break;
+      case 'revRope': boing(1.3); sfx(140, 0.4, 0.3); G.shake = Math.max(G.shake, 0.12); addLog(`리버스 · 밧줄이 안쪽으로 좁혀졌습니다${e.left ? '' : ' · 이제 더 바뀌지 않습니다'}`); panel = true; break;
       case 'portal':
         fxRing(e.fx, e.fy, e.a % 2 ? '#5fe0d0' : '#b58cff', 10, 70, 0.45); fxRing(e.x, e.y, e.a % 2 ? '#5fe0d0' : '#b58cff', 70, 10, 0.45);
         sfx(1200, 0.25, 0.12); setTimeout(() => sfx(700, 0.25, 0.14), 90); break;
@@ -5121,7 +5268,8 @@ function drawMapThumb(cnv, mapId) {
   drawPads(g, (MAPS[mapId].pads || []).map(p => Object.assign({ cd: 0 }, p)), 0, true);
   for (const p of MAPS[mapId].ponds || []) drawPond(g, Object.assign({ pond: true }, p), 0);
   if (MAPS[mapId].portals) drawPortals(g, K.portalsOf({ map: mapId, shrink: 0 }), 0, true);
-  if (MAPS[mapId].revHole) { const h = K.A.revH0; g.strokeStyle = '#d9b06a'; g.lineWidth = 22; g.strokeRect(0, 0, S, S); g.fillStyle = '#0b0605'; g.fillRect(CX - h, CY - h, 2 * h, 2 * h); g.strokeStyle = '#ff6a4a'; g.lineWidth = 10; g.strokeRect(CX - h, CY - h, 2 * h, 2 * h); }
+  if (MAPS[mapId].lab) drawLabTint(g, 0);
+  if (MAPS[mapId].revHole) { const h = K.A.revH0; g.strokeStyle = '#ffffff'; g.lineWidth = 22; g.strokeRect(0, 0, S, S); g.fillStyle = '#0b0605'; g.fillRect(CX - h, CY - h, 2 * h, 2 * h); g.strokeStyle = '#ff6a4a'; g.lineWidth = 10; g.strokeRect(CX - h, CY - h, 2 * h, 2 * h); }
   const F = K.FORMATION['1v1'].base[0];
   for (const team of [0, 1]) for (const [r, c] of F) {
     const x = K.L(c), y = K.L(team === 0 ? r : 18 - r);
@@ -5378,22 +5526,36 @@ function drawEdge(w) {
   ctx.fillStyle = gr(hi, 0, hi - band, 0); ctx.fillRect(hi - band, lo, band, L);
   ctx.restore();
 }
+/* ---------- 훈련장: 실험실 느낌 (청록 빛 격자와 표) ---------- */
+function drawLabTint(g, now) {
+  g.save(); g.fillStyle = 'rgba(40,140,150,.17)'; g.fillRect(0, 0, S, S);
+  g.strokeStyle = 'rgba(95,224,208,.32)'; g.lineWidth = 2;
+  for (let i = 0; i <= 36; i++) { const x = K.L(i / 2); g.beginPath(); g.moveTo(x, K.L(0)); g.lineTo(x, K.L(18)); g.stroke(); g.beginPath(); g.moveTo(K.L(0), x); g.lineTo(K.L(18), x); g.stroke(); }
+  g.font = `700 54px ${SERIF}`; g.textAlign = 'right'; g.textBaseline = 'bottom'; g.fillStyle = 'rgba(95,224,208,.35)'; g.fillText('實驗室 LAB', S - 30, S - 22);
+  g.restore();
+}
 /* ---------- 리버스: 둘레 밧줄 · 가운데 구멍 ---------- */
 function drawRev(w, now) {
-  const pulse = reduceMotion ? 0.5 : 0.5 + 0.5 * Math.sin(now / 260), vh = w.vh || 0;
+  const pulse = reduceMotion ? 0.5 : 0.5 + 0.5 * Math.sin(now / 260), vh = w.vh || 0, lo = w.shrink, hi = S - w.shrink, n = w.rvn || 0;
+  if (lo > 0) { ctx.fillStyle = C.void; ctx.fillRect(-2, -2, S + 4, lo + 2); ctx.fillRect(-2, hi, S + 4, S - hi + 2); ctx.fillRect(-2, lo, lo + 2, hi - lo); ctx.fillRect(hi, lo, S - hi + 2, hi - lo); }
+  /* 다음에 좁혀질 밧줄 자리 */
+  if (n >= K.A.revGrowN && n < K.A.revGrowN + K.A.revShrinkN && w.shots >= K.P.shrinkStart - 1 && !w.xtra) {
+    const a = lo, b = lo + K.P.shrinkStep;
+    ctx.save(); ctx.fillStyle = `rgba(255,255,255,${0.12 + 0.12 * pulse})`; ctx.beginPath(); ctx.rect(a, a, S - 2 * a, S - 2 * a); ctx.rect(b, b, S - 2 * b, S - 2 * b); ctx.fill('evenodd'); ctx.restore();
+  }
   /* 밧줄: 꼬인 무늬 */
   ctx.save(); ctx.lineCap = 'round';
-  for (const [x0, y0, x1, y1] of [[0, 0, S, 0], [S, 0, S, S], [S, S, 0, S], [0, S, 0, 0]]) {
-    ctx.strokeStyle = '#6b4a22'; ctx.lineWidth = 16; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
-    ctx.strokeStyle = '#d9b06a'; ctx.lineWidth = 10; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
-    ctx.strokeStyle = 'rgba(90,60,25,.85)'; ctx.lineWidth = 3; ctx.setLineDash([10, 12]); ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke(); ctx.setLineDash([]);
+  for (const [x0, y0, x1, y1] of [[lo, lo, hi, lo], [hi, lo, hi, hi], [hi, hi, lo, hi], [lo, hi, lo, lo]]) {
+    ctx.strokeStyle = '#8f8a80'; ctx.lineWidth = 16; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+    ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 10; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+    ctx.strokeStyle = 'rgba(150,145,135,.9)'; ctx.lineWidth = 3; ctx.setLineDash([10, 12]); ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke(); ctx.setLineDash([]);
   }
-  for (const [x, y] of [[0, 0], [S, 0], [S, S], [0, S]]) { ctx.fillStyle = '#8a2a1c'; ctx.beginPath(); ctx.arc(x, y, 18, 0, TAU); ctx.fill(); ctx.strokeStyle = '#e8cd8e'; ctx.lineWidth = 3; ctx.stroke(); }
+  for (const [x, y] of [[lo, lo], [hi, lo], [hi, hi], [lo, hi]]) { ctx.fillStyle = '#8a2a1c'; ctx.beginPath(); ctx.arc(x, y, 18, 0, TAU); ctx.fill(); ctx.strokeStyle = '#e8cd8e'; ctx.lineWidth = 3; ctx.stroke(); }
   ctx.restore();
   if (vh > 0) {
     /* 다음에 커질 띠 */
     const nx = Math.min(K.A.revMax, vh + K.A.revStep);
-    if (w.shots >= K.P.shrinkStart - 1 && vh < K.A.revMax && !w.xtra) {
+    if (w.shots >= K.P.shrinkStart - 1 && n < K.A.revGrowN && !w.xtra) {
       ctx.save(); ctx.fillStyle = `rgba(200,50,30,${0.18 + 0.18 * pulse})`; ctx.beginPath(); ctx.rect(CX - nx, CY - nx, 2 * nx, 2 * nx); ctx.rect(CX - vh, CY - vh, 2 * vh, 2 * vh); ctx.fill('evenodd'); ctx.restore();
     }
     ctx.save();
@@ -5420,8 +5582,9 @@ function drawShrinkMsg(now) {
 function drawShrink(w, now) {
   if (MAPS[w.map].revHole) {   /* 리버스: 판 대신 가운데 구멍이 커짐 */
     if (!G.started) { setShrinkHint('', false); return; }
-    const left2 = K.P.shrinkStart - w.shots, grow = w.shots >= K.P.shrinkStart - 1 && w.vh < K.A.revMax;
-    setShrinkHint(w.xtra && grow ? '추가 샷 · 이번에는 구멍이 커지지 않습니다' : grow ? '다음 수에 가운데 구멍이 커집니다' : left2 > 1 && left2 <= 6 ? `${left2}수 뒤 가운데 구멍이 커지기 시작합니다` : '', !grow);
+    const left2 = K.P.shrinkStart - w.shots, n = w.rvn || 0, total = K.A.revGrowN + K.A.revShrinkN, next = w.shots >= K.P.shrinkStart - 1 && n < total;
+    const what = n < K.A.revGrowN ? '가운데 구멍이 커집니다' : '밧줄이 안쪽으로 좁혀집니다';
+    setShrinkHint(w.xtra && next ? '추가 샷 · 이번에는 판이 바뀌지 않습니다' : next ? `다음 수에 ${what} (${n + 1}/${total})` : left2 > 1 && left2 <= 6 ? `${left2}수 뒤 가운데 구멍이 커지기 시작합니다` : '', !next);
     return;
   }
   if (w.noShrink || !G.started) { setShrinkHint('', false); return; }
@@ -5665,6 +5828,7 @@ function render(now) {
     }
     drawShrink(w, now);
     if (MAPS[w.map].ropes) drawRev(w, now); else drawEdge(w);
+    if (w.lab) drawLabTint(ctx, now);
     drawEdgeWalls(ctx, w);
     drawLand(w, now); drawIce(w); drawVortex(w, now); drawHole(w, now);
     /* 천원 경고: 누군가 천원 둘레에 돌을 세우면 붉게 깜빡이는 고리와 '다음 차례 승리' 표시 */
@@ -6112,7 +6276,7 @@ cv.addEventListener('pointerup', e => releaseAim(e, false));
 cv.addEventListener('pointercancel', e => releaseAim(e, true));
 
 /* ---------- menu ---------- */
-$('mapPick').innerHTML = [...MAP_ORDER.map(id => [id, MAPS[id].name]), ['random', '무작위']].map(([id, name], i) =>
+$('mapPick').innerHTML = [...MAP_ORDER.map(id => [id, MAPS[id].name]), ['random', '무작위'], ['lab', '훈련장']].map(([id, name], i) =>
   `<input type="radio" name="map" id="map-${id}" value="${id}"${i === 0 ? ' checked' : ''}><label for="map-${id}">${id === 'random'
     ? '<canvas width="168" height="168" data-random="1" aria-label="알 수 없는 지형"></canvas>' : `<canvas width="168" height="168" data-map="${id}"></canvas>`}<span>${name}</span></label>`).join('');
 $('mapPick').querySelectorAll('canvas[data-map]').forEach(c => drawMapThumb(c, c.dataset.map));
@@ -6343,7 +6507,7 @@ function miniPortals(g, t = 0) {
 }
 function miniRev(g, t = 0, grow = 0) {
   const e0 = mx(-1.1 / 18), e1 = mx(19.1 / 18), c = mx(0.5), h = (1 + grow) / 18 * (mx(1) - mx(0));
-  g.save(); g.strokeStyle = '#d9b06a'; g.lineWidth = 6; g.strokeRect(e0, e0, e1 - e0, e1 - e0);
+  g.save(); g.strokeStyle = '#ffffff'; g.lineWidth = 6; g.strokeRect(e0, e0, e1 - e0, e1 - e0);
   g.fillStyle = '#0b0605'; g.fillRect(c - h, c - h, 2 * h, 2 * h); g.strokeStyle = '#ff6a4a'; g.lineWidth = 3; g.strokeRect(c - h, c - h, 2 * h, 2 * h); g.restore();
 }
 function miniPonds(g) {
@@ -6377,6 +6541,7 @@ const GUIDE = {
   boost: { marks: [{ x: 3 / 18, y: 0.5, r: 0.07, text: '바람문', tx: 0.3, ty: 0.3 }, { x: 15 / 18, y: 0.5, r: 0.07, text: '바람문', tx: 0.7, ty: 0.7 }] },
   pond: { marks: [{ x: 2.75 / 18, y: 0.5, r: 0.09, text: '연못', tx: 0.3, ty: 0.3 }, { x: 15.25 / 18, y: 0.5, r: 0.09, text: '연못', tx: 0.7, ty: 0.7 }] },
   dim: { marks: [{ x: 0.4 / 18, y: 0.4 / 18, r: 0.1, text: '甲', tx: 0.24, ty: 0.2 }, { x: 17.6 / 18, y: 17.6 / 18, r: 0.1, text: '甲', tx: 0.76, ty: 0.8 }, { x: 17.6 / 18, y: 0.4 / 18, r: 0.1, text: '乙', tx: 0.76, ty: 0.2 }, { x: 0.4 / 18, y: 17.6 / 18, r: 0.1, text: '乙', tx: 0.24, ty: 0.8 }] },
+  lab: { lines: ['증강 고르기와 판 줄어듦이 없는 연습 판입니다.', '오른쪽 실험실 칸에서 흑·백 아무에게나 모든 증강을 넣고 뺄 수 있습니다.'], marks: [{ x: 0.5, y: 0.5, text: '실험실', tx: 0.5, ty: 0.5 }] },
   rev: { marks: [{ x: 0.5, y: 0.5, r: 0.08, text: '가운데 구멍', tx: 0.5, ty: 0.32 }, { x: -0.04, y: 0.5, text: '둘레 밧줄', tx: 0.2, ty: 0.68 }] },
   random: { lines: ['국마다 일곱 지형 가운데 하나가 무작위로 나옵니다.', '같은 지형이 연달아 나오지는 않습니다.'] }
 };
@@ -6394,6 +6559,7 @@ function drawGuide(g, id, t = 0) {
   if (id === 'pond') miniPonds(g);
   if (id === 'dim') miniPortals(g, t);
   if (id === 'rev') miniRev(g, t, 0);
+  if (id === 'lab') { g.save(); g.fillStyle = 'rgba(40,140,150,.18)'; g.fillRect(mx(-1.1 / 18), mx(-1.1 / 18), mx(19.1 / 18) - mx(-1.1 / 18), mx(19.1 / 18) - mx(-1.1 / 18)); g.restore(); }
   for (const [r, c] of K.FORMATION['1v1'].base[0]) { miniStone(g, c / 18, r / 18, 0, 0.85, 7); miniStone(g, c / 18, (18 - r) / 18, 1, 0.85, 7); }
   for (const m of (GUIDE[id] && GUIDE[id].marks) || []) miniMark(g, m, 1, t);
 }
@@ -6521,6 +6687,22 @@ function openTut() {
 function closeTut() { $('ovTut').hidden = true; if (miniStop) miniStop(); }
 $('btnTut').addEventListener('click', () => { ensureAudio(); openTut(); });
 $('btnRank').addEventListener('click', () => { ensureAudio(); openRanks(); });
+/* 첫 화면 '규칙': 규칙 전체를 갈래별로 */
+$('btnRules').addEventListener('click', () => {
+  ensureAudio();
+  const ov = $('ovRules');
+  ov.innerHTML = `<div class="ov-card rules-card" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
+    <p class="eyebrow">則 · 규칙</p><h2 id="rulesTitle">증강 알까기 규칙</h2>
+    <dl class="gloss">${GLOSSARY.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
+    ${RULE_GROUPS.filter(([h]) => h !== '용어').map(([h, list]) => `<div class="rule-card"><p class="rule-h">${h}</p><ul>${list.map(r => `<li>${r}</li>`).join('')}</ul></div>`).join('')}
+    <div class="actions"><button class="btn-primary" id="rulesClose" type="button">닫기</button></div></div>
+    <button class="book-x" id="rulesX" type="button" aria-label="규칙 닫기">닫기 ✕</button>`;
+  ov.hidden = false;
+  const close = () => { ov.hidden = true; };
+  $('rulesClose').addEventListener('click', close); $('rulesX').addEventListener('click', close);
+  ov.addEventListener('click', e => { if (e.target === ov) close(); });
+  $('rulesClose').focus({ preventScroll: true });
+});
 $('rankBox').addEventListener('toggle', () => { if ($('rankBox').open) loadRanks(true); });
 $('tutPrev').addEventListener('click', () => showTut(tutIdx - 1));
 $('tutNext').addEventListener('click', () => (tutIdx === TUT.length - 1 ? closeTut() : showTut(tutIdx + 1)));
@@ -6592,7 +6774,7 @@ INTRO.dim = { d: 6.4, lines: ['판 네 귀퉁이에 ㄱ자 차원 벽(3×3 칸)�
     if (t > 1.5 && t < 2.4) { miniRing(g, 1 / 18, 17 / 18, seg(t, 1.5, 2.2), '95,224,208'); miniRing(g, 17 / 18, 1 / 18, seg(t, 1.6, 2.3), '95,224,208'); }
     if (t > 1.7) miniLabel(g, 0.72, 0.22, '반대 대각선으로!', seg(t, 1.7, 1.9) * (1 - seg(t, 4.2, 4.6)), 14, '#bff3ec');
   } };
-INTRO.rev = { d: 6.6, lines: ['판 가운데에 4×4칸 사각 구멍이 있고, 돌의 가운데가 들어가면 떨어집니다.', '판 둘레는 밧줄이라 돌이 판 밖으로 떨어지지 않고 튕겨 나옵니다.', `판이 줄어드는 대신 ${K.P.shrinkStart}수부터 한 수마다 구멍이 반 칸씩 커집니다.`, '상대 돌을 가운데로 밀어 넣으세요.'], at: [0, 1.6, 3.2, 4.8],
+INTRO.rev = { d: 6.6, lines: ['판 가운데에 4×4칸 사각 구멍이 있고, 돌의 가운데가 들어가면 떨어집니다.', '판 둘레는 흰 밧줄이라 돌이 판 밖으로 떨어지지 않고 세게 튕겨 나옵니다(밀려 온 돌은 1.5배 더 세게).', `${K.P.shrinkStart}수부터 구멍이 2번 커지고, 밧줄이 3번 좁혀진 뒤 멈춥니다.`, '상대 돌을 가운데로 밀어 넣으세요.'], at: [0, 1.6, 3.2, 4.8],
   draw(g, t) {
     miniBase(g); miniRev(g, t, 1 + (t > 3.2 ? Math.min(1.5, (t - 3.2) * 0.8) : 0));
     for (const [r, c] of K.FORMATION['1v1'].base[0]) { miniStone(g, c / 18, (18 - r) / 18, 1, 0.85, 7); miniStone(g, c / 18, r / 18, 0, 0.85, 7); }
@@ -6600,7 +6782,7 @@ INTRO.rev = { d: 6.6, lines: ['판 가운데에 4×4칸 사각 구멍이 있고,
     const k1 = eo(seg(t, 0.4, 1.0)), k2 = eo(seg(t, 1.0, 1.8)), k3 = eo(seg(t, 1.8, 2.6));
     const wx = t < 1.8 ? lerp(0.8, 1.02, k2) : lerp(1.02, 0.5, k3), wy = t < 1.8 ? lerp(0.35, 0.42, k2) : lerp(0.42, 0.5, k3);
     if (t < 2.7) miniStone(g, wx, wy, 1, t > 2.5 ? 1 - seg(t, 2.5, 2.7) : 1, 10);
-    if (t > 1.7 && t < 2.2) miniRing(g, 1.0, 0.42, seg(t, 1.7, 2.2), '217,176,106');
+    if (t > 1.7 && t < 2.2) miniRing(g, 1.0, 0.42, seg(t, 1.7, 2.2), '255,255,255');
     if (t > 2.5) miniRing(g, 0.5, 0.5, seg(t, 2.5, 3.1), '255,106,74');
     if (t > 1.8) miniLabel(g, 0.78, 0.3, '밧줄 반동!', seg(t, 1.8, 2.0) * (1 - seg(t, 3.0, 3.3)), 14, '#ffe6a8');
   } };
@@ -6805,6 +6987,7 @@ renderSnd();
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
   if (!$('sndPanel').hidden) { closeSnd(); if (sndFrom) sndFrom.focus(); return; }
+  if (!$('ovRules').hidden) { $('ovRules').hidden = true; return; }
   if (!$('ovRank').hidden) { $('ovRank').hidden = true; hideRankTip(); return; }
   if (!$('ovBook').hidden) { $('ovBook').hidden = true; return; }
   if (!$('ovProfile').hidden) { if (!profFirst) $('ovProfile').hidden = true; return; }
