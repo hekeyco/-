@@ -266,7 +266,7 @@ button,input{font:inherit;color:inherit}
 .shrinkbar b{display:block;font-size:15px}
 .shrinkbar.on b{color:#e07a64}
 .shrinkbar small{display:block}
-.shrinkbar .frog-left{color:#8fd17a}
+.shrinkbar .frog-left{color:#ffae5c}
 #players{display:flex;flex-direction:column;gap:10px}
 .pcard{padding:13px 15px;display:flex;flex-direction:column;gap:9px;position:relative}
 .pcard.active{border-color:var(--hair-strong)}
@@ -283,6 +283,32 @@ button,input{font:inherit;color:inherit}
 .aug-list .seal{grid-row:span 2}
 .aug-list b{font-size:13.5px;font-weight:600}
 .aug-list small{color:var(--muted);font-size:12px;line-height:1.35}
+/* 가진 증강의 등급 색: 은 · 금 · 옥 · 초월 */
+.aug-list li{border-left:3px solid transparent;padding-left:7px;margin-left:-10px}
+.aug-list li.tier-1{border-color:#aeb6c2}.aug-list li.tier-1 .seal{background:#7d838d}
+.aug-list li.tier-2{border-color:#d9b25c}.aug-list li.tier-2 .seal{background:#a8801f}
+.aug-list li.tier-3{border-color:#8fd0c4}.aug-list li.tier-3 .seal{background:linear-gradient(135deg,#4e9e95,#7f6bb8 55%,#c06f97)}
+.aug-list li.tier-4{border-color:#e0523a}.aug-list li.tier-4 .seal{background:#7a1a12}
+.tier-dot{font-style:normal;font-size:10.5px;font-weight:600;padding:1px 6px;margin-right:6px;border-radius:9px;vertical-align:1px}
+.tier-1 .tier-dot{background:rgba(174,182,194,.18);color:#d6dbe2}
+.tier-2 .tier-dot{background:rgba(217,178,92,.2);color:#f1d494}
+.tier-3 .tier-dot{background:rgba(143,208,196,.18);color:#b9ece2}
+.tier-4 .tier-dot{background:rgba(224,82,58,.22);color:#ffb3a3}
+.owned .tier-dot{margin:0 3px 0 0}
+/* 증강 고르기: 남은 시간 · 새로고침 */
+.draft-timer{margin:12px auto 0;max-width:420px;font-size:13px;color:var(--muted);text-align:center}
+.draft-timer b{color:var(--gold-hi);font-variant-numeric:tabular-nums}
+.draft-timer.low b{color:#ff7a5c}
+.draft-timer .tbar{height:4px;margin-top:6px;border-radius:2px;background:rgba(201,164,92,.18);overflow:hidden}
+.draft-timer .tbar i{display:block;height:100%;background:var(--gold);transform-origin:left;transition:transform .25s linear}
+.draft-timer.low .tbar i{background:#e0523a}
+.reroll-row{display:flex;justify-content:center;margin-top:18px}
+.reroll-btn{display:inline-flex;align-items:center;gap:8px;padding:9px 22px;border:1px solid var(--hair-strong);border-radius:2px;background:transparent;color:var(--ivory);font:inherit;font-size:14px;cursor:pointer}
+.reroll-btn:hover:not(:disabled){border-color:var(--gold);color:var(--gold-hi)}
+.reroll-btn:disabled{opacity:.45;cursor:default}
+.reroll-btn small{color:var(--muted);font-size:11.5px}
+.reroll-up{display:inline-block;margin-left:8px;padding:2px 10px;border-radius:10px;background:#e0523a;color:#fff;font-size:12px;font-weight:600;animation:rrPop .5s ease-out}
+@keyframes rrPop{from{transform:scale(1.8);opacity:0}}
 .empty{margin:0;color:var(--faint);font-size:12.5px}
 .new-tag{font-size:10.5px;padding:0 5px;border-radius:2px;background:rgba(127,195,201,.18);color:var(--teal);letter-spacing:.04em}
 .box-title{font-family:var(--font-display);font-size:13px;font-weight:600;letter-spacing:.2em;color:var(--gold);margin:0 0 10px}
@@ -327,7 +353,7 @@ button,input{font:inherit;color:inherit}
 /* 증강 고르기 숨기기: 판을 보고 다시 펼침 */
 #ovDraft.peek{background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;pointer-events:none}
 #ovDraft.peek .ov-card{display:none}
-.peek-row{display:flex;justify-content:center;margin-top:18px}
+.peek-row{display:flex;justify-content:center;margin-top:12px}
 .peek-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 30px;border:1px solid var(--gold);border-radius:2px;background:rgba(201,164,92,.16);color:var(--gold-hi);font-family:var(--font-display);font-weight:700;font-size:15px;letter-spacing:.12em;cursor:pointer;box-shadow:0 0 18px rgba(232,205,142,.25)}
 .peek-btn:hover{background:rgba(201,164,92,.28);box-shadow:0 0 24px rgba(232,205,142,.4)}
 .peek-open{display:none;position:fixed;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);pointer-events:auto;align-items:center;gap:8px;padding:13px 24px;border:0;border-radius:2px;background:var(--gold-leaf);color:#1c140a;font-family:var(--font-display);font-weight:700;font-size:15px;letter-spacing:.1em;white-space:nowrap;cursor:pointer;box-shadow:0 12px 30px rgba(0,0,0,.6)}
@@ -781,14 +807,14 @@ const A = {
   clone: 1, cloneK: 1.0, buddyD: 500, lastN: 3, lastR: 1.15, lastM: 1.2, lastV: 1.12, tideD: GAP,
   /* 새 증강 */
   momV: 1.3, ctrV: 1.3, grip: 1.08, sand: 1.24, starM: 2.4, starD: 0.8 * GAP, edgeM: 2.6, edgeD: 1.6 * GAP, firstK: 1.8, firstN: 2,
-  gustD: 1.0 * GAP, hamM: 1.16, pressD: 2 * GAP, pressM: 0.37, shockR: 2 * GAP, shockD: 1.6 * GAP, chainK: 3.4,
-  dragonN: 1, dragonD: 2.2 * GAP, dragonM: 2.8, ko: 3, pillarR: 1.01, pillarM: 1.025, pillarV: 1.012, pillarCap: 20, pillarFree: 3,
+  gustD: 1.0 * GAP, hamM: 1.16, pressD: 2 * GAP, pressM: 0.37, shockR: 2 * GAP, shockD: 1.6 * GAP, chainK: 2.2,
+  dragonN: 1, dragonD: 2.2 * GAP, dragonM: 2.0, ko: 3, pillarR: 1.01, pillarM: 1.025, pillarV: 1.012, pillarCap: 20, pillarFree: 3,
   /* v29 새 증강 */
   clayV: 1.15, clayH: 0.85, milletR: 0.85, milletM: 0.96, milletV: 1.08, gritStep: 0.05, gritMax: 4, lateV0: 0.95, lateV1: 1.12, lateH: 1.08,
   loneV: 1.1, loneM: 1.1, loneR: 1.1, trainN: 3,
   curveA: 30 * Math.PI / 180, curveB: 60 * Math.PI / 180, thriceV: 1.15, thriceK: 1.15, brandK: 1.25, iceF: 0.4,
   glutR: 1.06, glutM: 1.06, glutV: 1.03, glutN: 4, bountyN: 5, bountyIn: 2 * GAP, bountyH: 0.6,
-  yiN: 3, shardHs: 0.3 * GAP, frogEvery: 5, frogAir: 0.55, frogBox: 1.5 * GAP, frogPush: GAP, sqrV: 1.3, sqrN: 2, heavenRow: 3 * GAP, vortexN: 3, vortexR: 2.5 * GAP, vortexPull: 0.75 * GAP, vortexH: 0.5, ikiN: 3, pajukN: 2, holeR: 4.5 * GAP, holePull: 1 * GAP, holeKill: 0.5 * GAP, lianV: 0.75, landW: 0.9 * GAP, landF: 4.5, passK: 0.75, passF: 5
+  yiN: 3, shardHs: 0.3 * GAP, portalR: 0.55 * GAP, portalIn: 1.6 * GAP, frogEvery: 5, frogAir: 1.1, fishHops: 2, frogBox: 1.5 * GAP, frogPush: GAP, sqrV: 1.3, sqrN: 2, heavenRow: 3 * GAP, vortexN: 3, vortexR: 2.5 * GAP, vortexPull: 0.75 * GAP, vortexH: 0.5, ikiN: 3, pajukN: 2, holeR: 4.5 * GAP, holePull: 1 * GAP, holeKill: 0.5 * GAP, lianV: 0.75, landW: 0.9 * GAP, landF: 4.5, passK: 0.75, passF: 5
 };
 /* tier odds per pick: [silver, gold, prism]; always silver > gold > prism, a little richer on later picks */
 const TIER_ODDS = [[60, 30, 10], [50, 33, 17], [45, 35, 20]];
@@ -806,9 +832,10 @@ const MAPS = {
 MAPS.boost = { id: 'boost', name: '용오름', short: '판 양쪽 가장자리 가까이의 바람문(가로 3칸·세로 1칸)을 지나는 돌은 빨라지고, 쓰인 문은 2수 동안 닫힙니다',
   obs: [], pads: [{ kind: 'rect', gate: true, x: L(3), y: CY, hw: 1.5 * GAP, hh: 0.5 * GAP }, { kind: 'rect', gate: true, x: L(15), y: CY, hw: 1.5 * GAP, hh: 0.5 * GAP }], shrinkMax: CX - 1.5 * GAP };
 /* 연못: 판 양쪽의 두 연못. 흑백 가리지 않고 빠진 돌은 떨어집니다 */
-MAPS.pond = { id: 'pond', name: '연못', short: '판 양쪽 연못에 빠진 돌은 떨어지고, 5수마다 연못에서 개구리가 뛰어나와 둘레 돌을 밀어냅니다', frog: true, obs: [], shrinkMax: CX - 1.5 * GAP,
+MAPS.pond = { id: 'pond', name: '연못', short: '판 양쪽 연못에 빠진 돌은 떨어지고, 5수마다 두 연못에서 금붕어가 나와 두 번 뛰어오르며 둘레 돌을 밀어냅니다', frog: true, obs: [], shrinkMax: CX - 1.5 * GAP,
   ponds: [{ x: L(2.75), y: CY, r: 0.85 * GAP }, { x: L(15.25), y: CY, r: 0.85 * GAP }] };
-const MAP_IDS = ['flat', 'diamond', 'siege', 'boost', 'pond'];
+MAPS.dim = { id: 'dim', name: '차원', short: '네 귀퉁이 가까이 차원문 넷: 들어간 돌은 마주 보는 대각선 문으로 나옵니다 (판이 줄어도 가장자리를 따라옴)', obs: [], portals: true, shrinkMax: CX - 1.5 * GAP };
+const MAP_IDS = ['flat', 'diamond', 'siege', 'boost', 'pond', 'dim'];
 for (const m of MAP_IDS) MAPS[m].obs.forEach((o, i) => { o.oi = i; });
 
 /* rows counted from the team's own back edge side: black uses rows as-is (bottom), white mirrors */
@@ -870,7 +897,7 @@ const AUG = {
   lone:      { name: '외길', seal: '徑', tier: 1, max: 1, short: () => `증강을 더 받지 않음 · 힘 +${pct(A.loneV - 1)}% · 무게 ×${f1(A.loneM)} · 크기 +${pct(A.loneR - 1)}%`,
     desc: () => `이번 국에서 증강을 더 받지 않는 대신 내 돌이 모두 힘 +${pct(A.loneV - 1)}%, 무게 ×${f1(A.loneM)}, 크기 +${pct(A.loneR - 1)}%가 됩니다. 이번 국에 증강을 한 번 이상 더 받을 수 있을 때만 나옵니다.` },
   train:     { name: '수련', seal: '修', tier: 1, max: 1, quest: true, short: () => `상대 기본 돌 ${A.trainN}개 떨어뜨리면 금 1장`,
-    desc: () => `고를 때는 효과가 없고, 내 샷으로 상대 기본 돌을 ${A.trainN}개(분열 조각은 반 개) 떨어뜨리면 금 증강 3장 가운데 하나를 더 고릅니다. 상대 기본 돌이 ${A.trainN + 1}개 이상일 때만 나옵니다. 상대가 스스로 떨어뜨린 돌, 판 줄어듦·개구리로 떨어진 상대 돌도 내가 떨어뜨린 것으로 셉니다.` },
+    desc: () => `고를 때는 효과가 없고, 내 샷으로 상대 기본 돌을 ${A.trainN}개(분열 조각은 반 개) 떨어뜨리면 금 증강 3장 가운데 하나를 더 고릅니다. 상대 기본 돌이 ${A.trainN + 1}개 이상일 때만 나옵니다. 상대가 스스로 떨어뜨린 돌, 판 줄어듦·금붕어로 떨어진 상대 돌도 내가 떨어뜨린 것으로 셉니다.` },
   /* ---- gold ---- */
   combo:     { name: '연타', seal: '連', tier: 2, max: 1, short: () => `떨어뜨리면 한 번 더 (${A.comboRound}회)`,
     desc: () => `내 샷으로 상대 돌을 떨어뜨리면 한 번 더 칩니다. 한 차례에 한 번, 이번 국에 ${A.comboRound}번까지 됩니다.` },
@@ -888,8 +915,6 @@ const AUG = {
     desc: () => `쏜 돌이 처음 맞힌 상대 돌에 힘을 모두 실어 보내고, 쏜 돌은 그 자리에 멈춥니다.${A.pierce > 1 ? ` 그 타격은 ${pct(A.pierce - 1)}% 더 셉니다.` : ''}` },
   thorns:    { name: '가시', seal: '棘', tier: 2, max: 1, short: () => `나와 부딪힌 상대 돌에 타격 ${pct(A.thorns)}% 되돌림`,
     desc: () => `상대 샷 동안 내 돌과 부딪힌 상대 돌은, 부딪힌 세기의 ${pct(A.thorns)}%만큼 타격을 되돌려 받아 더 튕겨 나갑니다.` },
-  trap:      { name: '함정', seal: '陷', tier: 2, max: 2, short: () => `숨은 함정 ${A.traps}개를 직접 놓음`,
-    desc: () => `내 차례가 오면 판의 상대 쪽 절반에서 함정 ${A.traps}개를 놓을 빈자리를 직접 누릅니다(다 놓아야 칠 수 있고, 단추를 누르면 알아서 놓음). 상대 눈에는 보이지 않고, 상대 돌만 빠집니다. 빠진 돌은 탈락하고 그 함정은 드러납니다.` },
   double:    { name: '쌍발', seal: '雙', tier: 2, max: 1, short: () => `같은 돌로 2번 · 힘 −${pct(1 - A.doubleV)}%`,
     desc: () => `매 차례 두 번씩 칩니다. 두 번째는 첫 번째로 친 돌로만 칠 수 있고, 내 힘이 ${pct(1 - A.doubleV)}% 줄어듭니다.` },
   gust:      { name: '돌풍', seal: '颯', tier: 2, max: 1, short: () => `샷이 끝나면 가까운 상대 돌 ${f1(A.gustD / GAP)}칸 밀어냄`,
@@ -913,9 +938,9 @@ const AUG = {
   glut:      { name: '탐식', seal: '貪', tier: 2, max: 1, short: () => `떨어뜨릴 때마다 쏜 돌이 자람 (최대 ${A.glutN}번)`,
     desc: () => `내 샷으로 상대 돌을 떨어뜨릴 때마다 쏜 그 돌이 크기 +${pct(A.glutR - 1)}%, 무게 ×${f1(A.glutM)}, 힘 +${pct(A.glutV - 1)}%씩 자랍니다(최대 ${A.glutN}번). 그 돌이 떨어지면 쌓인 것도 사라집니다.` },
   bounty:    { name: '현상금', seal: '賞', tier: 2, max: 1, quest: true, short: () => `표시된 상대 돌을 ${A.bountyN}샷 안에 떨어뜨리면 옥 1장`,
-    desc: () => `고르는 즉시 가장자리에서 ${f1(A.bountyIn / GAP)}칸 이상 안쪽에 있는 상대 돌 가운데 내 돌에 가까운 돌 하나에 현상금이 걸립니다(상대도 봅니다). 현상금이 걸린 돌은 내 샷에 맞을 때 방어력이 ×${f1(A.bountyH)}로 떨어집니다. 내 샷 ${A.bountyN}번 안에 내 샷으로 그 돌을 떨어뜨리면 옥 증강 3장 가운데 하나를 더 고르고, 못 하면 현상금은 사라집니다. 상대 기본 돌이 2개 이상일 때만 나옵니다. 상대가 스스로 떨어뜨린 돌, 판 줄어듦·개구리로 떨어진 상대 돌도 내가 떨어뜨린 것으로 셉니다.` },
+    desc: () => `고르는 즉시 가장자리에서 ${f1(A.bountyIn / GAP)}칸 이상 안쪽에 있는 상대 돌 가운데 내 돌에 가까운 돌 하나에 현상금이 걸립니다(상대도 봅니다). 현상금이 걸린 돌은 내 샷에 맞을 때 방어력이 ×${f1(A.bountyH)}로 떨어집니다. 내 샷 ${A.bountyN}번 안에 내 샷으로 그 돌을 떨어뜨리면 옥 증강 3장 가운데 하나를 더 고르고, 못 하면 현상금은 사라집니다. 상대 기본 돌이 2개 이상일 때만 나옵니다. 상대가 스스로 떨어뜨린 돌, 판 줄어듦·금붕어로 떨어진 상대 돌도 내가 떨어뜨린 것으로 셉니다.` },
   iki:       { name: '일기당천', seal: '騎', tier: 2, max: 1, quest: true, short: () => `돌 하나로 상대 기본 돌 ${A.ikiN}개 떨어뜨리면 초월 1장`,
-    desc: () => `고를 때는 효과가 없고, 내 돌 하나로 쏜 샷들에서 상대 기본 돌을 모두 ${A.ikiN}개(분열 조각은 반 개) 떨어뜨리면 초월 증강 2장 가운데 하나를 고릅니다. 돌마다 따로 세어 돌 위에 별로 보이고, 그 돌이 떨어지면 그 돌의 기록은 0이 됩니다. 상대 기본 돌이 5개 이상이고 아직 초월이 없을 때만 나옵니다. 상대가 스스로 떨어뜨린 돌, 판 줄어듦·개구리로 떨어진 상대 돌도 내가 떨어뜨린 것으로 셉니다.` },
+    desc: () => `고를 때는 효과가 없고, 내 돌 하나로 쏜 샷들에서 상대 기본 돌을 모두 ${A.ikiN}개(분열 조각은 반 개) 떨어뜨리면 초월 증강 2장 가운데 하나를 고릅니다. 돌마다 따로 세어 돌 위에 별로 보이고, 그 돌이 떨어지면 그 돌의 기록은 0이 됩니다. 상대 기본 돌이 5개 이상이고 아직 초월이 없을 때만 나옵니다. 상대가 스스로 떨어뜨린 돌, 판 줄어듦·금붕어로 떨어진 상대 돌도 내가 떨어뜨린 것으로 셉니다.` },
   /* ---- prism ---- */
   revive:    { name: '부활', seal: '復', tier: 3, max: 1, short: () => `떨어진 자리로 복귀 (${A.revive}회)`,
     desc: () => `이번 국에 내 돌이 떨어지면 떨어진 자리(판 가장자리 안쪽)로 되돌아옵니다. ${A.revive}번까지 됩니다.` },
@@ -960,7 +985,7 @@ const AUG = {
   bundle:    { name: '보따리', seal: '褓', tier: 3, max: 1, short: () => '무작위 금 1장 + 은 1장',
     desc: () => '고르는 즉시 무작위 금 증강 1장과 은 증강 1장을 함께 얻습니다. 퀘스트와 외길은 나오지 않습니다.' },
   pajuk:     { name: '파죽지세', seal: '竹', tier: 3, max: 1, quest: true, short: () => `돌 하나로 상대 기본 돌 ${A.pajukN}개 떨어뜨리면 초월 1장`,
-    desc: () => `고를 때는 효과가 없고, 내 돌 하나로 쏜 샷들에서 상대 기본 돌을 모두 ${A.pajukN}개(분열 조각은 반 개) 떨어뜨리면 초월 증강 2장 가운데 하나를 고릅니다. 돌마다 따로 세어 돌 위에 별로 보이고, 그 돌이 떨어지면 그 돌의 기록은 0이 됩니다. 상대 기본 돌이 4개 이상이고 아직 초월이 없을 때만 나옵니다. 상대가 스스로 떨어뜨린 돌, 판 줄어듦·개구리로 떨어진 상대 돌도 내가 떨어뜨린 것으로 셉니다.` },
+    desc: () => `고를 때는 효과가 없고, 내 돌 하나로 쏜 샷들에서 상대 기본 돌을 모두 ${A.pajukN}개(분열 조각은 반 개) 떨어뜨리면 초월 증강 2장 가운데 하나를 고릅니다. 돌마다 따로 세어 돌 위에 별로 보이고, 그 돌이 떨어지면 그 돌의 기록은 0이 됩니다. 상대 기본 돌이 4개 이상이고 아직 초월이 없을 때만 나옵니다. 상대가 스스로 떨어뜨린 돌, 판 줄어듦·금붕어로 떨어진 상대 돌도 내가 떨어뜨린 것으로 셉니다.` },
   pass:      { name: '관통', seal: '貫', tier: 3, max: 1, short: () => `첫 상대 돌을 뚫고 힘 ${pct(A.passK)}%로 계속 (한 샷 2개)`,
     desc: () => `내 샷이 처음 맞힌 상대 돌을 튕겨 낸 뒤에도 멈추지 않고, 맞히기 전 빠르기의 ${pct(A.passK)}%로 그대로 뚫고 나가 다음 돌을 맞힙니다. 뚫고 나간 뒤에는 금방 멈추고, 한 샷에 두 개까지 맞힙니다.` },
   /* ---- 초월: 퀘스트(일기당천·파죽지세) 보상으로만, 한 국에 한 사람당 1장 ---- */
@@ -980,7 +1005,6 @@ const SYN = [
   { id: 'sniper', a: 'fast', b: 'marks', name: '저격', desc: '명사수가 2칸부터 터지고 타격 +30%' },
   { id: 'bedrock', a: 'root', b: 'grip', name: '반석', desc: '내 돌 방어력이 한 번 더 ×1.15' },
   { id: 'gale', a: 'momentum', b: 'combo', name: '질풍', desc: '기세 힘 +45%, 연타 1회 더' },
-  { id: 'swamp', a: 'trap', b: 'tide', name: '늪', desc: '내 함정이 1.5배 넓어짐' },
   { id: 'blast', a: 'bomb', b: 'wedge', name: '폭심', desc: '시한폭탄 반경 ×1.3' },
   { id: 'thunder', a: 'bolt', b: 'thrice', name: '천둥', desc: '삼세번 강타 샷 뒤에도 번개가 떨어짐' },
   { id: 'avalanche', a: 'ice', b: 'tide', name: '눈사태', desc: '밀물이 1.5칸씩 밀어냄' },
@@ -1109,12 +1133,12 @@ function segObs(x0, y0, x1, y1, o, pad) {
 
 /* ===== world ===== */
 const COUNTERS = ['reviveLeft', 'buddyLeft', 'rewindLeft', 'comboRound', 'boltCount', 'lost', 'picks', 'splitLeft', 'mom', 'ctr', 'fsd', 'koLeft', 'koArm', 'bdx', 'plk',
-  'grt', 'thr', 'trn', 'bonus', 'fq', 'bty', 'yiLeft', 'sqr', 'vtxLeft', 'tq', 'dcr', 'hvU', 'fl', 'syn', 'orl', 'tpl'];
+  'grt', 'thr', 'trn', 'bonus', 'fq', 'bty', 'yiLeft', 'sqr', 'vtxLeft', 'tq', 'dcr', 'hvU', 'fl', 'syn', 'orl', 'tpl', 'rr'];
 function blankWorld(players, mode, mapId) {
   const map = MAPS[mapId];
   const w = { players, mode, map: mapId, obs: map.obs, stones: [], walls: { top: false, bottom: false }, nextId: 1,
     reviveLeft: {}, buddyLeft: {}, rewindLeft: {}, comboRound: {}, boltCount: {}, lost: {}, picks: {}, splitLeft: {}, mom: {}, ctr: {}, fsd: {}, koLeft: {}, koArm: {}, bdx: {}, plk: {},
-    grt: {}, thr: {}, trn: {}, bonus: {}, fq: {}, bty: {}, yiLeft: {}, sqr: {}, vtxLeft: {}, tq: {}, dcr: {}, hvU: {}, fl: {}, syn: {}, orl: {}, tpl: {}, vortex: [], ice: null, land: [false, false], noYi: -1, bh: [], lian: null, lianUsed: false,
+    grt: {}, thr: {}, trn: {}, bonus: {}, fq: {}, bty: {}, yiLeft: {}, sqr: {}, vtxLeft: {}, tq: {}, dcr: {}, hvU: {}, fl: {}, syn: {}, orl: {}, tpl: {}, rr: {}, vortex: [], ice: null, land: [false, false], noYi: -1, bh: [], lian: null, lianUsed: false,
     wallSave: [0, 0], holes: (map.ponds || []).map(p => ({ x: p.x, y: p.y, r: p.r, team: -1, seen: true, pond: true })), mark: [], pads: (map.pads || []).map(p => Object.assign({}, p, { cd: 0 })), obsHits: map.obs.map(() => 0), dbl: null,
     comboLeft: A.combo, doubleUsed: false, shot: null, events: [], sim: false, shots: 0, shrink: 0, snap: null };
   for (const p of players) for (const k of COUNTERS) w[k][p.id] = 0;
@@ -1390,7 +1414,7 @@ function placeBounty(w, p) {
 /* 어명: 빼앗을 수 있는 상대 증강 (고를 때 효과가 끝나는 것·퀘스트·초월은 빼앗지 못함) */
 const NO_STEAL = new Set(['orleans', 'wall', 'land', 'bundle', 'lone', 'train', 'bounty', 'iki', 'pajuk']);
 /* 고를 때 효과가 나는 증강: 상대 쪽 효과를 거두고 내 쪽에 새로 냄 */
-const INSTANT = new Set(['reinforce', 'seal', 'thief', 'trap', 'big', 'dense', 'king', 'clone', 'pillar']);
+const INSTANT = new Set(['reinforce', 'seal', 'thief', 'big', 'dense', 'king', 'clone', 'pillar']);
 const STEAL_KEYS = { revive: 'reviveLeft', buddy: 'buddyLeft', rewind: 'rewindLeft', combo: 'comboRound', split: 'splitLeft', ko: 'koLeft', yi: 'yiLeft', vortex: 'vtxLeft', squirrel: 'sqr', thrice: 'thr', grit: 'grt', bolt: 'boltCount', first: 'fsd' };
 /* 어명으로 빼앗은 증강의 횟수: 처음 값의 2배 (쓰는 횟수) · 처음으로 (쌓이는 값) */
 const STEAL_FULL = () => ({ revive: 2 * A.revive, buddy: 2 * A.buddy, rewind: 2 * A.rewind, combo: 2 * A.comboRound, split: 2 * A.splitN, ko: 2 * A.ko, yi: 2 * A.yiN, vortex: 2 * A.vortexN,
@@ -1600,6 +1624,27 @@ function rollOffer(w, pid, n = 3) {
   while (ids.length < n && left.length) ids.push(left.splice(Math.floor(rnd() * left.length), 1)[0]);
   p.dry = tier === 3 ? 0 : forced ? (p.dry || 0) : (p.dry || 0) + 1;
   return { tier, ids, pity, odds, bonus: !!forced };
+}
+/* 새로고침: 국마다 한 번, 받은 카드를 모두 새로 뽑음. 5% 확률로 한 등급 위 (옥에서 초월로는 1%) */
+const RR_UP = 0.05, RR_UP4 = 0.01;
+const canReroll = (w, pid) => !((w.rr[pid] || 0) > 0);
+function rerollOffer(w, pid, prev) {
+  const p = w.players[pid];
+  if (!canReroll(w, pid) || !prev || !prev.tier) return null;
+  w.rr[pid] = 1;
+  let tier = prev.tier;
+  const r = rnd();
+  if (tier === 3 && r < RR_UP4) tier = 4;
+  else if (tier < 3 && r < RR_UP) tier++;
+  const pickN = (pool, n) => { const fresh = pool.filter(id => !prev.ids.includes(id)), out = []; while (out.length < n && fresh.length) out.push(fresh.splice(Math.floor(rnd() * fresh.length), 1)[0]); const old = pool.filter(id => !out.includes(id)); while (out.length < n && old.length) out.push(old.splice(Math.floor(rnd() * old.length), 1)[0]); return out; };
+  if (tier === 4) {
+    const p4 = AUG_IDS.filter(id => AUG[id].tier === 4 && canTake(w, p, id));
+    if (p4.length) return { tier: 4, ids: pickN(p4, 2), pity: prev.pity, odds: prev.odds, bonus: prev.bonus, up: prev.tier !== 4, rr: true };
+    tier = Math.min(prev.tier, 3);
+  }
+  const pool = AUG_IDS.filter(id => AUG[id].tier === tier && canTake(w, p, id));
+  if (!pool.length) return { ...prev, rr: true };
+  return { tier, ids: pickN(pool, prev.ids.length || 3), pity: prev.pity, odds: prev.odds, bonus: prev.bonus, up: tier > prev.tier, rr: true };
 }
 function unsealIfStuck(w, pid) {
   const mine = w.stones.filter(s => live(s) && s.owner === pid);
@@ -1819,6 +1864,7 @@ function step(w) {
       handleFall(w, s);
       continue;
     }
+    if (s._mv) portalStep(w, s);
     if (w.bh && w.bh.length && s._mv && w.bh.some(b => b.team !== s.team) && holeEats(w, s)) {
       emit(w, { type: 'holeEat', x: s.x, y: s.y, pid: s.owner });
       handleFall(w, s);
@@ -2066,15 +2112,27 @@ function tide(w, sh) {
   return any;
 }
 /* 개구리: 판 안에 남은 연못에서, 판 안쪽으로 연못 가장자리에서 1~2칸 떨어진 곳에 착지 (떨어질 수 있는 연못에서 2칸 안). 난수 대신 수 번호로 정해 온라인·CPU 예측이 같게 */
-function frogPlan(w) {
+/* 금붕어: 5수마다 두 연못에서 한 마리씩 나와 착지하고, 다음 수에 한 번 더 뛴 뒤 연못으로 돌아감.
+   착지 자리는 연못 가장자리에서 판 안쪽으로 1~2칸 (떨어질 수 있는 연못에서 2칸 안). 난수 대신 수 번호로 정해 온라인·CPU 예측이 같게 */
+function fishPlan(w) {
   const lo = w.shrink, hi = S - w.shrink;
-  const ponds = w.holes.filter(h => h.pond && h.x > lo && h.x < hi && h.y > lo && h.y < hi);
-  if (!ponds.length) return null;
-  const k = Math.floor(w.shots / A.frogEvery), hsh = n => { const v = Math.sin(n * 12.9898 + k * 78.233) * 43758.5453; return v - Math.floor(v); };
-  const h = ponds[k % ponds.length];
-  const base = Math.atan2(CY - h.y, CX - h.x), ang = base + (hsh(1) - 0.5) * 1.5, d = h.r + GAP * (1 + hsh(2));
-  const x = clamp(h.x + Math.cos(ang) * d, lo + 0.6 * GAP, hi - 0.6 * GAP), y = clamp(h.y + Math.sin(ang) * d, lo + 0.6 * GAP, hi - 0.6 * GAP);
-  return { fx: h.x, fy: h.y, x, y, px: h.x, py: h.y };
+  const inB = (x, y) => x > lo && x < hi && y > lo && y < hi;
+  const ponds = w.holes.filter(h => h.pond);
+  const hsh = n => { const v = Math.sin(n * 12.9898 + w.shots * 78.233) * 43758.5453; return v - Math.floor(v); };
+  const land = (h, i) => {
+    const base = Math.atan2(CY - h.y, CX - h.x), ang = base + (hsh(1 + 3 * i) - 0.5) * 1.6, d = h.r + GAP * (1 + hsh(2 + 3 * i));
+    return [clamp(h.x + Math.cos(ang) * d, lo + 0.6 * GAP, hi - 0.6 * GAP), clamp(h.y + Math.sin(ang) * d, lo + 0.6 * GAP, hi - 0.6 * GAP)];
+  };
+  if (w.fish && w.fish.length) {   /* 이미 나온 금붕어: 한 번 더 뜀 */
+    return w.fish.map((f, i) => {
+      const h = ponds.find(q => q.x === f.px && q.y === f.py);
+      if (!h || !inB(h.x, h.y)) return { fx: f.x, fy: f.y, x: f.x, y: f.y, px: f.px, py: f.py, left: 0, gone: true };
+      const [x, y] = land(h, i + 5);
+      return { fx: f.x, fy: f.y, x, y, px: h.x, py: h.y, left: f.left - 1 };
+    });
+  }
+  if (!(w.shots > 0 && w.shots % A.frogEvery === 0)) return [];
+  return ponds.filter(h => inB(h.x, h.y)).map((h, i) => { const [x, y] = land(h, i); return { fx: h.x, fy: h.y, x, y, px: h.x, py: h.y, left: A.fishHops - 1 }; });
 }
 function frogLand(w, sh, f) {
   const B = A.frogBox;
@@ -2088,14 +2146,34 @@ function frogLand(w, sh, f) {
   }
   emit(w, { type: 'frogLand', x: f.x, y: f.y, n });
   if (!n) return false;
-  sh.shrinking = true; sh.frogged = true;   /* 개구리에 밀려 떨어진 돌은 판 줄어듦처럼 셈 (그 돌 주인이 스스로 떨어진 것) */
+  sh.shrinking = true; sh.frogged = true;   /* 금붕어에 밀려 떨어진 돌은 판 줄어듦처럼 셈 (그 돌 주인이 스스로 떨어진 것) */
   sh.t = Math.min(sh.t, P.timeout - 4);
   return true;
+}
+/* 차원문: 네 귀퉁이 가까이, 지금 판 가장자리를 따라 자리 잡음 (판이 줄어도 유지). 0↔2(왼위↔오른아래), 1↔3(오른위↔왼아래) */
+function portalsOf(w) {
+  if (!MAPS[w.map].portals) return null;
+  const lo = w.shrink, hi = S - w.shrink, d = Math.min(A.portalIn, (hi - lo) * 0.25);
+  return [[lo + d, lo + d], [hi - d, lo + d], [hi - d, hi - d], [lo + d, hi - d]];
+}
+const portalAt = (P, x, y) => { for (let i = 0; i < 4; i++) if (hyp(x - P[i][0], y - P[i][1]) < A.portalR) return i; return -1; };
+/* 샷이 시작될 때 문 위에 서 있던 돌은, 그 문을 벗어나기 전에는 다시 들어가지 않음 */
+function portalLocks(w) { const P = portalsOf(w); if (P) for (const s of w.stones) s.ptl = portalAt(P, s.x, s.y); }
+function portalStep(w, s) {
+  const P = portalsOf(w);
+  if (!P) return;
+  const i = portalAt(P, s.x, s.y);
+  if (s.ptl != null && s.ptl >= 0) { if (i !== s.ptl) s.ptl = -1; return; }
+  if (i < 0 || !s._mv) return;
+  const j = (i + 2) % 4, ox = s.x - P[i][0], oy = s.y - P[i][1];
+  const fx = s.x, fy = s.y;
+  s.x = P[j][0] + ox; s.y = P[j][1] + oy; s.ptl = j;
+  emit(w, { type: 'portal', fx, fy, x: s.x, y: s.y, a: i, b: j });
 }
 function snapshot(w) {
   return { stones: w.stones.filter(s => !s.dead).map(s => Object.assign({}, s)), reviveLeft: Object.assign({}, w.reviveLeft),
     buddyLeft: Object.assign({}, w.buddyLeft), lost: Object.assign({}, w.lost), wallSave: w.wallSave.slice(), nextId: w.nextId,
-    mark: w.mark.slice(), obs: w.obs, obsHits: (w.obsHits || []).slice(), pads: w.pads.map(p => p.cd || 0),
+    mark: w.mark.slice(), obs: w.obs, obsHits: (w.obsHits || []).slice(), fish: (w.fish || []).map(f => Object.assign({}, f)), pads: w.pads.map(p => p.cd || 0),
     trn: Object.assign({}, w.trn), bonus: Object.assign({}, w.bonus), fq: Object.assign({}, w.fq), bty: Object.assign({}, w.bty),
     yiLeft: Object.assign({}, w.yiLeft), vtxLeft: Object.assign({}, w.vtxLeft), vortex: w.vortex, fl: Object.assign({}, w.fl), tq: Object.assign({}, w.tq) };
 }
@@ -2110,6 +2188,7 @@ function tryRewind(w, sh) {
   w.wallSave = sn.wallSave.slice(); w.nextId = Math.max(w.nextId, sn.nextId);
   w.mark = (sn.mark || []).slice();
   if (sn.obs) { w.obs = sn.obs; w.obsHits = sn.obsHits.slice(); }
+  if (sn.fish) w.fish = sn.fish.map(f => Object.assign({}, f));
   (sn.pads || []).forEach((cd, i) => { if (w.pads[i]) w.pads[i].cd = cd; });
   for (const k of ['trn', 'bonus', 'fq', 'bty', 'yiLeft', 'vtxLeft', 'fl', 'tq']) if (sn[k]) Object.assign(w[k], sn[k]);
   if (sn.vortex) w.vortex = sn.vortex;
@@ -2183,11 +2262,18 @@ function updatePhase(w) {
   /* 연못: 5수마다 개구리가 뛰어나와 착지한 자리 둘레 3×3 칸의 돌을 1칸씩 밀어냄 */
   if (!sh.frogDone) {
     if (!sh.frogAt) {
-      const f = MAPS[w.map].frog && w.shots > 0 && w.shots % A.frogEvery === 0 ? frogPlan(w) : null;
-      if (!f) sh.frogDone = true;
-      else { sh.frogAt = f; sh.frogWait = A.frogAir; emit(w, { type: 'frog', fx: f.fx, fy: f.fy, x: f.x, y: f.y, t: A.frogAir }); return; }
+      const fs = MAPS[w.map].frog ? fishPlan(w).filter(f => !f.gone) : [];
+      if (!fs.length) { sh.frogDone = true; if (w.fish && w.fish.length) { emit(w, { type: 'fishGone', fish: w.fish.map(f => [f.x, f.y, f.px, f.py]) }); w.fish = []; } }
+      else { sh.frogAt = fs; sh.frogWait = A.frogAir; w.fish = []; for (const f of fs) emit(w, { type: 'frog', fx: f.fx, fy: f.fy, x: f.x, y: f.y, t: A.frogAir, hop: f.left > 0 ? 1 : 2 }); return; }
     } else if (sh.frogWait > 0) { sh.frogWait -= DT; return; }
-    else { sh.frogDone = true; if (frogLand(w, sh, sh.frogAt)) return; }
+    else {
+      sh.frogDone = true; let any = false;
+      for (const f of sh.frogAt) any = frogLand(w, sh, f) || any;
+      const stay = sh.frogAt.filter(f => f.left > 0), gone = sh.frogAt.filter(f => f.left <= 0);
+      w.fish = stay.map(f => ({ x: f.x, y: f.y, px: f.px, py: f.py, left: f.left }));
+      if (gone.length) emit(w, { type: 'fishGone', fish: gone.map(f => [f.x, f.y, f.px, f.py]) });
+      if (any) return;
+    }
   }
   if (sh.snapOn && !sh.rewindChecked) { sh.rewindChecked = true; if (tryRewind(w, sh)) return; }
   sh.phase = 'done';
@@ -2198,6 +2284,7 @@ function startShot(w, pid, stoneId, vx, vy, opt) {
   const snapOn = w.players.some(q => q.team !== p.team && w.rewindLeft[q.id] > 0);
   w.snap = snapOn ? snapshot(w) : null;
   for (const s of w.stones) { s.lastHit = null; s.oiled = false; }
+  portalLocks(w);
   /* 쐐기: 내 차례가 다시 오면 박아 두었던 돌이 풀립니다 */
   for (const q of w.stones) if (q.wedge && q.owner === pid) { q.wedge = false; q.km /= A.wedgeM; restat(w, q); }
   const s = byId(w, stoneId);
@@ -2247,7 +2334,7 @@ function packWorld(w) {
   for (const k of COUNTERS) c[k] = Object.assign({}, w[k]);
   return { map: w.map, mode: w.mode, ns: w.noShrink ? 1 : 0, xt: w.xtra ? 1 : 0, nid: w.nextId, sh: w.shots, sk: r1(w.shrink), og: MAPS[w.map].obs.reduce((m, o) => (w.obs.includes(o) ? m : m | (1 << o.oi)), 0), oh: (w.obsHits || []).slice(), db: w.dbl ? w.dbl.slice() : 0,
     wl: [w.walls.top ? 1 : 0, w.walls.bottom ? 1 : 0], ws: w.wallSave.slice(), cl: w.comboLeft, du: w.doubleUsed ? 1 : 0,
-    h: w.holes.map(h => [r1(h.x), r1(h.y), r1(h.r), h.team, h.seen ? 1 : 0]), sd: w.obs.filter(q => q.kind === 'shard').map(q => [r1(q.cx), r1(q.cy)]), tm: w.trapManual ? 1 : 0, mk: w.mark.slice(), c, pd: w.pads.map(p => p.cd || 0),
+    h: w.holes.map(h => [r1(h.x), r1(h.y), r1(h.r), h.team, h.seen ? 1 : 0]), sd: w.obs.filter(q => q.kind === 'shard').map(q => [r1(q.cx), r1(q.cy)]), fs: (w.fish || []).map(f => [r1(f.x), r1(f.y), f.px, f.py, f.left]), tm: w.trapManual ? 1 : 0, mk: w.mark.slice(), c, pd: w.pads.map(p => p.cd || 0),
     bh: (w.bh || []).map(b => [b.team, b.pid]), ln: w.lian ? w.lian.slice() : 0, lu: w.lianUsed ? 1 : 0, ny: w.noYi == null ? -1 : w.noYi, vt: w.vortex.map(v => [r1(v.x), r1(v.y), v.team, v.pid]), ic: w.ice ? { p: w.ice.pid, t: w.ice.team, c: [...w.ice.cells] } : 0, ld: [w.land[0] ? 1 : 0, w.land[1] ? 1 : 0],
     s: w.stones.filter(s => live(s)).map(s => [s.id, s.owner, r1(s.x), r1(s.y), +s.rs.toFixed(3), +s.ms.toFixed(3), s.kr, s.km, s.kv, s.gen,
       (s.sealed ? 1 : 0) | (s.king ? 2 : 0) | (s.clone ? 4 : 0) | (s.wedge ? 8 : 0) | (s.big ? 16 : 0) | (s.small ? 32 : 0) | (s.cloneBack ? 64 : 0) | (s.pillar ? 128 : 0) | (s.locked ? 256 : 0), s.bw || 0, s.home == null ? -1 : s.home, s.press == null ? -1 : s.press, s.pg || 0, s.bounty == null ? -1 : s.bounty, s.brand == null ? -1 : s.brand, s.glut || 0, s.kq || 0, s.anchor || 0, Math.round(s.hx == null ? -1 : s.hx), Math.round(s.hy == null ? -1 : s.hy)]) };
@@ -2256,7 +2343,7 @@ function unpackWorld(o, players) {
   const w = blankWorld(players, o.mode, o.map);
   w.nextId = o.nid; w.shots = o.sh; w.shrink = o.sk; w.noShrink = !!o.ns; w.xtra = o.xt ? 1 : 0; if (o.cr) w.obs = []; if (o.og) w.obs = MAPS[o.map].obs.filter(x => !((o.og >> x.oi) & 1)); if (o.oh) w.obsHits = o.oh.slice(); w.dbl = o.db ? o.db.slice() : null;
   if (o.sd && o.sd.length) w.obs = w.obs.filter(q => q.kind !== 'shard').concat(o.sd.map(([x, y]) => mkShard(x, y)));
-  w.trapManual = !!o.tm;
+  w.trapManual = !!o.tm; w.fish = (o.fs || []).map(([x, y, px, py, left]) => ({ x, y, px, py, left }));
   w.walls = { top: !!o.wl[0], bottom: !!o.wl[1] }; w.wallSave = o.ws.slice(); w.comboLeft = o.cl; w.doubleUsed = !!o.du;
   (o.pd || []).forEach((cd, i) => { if (w.pads[i] && typeof cd === 'number') w.pads[i].cd = cd; });
   w.holes = o.h.map(([x, y, r, team, seen]) => ({ x, y, r, team, seen: !!seen, pond: team === -1 })); w.mark = (o.mk || []).slice();
@@ -2485,7 +2572,7 @@ function edgeDist(w, s) {
 function cloneWorld(w) {
   const c = { players: w.players, mode: w.mode, map: w.map, obs: w.obs, stones: w.stones.filter(s => !s.dead).map(s => Object.assign({}, s)),
     walls: Object.assign({}, w.walls), nextId: w.nextId, wallSave: w.wallSave.slice(), holes: w.holes, mark: w.mark.slice(),
-    comboLeft: w.comboLeft, doubleUsed: w.doubleUsed, dbl: w.dbl, obsHits: (w.obsHits || []).slice(), dt: PLAN_DT, shot: null, events: [], sim: true, shots: w.shots, shrink: w.shrink, noShrink: !!w.noShrink, snap: null };
+    comboLeft: w.comboLeft, doubleUsed: w.doubleUsed, dbl: w.dbl, obsHits: (w.obsHits || []).slice(), fish: (w.fish || []).map(f => Object.assign({}, f)), dt: PLAN_DT, shot: null, events: [], sim: true, shots: w.shots, shrink: w.shrink, noShrink: !!w.noShrink, snap: null };
   for (const k of COUNTERS) c[k] = Object.assign({}, w[k]);
   c.pads = w.pads.map(p => Object.assign({}, p));
   c.vortex = w.vortex || []; c.ice = w.ice || null; c.land = w.land || [false, false]; c.noYi = w.noYi; c.bh = w.bh || []; c.lian = w.lian; c.lianUsed = w.lianUsed;
@@ -2720,7 +2807,7 @@ return { N, GAP, INSET, S, BASE_R, DT, FALL_T, TAU, CX, CY, L, P, A, MAPS, MAP_I
   setRandom, cnt, hasA, live, maxV, vmaxOf, statsFor, augAllowed, newWorld, gainAug, pendingPick, picksOwed, rollOffer, tierOdds, pityOn, canTake,
   unsealIfStuck, step, updatePhase, startShot, fire, fireExact, packWorld, unpackWorld, runShot, afterShot, onTengen, byId, teamAlive, hasStones, knocked, cpuPlan,
   predictPath, travel, reachRay, threats, teamCount, obsLocal, markRemove, cpuMark, CPU_LEVEL, canShoot, padWait, restatAll,
-  SYN, hasSyn, synOf, canYi, iceAt, thriceOn, baseLeft, morePicks, ICE, decreeOptions, trapOK, placeTrapAt, autoTraps, stealAug, resolveDecree, heaven, heavenOK, fallenBase, holeRock };
+  SYN, hasSyn, synOf, portalsOf, nearStar, nearEdge, inDragon, canYi, iceAt, thriceOn, baseLeft, morePicks, ICE, decreeOptions, rerollOffer, canReroll, trapOK, placeTrapAt, autoTraps, stealAug, resolveDecree, heaven, heavenOK, fallenBase, holeRock };
 })();
 if (typeof module !== 'undefined') module.exports = CORE;
 
@@ -2763,49 +2850,49 @@ const GLOSSARY = [
   ['크기 · 마찰', '크기는 돌의 지름, 마찰은 바닥에 걸리는 정도입니다. 마찰이 클수록 덜 미끄러집니다.'],
   ['칸', '바둑판 한 칸만큼의 거리입니다.']
 ];
+const PICK_SEC = 30;   /* 증강 고르기 제한 시간(초) */
 const RULE_GROUPS = [
   ['용어', GLOSSARY.map(([k, v]) => `<b>${k}</b> — ${v}`)],
   ['쏘는 법', [
-    '내 돌을 누른 채 뒤로 당겼다가 놓습니다. 당긴 반대쪽으로, 당긴 만큼 세게 나갑니다.',
-    '돌을 톡 눌러 고른 뒤 판 아무 데서나 끌어도 됩니다. 가장자리 돌을 칠 때 편합니다.',
-    '무거운 돌은 같은 힘으로 덜 나가지만 부딪히면 상대를 더 멀리 밀고 자신은 덜 밀립니다. 가벼운 돌은 더 멀리 나가지만 맞으면 더 밀립니다.',
-    '조준 취소: 컴퓨터는 마우스 오른쪽 단추, 휴대폰은 다른 손가락으로 화면을 한 번 더 누릅니다. 조준하는 동안 판 위에 붉은 안내가 뜹니다.',
-    '판 둘레의 밝은 선이 떨어지는 선입니다. 돌의 가운데가 이 선을 넘으면 떨어지고, 선 안쪽 붉은 띠는 돌 반지름만큼의 위험 구역입니다.',
-    '백은 판이 180° 돌아가 흑과 똑같이 늘 아래에서 위로 조준합니다(온라인은 백 자리 화면, 같은 화면은 백 차례에).',
-    '조작 실수를 막으려고, 누르자마자 놓은 샷은 쏘지 않고 차례가 막 넘어온 순간의 클릭도 잠깐 받지 않습니다.'
+    '내 돌을 누른 채 뒤로 당겼다 놓으면, 당긴 반대쪽으로 당긴 만큼 세게 나갑니다.',
+    '돌을 한 번 눌러 고르면 판 어디서든 끌어 쏠 수 있습니다. 가장자리 돌을 칠 때 편합니다.',
+    '<b>40% 이하</b>로 당기면 내 돌이 멈출 자리가 파란 고리로 보입니다. 30~40%에서는 화살표도 파래지고, 40%를 넘으면 미리 보기가 사라집니다.',
+    '<b>조준 취소</b> — 컴퓨터는 마우스 오른쪽 단추, 휴대폰은 다른 손가락으로 화면을 한 번 더 누릅니다.',
+    '백은 판이 180° 돌아가, 흑처럼 늘 아래에서 위로 조준합니다.',
+    '누르자마자 놓은 샷과 차례가 막 넘어온 순간의 클릭은 실수로 보고 받지 않습니다.'
   ]],
   ['이기고 지기', [
-    '돌의 가운데가 판 밖으로 나가면 떨어집니다.',
-    '상대 돌을 모두 떨어뜨리면 그 국을 이깁니다.',
-    '양쪽 마지막 돌이 함께 떨어지면 친 쪽이 집니다.',
+    '판 둘레의 <b>밝은 선</b>이 떨어지는 선입니다. 돌의 가운데가 이 선을 넘으면 떨어집니다. 선 안쪽 붉은 띠는 위험 구역입니다.',
+    '상대 돌을 모두 떨어뜨리면 그 국을 이깁니다. 양쪽 마지막 돌이 함께 떨어지면 친 쪽이 집니다.',
     `한 편에 하나 남은 마지막 돌은 ${Math.round(K.P.lastKB * 100)}% 덜 밀립니다.`,
-    '국마다 두 사람이 증강을 모두 고른 뒤 동전을 던져 흑·백 중 먼저 칠 쪽을 정합니다. 동전이 떨어질 때까지는 돌을 움직일 수 없습니다.'
+    '국마다 두 사람이 증강을 다 고른 뒤 동전을 던져 먼저 칠 쪽을 정합니다.'
   ]],
   ['증강', [
-    `국 시작에 1장, 처음 놓인 기본 돌을 ${K.P.lossPerPick}개 잃을 때마다 1장 더 고릅니다. 기본 돌이 판 밖·연못·함정·흑점으로 떨어진 것만 세고(분열한 조각은 반 개), 증원·분신·빼앗은 돌, 도둑에게 빼앗기거나 길동무에게 데려가진 돌은 세지 않습니다.`,
-    '한 번에 같은 등급 카드 3장이 나옵니다. 은이 가장 흔하고 금, 옥 순으로 드뭅니다. 늦게 받을수록 높은 등급이 조금 더 잘 나옵니다.',
-    `옥이 ${K.P.pityAfter}번 연속 안 나오면, 나올 때까지 옥 확률이 2배가 됩니다.`,
-    '한 번 고른 증강은 그 국에서 다시 나오지 않고, 국이 끝나면 모두 사라집니다.',
-    '퀘스트 증강(수련·현상금·일기당천·파죽지세)은 고를 때는 효과가 없고, 조건을 채우면 더 높은 등급 증강을 한 장 더 고릅니다. 조건을 채울 수 없는 때에는 선택지에 나오지 않습니다.',
-    `조합: 어울리는 두 증강을 함께 가지면 덤 효과가 생깁니다(${K.SYN.length}가지). 카드에 '조합 완성'·'어울리는 짝'이 보이고, 전체 목록은 증강 설명표 맨 아래에 있습니다.`,
-    '초월(어명·역천·흑점·연환)은 일반 고르기에 나오지 않고, 일기당천이나 파죽지세를 이루면 2장 가운데 1장을 고릅니다. 한 국에 한 사람당 1장까지입니다.',
-    '조작 증강(변화구·이이제이·소용돌이)은 내 차례에 판 위 단추 줄에서 켜고 씁니다. 퀘스트 진행이나 삼세번처럼 지금 상태도 그 줄에 보입니다.'
+    `<b>받는 때</b> — 국 시작에 1장, 내 기본 돌을 ${K.P.lossPerPick}개 잃을 때마다 1장 더. 고르는 시간은 ${PICK_SEC}초이고, 지나면 알아서 골라집니다.`,
+    '<b>세는 돌</b> — 처음 놓인 기본 돌이 판 밖·연못·흑점으로 떨어진 것만 셉니다(분열 조각은 반 개). 증원·분신·빼앗은 돌, 도둑·길동무로 잃은 돌은 세지 않습니다.',
+    `<b>등급</b> — 은 → 금 → 옥 순으로 드뭅니다. 늦게 받을수록 높은 등급이 잘 나오고, 옥이 ${K.P.pityAfter}번 연속 안 나오면 나올 때까지 옥 확률이 2배입니다. 내가 가진 증강은 등급 색으로 표시됩니다.`,
+    '<b>새로고침</b> — 국마다 한 번, 받은 카드를 모두 새로 뽑을 수 있습니다. 5% 확률로 한 등급 위가 나오고, 옥에서는 1% 확률로 초월이 나옵니다.',
+    '한 번 고른 증강은 그 국에서 다시 나오지 않고, 국이 끝나면 모두 사라집니다. 지금 쓸 수 없는 증강은 선택지에 나오지 않습니다.',
+    '<b>퀘스트</b>(수련·현상금·일기당천·파죽지세) — 고를 때는 효과가 없고, 조건을 채우면 더 높은 등급을 한 장 더 고릅니다. 상대가 스스로 떨어뜨리거나 판 줄어듦·금붕어로 떨어진 상대 돌도 셉니다.',
+    `<b>조합</b> — 어울리는 두 증강을 함께 가지면 덤 효과가 생깁니다(${K.SYN.length}가지). 전체 목록은 증강 설명표 맨 아래에 있습니다.`,
+    '<b>초월</b>(어명·역천·흑점·연환) — 일기당천·파죽지세를 이루면 2장 중 1장을 고릅니다. 한 국에 한 사람당 1장입니다.',
+    '<b>조작 증강</b>(변화구·이이제이·소용돌이)은 내 차례에 판 위 단추 줄에서 씁니다.'
   ]],
   ['지형', [
-    '증강 없이 처음 자리에서는 끝까지 당겨도 상대 돌에 닿지 않습니다. 차돌 같은 증강이나 용오름의 바람문을 타면 닿을 수 있습니다.',
-    '흑요석 제단의 바위, 철옹성의 성벽에 맞은 돌은 힘을 잃지 않고 튕겨 나옵니다.',
-    '흑요석 제단의 바위가 깨지면 파편 2~6개가 판 여기저기에 작은 기둥으로 박혀 길을 막습니다.',
-    `흑요석 바위는 세게 ${K.P.rockHits}번 맞으면 깨지며 둘레 돌을 밀어냅니다.`,
-    `용오름: 판 양쪽 가장자리 가까이에 바람문(가로 3칸 · 세로 1칸)이 둘 있습니다. 흑·백 누구의 샷이든 열린 문을 지나는 돌은 한 샷에 한 번 빨라지고, 쓰인 문은 ${K.P.gateCool}수 동안 닫힙니다. 처음 자리에서 바로 상대 돌을 떨어뜨릴 만큼 세지는 않습니다.`,
-    '연못: 판 양쪽 두 연못에 돌의 가운데가 들어가면 흑백 가리지 않고 떨어집니다. 5수마다 연못에서 개구리가 뛰어나와 연못 가장자리에서 1~2칸 안쪽에 착지하고, 착지한 자리 둘레 3×3 칸의 돌을 모두 1칸씩 밀어낸 뒤 사라집니다. 판 줄어듦·개구리로 떨어진 돌은 그 돌 주인이 스스로 떨어진 것으로 셉니다(상대 퀘스트에 들어감).',
-    `'판 줄어듦'을 '있음'으로 고르면 ${K.P.shrinkStart}수 뒤부터 한 수마다 판이 반 칸씩 좁아지고, 바깥 돌은 떨어집니다. 쌍발·연타·연환·이이제이처럼 한 차례에 더 치는 샷은 그 차례에 한 번만 좁아집니다.`
+    '처음 자리에서는 끝까지 당겨도 상대 돌에 닿지 않습니다. 먼저 다가가거나 차돌·바람문을 이용하세요.',
+    `<b>흑요석 제단</b> — 가운데 바위가 돌을 튕겨 냅니다. 세게 ${K.P.rockHits}번 맞으면 깨지며 둘레 돌을 밀어내고, 파편 2~6개가 작은 기둥으로 박혀 길을 막습니다.`,
+    '<b>철옹성</b> — 양 진영 뒤 성벽에 맞은 돌은 힘을 잃지 않고 튕겨 나옵니다.',
+    `<b>용오름</b> — 양쪽 가장자리 가까이의 바람문(가로 3칸·세로 1칸)을 지나는 돌은 한 샷에 한 번 빨라집니다. 쓰인 문은 ${K.P.gateCool}수 동안 닫힙니다.`,
+    `<b>연못</b> — 돌의 가운데가 연못에 들어가면 흑백 가리지 않고 떨어집니다. ${K.A.frogEvery}수마다 두 연못에서 금붕어가 한 마리씩 나와 두 번(이번 수와 다음 수) 뛰어오르고 연못으로 돌아갑니다. 착지할 때마다 둘레 3×3 칸의 돌을 1칸씩 밀어냅니다.`,
+    '<b>차원</b> — 네 귀퉁이 가까이에 차원문이 넷 있습니다. 돌이 문에 들어가면 마주 보는 대각선 문(甲↔甲, 乙↔乙)으로 나와 같은 방향으로 계속 갑니다. 판이 줄어들어도 문은 가장자리를 따라와 그대로 남습니다.',
+    `<b>판 줄어듦</b>(기본 켬) — ${K.P.shrinkStart}수부터 한 수마다 판이 반 칸씩 좁아지고, 바깥 돌은 떨어집니다. 한 차례에 여러 번 치는 증강을 써도 그 차례에는 한 번만 좁아집니다. 판 줄어듦·금붕어로 떨어진 돌은 주인이 스스로 떨어진 것으로 셉니다.`
   ]],
   ['그 밖에', [
-    'CPU 난이도: 쉬움은 처음 하는 사람도 금방 이길 만큼 약하고, 중간은 알맞은 맞수, 어려움은 좋은 증강 없이는 이기기 어렵습니다.',
-    '국이 끝나면 결과 화면에서 다음 지형을 바꿀 수 있습니다. 새 지형으로 국을 열 때는 지형 소개가 잠깐 나오고, 건너뛸 수 있습니다.',
-    '온라인 1대1은 방을 만든 사람이 흑, 방 이름으로 들어온 사람이 백입니다. 국 시작 증강은 두 사람이 함께 고릅니다.',
-    '첫 화면 오른쪽 위 물음표 단추에서 조작을 그림으로 배울 수 있습니다.',
-    '기객은 겉모습과 이야기만 다르고 능력치는 모두 같습니다. 첫 화면 맨 위에서 언제든 바꿀 수 있습니다.'
+    '<b>CPU 난이도</b> — 쉬움은 처음 하는 사람도 이길 만큼 약하고, 중간은 알맞은 맞수, 어려움은 좋은 증강 없이는 이기기 어렵습니다.',
+    '국이 끝나면 결과 화면에서 다음 지형을 바꿀 수 있습니다. 새 지형은 짧은 소개가 나오고, 건너뛸 수 있습니다.',
+    '<b>온라인</b> — 방을 만든 사람이 흑, 방 이름으로 들어온 사람이 백입니다. 국 시작 증강은 두 사람이 함께 고릅니다.',
+    '<b>소리</b> — 머리줄이나 첫 화면의 소리 단추에서 효과음·배경음을 따로 조절하고, 배경음을 고를 수 있습니다.',
+    '첫 화면 오른쪽 위 물음표 단추에서 조작을 그림으로 배울 수 있습니다. 기객은 겉모습과 이야기만 다르고 능력치는 같습니다.'
   ]]
 ];
 
@@ -2997,7 +3084,7 @@ function dualStep() {
     netSync('pick2', -1);
     return renderDraft(G.players[me], d.of[me], id => {
       K.gainAug(G.world, me, id); drainEvents(); d.done[me] = true; renderAll(); dualStep();
-    });
+    }, 0, nx => { d.of[me] = nx; });
   }
   $('ovDraft').hidden = true;
   G.state = 'remote'; NET.waitKind = 'pick2'; NET.waitPid = 1 - me;
@@ -3248,7 +3335,8 @@ function netOnPeers(ch) {
   renderNetChip(); if (!$('ovMenu').hidden) renderNetPanel();
   if (!opp || !opp.presence) return;
   const { st, act, pk } = opp.presence;
-  if (pk && NET.seat === 0 && G.dual && pk.n === G.dual.n && !G.dual.done[1] && G.dual.of[1].ids.includes(pk.id)) {
+  if (pk && NET.seat === 0 && G.dual && pk.n === G.dual.n && !G.dual.done[1] && (G.dual.of[1].ids.includes(pk.id) || (pk.of && pk.of.includes(pk.id) && K.canReroll(G.world, 1)))) {
+    if (!G.dual.of[1].ids.includes(pk.id)) G.world.rr[1] = 1;   /* 상대가 새로고침해서 고른 카드 */
     K.gainAug(G.world, 1, pk.id); drainEvents(); G.dual.done[1] = true; renderAll();
     if (G.state === 'remote' && NET.waitKind === 'pick2') dualStep(); else netSync('pick2', -1);
   }
@@ -3294,9 +3382,9 @@ function netAdopt(st) {
     if (keepDraft) return renderPlayers();
     if (me >= 0 && !G.dual.done[me] && NET.pkN !== G.dual.n) {
       NET.dualN = G.dual.n; G.state = 'draft'; renderAll();
-      return renderDraft(G.players[me], G.dual.of[me], id => {
+      return renderDraft(G.players[me], G.dual.of[me], (id, of) => {
         NET.pkN = G.dual.n;
-        NET.room.presence({ pk: { n: G.dual.n, id } }).catch(() => {});
+        NET.room.presence({ pk: { n: G.dual.n, id, of: of && of.rr ? of.ids : 0 } }).catch(() => {});
         $('ovDraft').hidden = true; G.state = 'remote'; NET.waitKind = 'pick2'; NET.waitPid = 1 - me; renderAll();
       });
     }
@@ -3421,7 +3509,6 @@ const STATS = () => { const A = K.A, P = K.P; return {
   split: [['세게 맞은 내 돌', '둘로 갈라짐', `${A.splitN}회`, 'up'], ['조각', '크기', `−${pc(1 - A.splitR)}%`, 'down']],
   pierce: [['첫 타격', '힘', '모두 실음', 'up'], ['쏜 돌', '멈춤', '그 자리', 'down']],
   thorns: [['나와 부딪힌 상대 돌', '타격', `${pc(A.thorns)}% 되돌림`, 'foe']],
-  trap: [['상대 쪽 절반 · 직접 고름', '숨은 함정', `${A.traps}개`, 'foe']],
   orleans: [['다음 고르기', '옥 등급', '확정', 'up']],
   double: [['매 차례', '샷', '2번', 'up'], ['내 돌', '힘', `−${pc(1 - A.doubleV)}%`, 'down']],
   gust: [['가까운 상대 돌', '밀어냄', `${cell(A.gustD)}칸`, 'foe']],
@@ -3530,10 +3617,13 @@ function showDecree(p, after) {
     <h2 class="draft-who" id="dcTitle">${avatar(p)}빼앗을 상대 증강을 고르세요</h2>
     <p class="why">고른 증강은 내 것이 되고, 횟수가 있는 증강은 처음 횟수의 2배가 됩니다.</p>
     <div class="cards">${opts.map((id, i) => cardHTML(id, i, p)).join('')}</div>
+    ${timerHTML()}
   </div>`;
   peekUI(ov);
   ov.hidden = false;
+  startPickTimer(ov, performance.now() + PICK_SEC * 1000, () => { const b = ov.querySelector('.aug-card'); if (b) b.click(); });
   ov.querySelectorAll('.aug-card').forEach(b => b.addEventListener('click', () => {
+    stopPickTimer();
     ensureAudio(); bell(147, 0.3, 1.6);
     K.resolveDecree(w, p.id, b.dataset.id);
     ov.hidden = true;
@@ -3547,14 +3637,32 @@ function peekUI(ov) {
   const card = ov.querySelector('.ov-card');
   if (!card) return;
   const cards = card.querySelector('.cards');
-  (cards || card.lastElementChild).insertAdjacentHTML('afterend', '<div class="peek-row"><button type="button" class="peek-btn" aria-label="고르기 창을 숨기고 판 보기">숨기기 ▾</button></div>');
+  const rr = card.querySelector('.reroll-row');
+  (rr || cards || card.lastElementChild).insertAdjacentHTML('afterend', '<div class="peek-row"><button type="button" class="peek-btn" aria-label="고르기 창을 숨기고 판 보기">숨기기 ▾</button></div>');
   ov.insertAdjacentHTML('beforeend', '<button type="button" class="peek-open" aria-label="증강 고르기 다시 펼치기">▴ 펼치기</button>');
   card.querySelector('.peek-btn').addEventListener('click', e => { e.stopPropagation(); ensureAudio(); stoneTap(0.1, 1900); ov.classList.add('peek'); ov.querySelector('.peek-open').focus({ preventScroll: true }); });
   ov.querySelector('.peek-open').addEventListener('click', e => { e.stopPropagation(); ensureAudio(); stoneTap(0.1, 1900); ov.classList.remove('peek'); const f = ov.querySelector('.aug-card'); if (f) f.focus({ preventScroll: true }); });
 }
-function renderDraft(p, offer, onPick) {
+/* 증강 고르기 제한 시간: 30초가 지나면 알아서 고름 */
+function stopPickTimer() { clearInterval(G.pickT); G.pickT = 0; }
+function startPickTimer(ov, end, onAuto) {
+  stopPickTimer();
+  const tick = () => {
+    const el = ov.querySelector('.draft-timer');
+    if (!el || ov.hidden) { stopPickTimer(); return; }
+    const left = Math.max(0, (end - performance.now()) / 1000);
+    el.querySelector('b').textContent = Math.ceil(left);
+    el.querySelector('.tbar i').style.transform = `scaleX(${left / PICK_SEC})`;
+    el.classList.toggle('low', left <= 5);
+    if (left <= 0) { stopPickTimer(); onAuto(); }
+  };
+  tick(); G.pickT = setInterval(tick, 250);
+}
+const timerHTML = () => `<div class="draft-timer" role="timer" aria-live="off">남은 시간 <b>${PICK_SEC}</b>초 · 다 지나면 알아서 고릅니다<div class="tbar"><i></i></div></div>`;
+function renderDraft(p, offer, onPick, keepEnd, onReroll) {
   const ov = $('ovDraft'), w = G.world, nth = w.picks[p.id] + 1;
-  const owned = uniq(p.augs).map(id => AUG[id].name + (cnt(p, id) > 1 ? ` ×${cnt(p, id)}` : '')).join(', ') || '없음';
+  const owned = uniq(p.augs).map(id => `<i class="tier-${AUG[id].tier}"><i class="tier-dot">${TIER[AUG[id].tier]}</i></i>` + AUG[id].name + (cnt(p, id) > 1 ? ` ×${cnt(p, id)}` : '')).join(', ') || '없음';
+  const canRR = K.canReroll(w, p.id);
   const why = offer.bonus ? `퀘스트를 이뤄 받는 ${TIER[offer.tier]} 증강입니다` : (nth === 1 ? '국을 시작하며 받는 증강입니다' : `기본 돌을 ${Math.floor(w.lost[p.id])}개 잃어서 받는 ${nth}번째 증강입니다`) + (onPick && G.online ? ' · 상대도 지금 함께 고르고 있습니다' : '');
   ov.innerHTML = `<div class="ov-card" role="dialog" aria-modal="true" aria-labelledby="draftTitle">
     <p class="eyebrow">제${G.round}국 · ${MAPS[w.map].name}</p>
@@ -3563,9 +3671,28 @@ function renderDraft(p, offer, onPick) {
     <span class="tier-banner" data-tier="${offer.tier}">${TIER[offer.tier]} 증강</span>
     ${offer.bonus ? '' : `<p class="odds">이번 등급 확률 · ${offer.odds.map((v, i) => `${TIER[i + 1]} ${Math.round(v / offer.odds.reduce((a, b) => a + b, 0) * 100)}%`).join(' · ')}${offer.pity ? ' · <b>옥 확률 2배</b>' : ''}</p>`}
     <div class="cards">${offer.ids.map((id, i) => cardHTML(id, i, p)).join('')}</div>
+    ${timerHTML()}
+    <div class="reroll-row"><button type="button" class="reroll-btn"${canRR ? '' : ' disabled'}>↻ 새로고침 <small>${canRR ? '이번 국 1회 · 5% 확률로 한 등급 위' : '이번 국에 이미 썼습니다'}</small></button>${offer.up ? `<span class="reroll-up">${TIER[offer.tier]}로 올랐다!</span>` : ''}</div>
     <p class="owned">이번 국 보유 증강: ${owned}</p>
   </div>`;
   peekUI(ov);
+  const end = keepEnd || performance.now() + PICK_SEC * 1000;
+  ov.querySelector('.reroll-btn').addEventListener('click', e => {
+    e.stopPropagation();
+    if (ov.querySelector('.reveal')) return;
+    const nx = K.rerollOffer(w, p.id, offer);
+    if (!nx) return;
+    ensureAudio(); sfx(nx.up ? 1300 : 700, 0.4, 0.12); if (nx.up) setTimeout(() => sfx(1700, 0.35, 0.18), 120);
+    if (onReroll) onReroll(nx);
+    stopPickTimer(); renderDraft(p, nx, onPick, 0, onReroll);   /* 새로고침하면 시간도 다시 30초 */
+  });
+  startPickTimer(ov, end, () => {
+    const rv = ov.querySelector('.reveal'); if (rv) rv.remove();
+    const ids = [...ov.querySelectorAll('.aug-card')].map(b => b.dataset.id), id = cpuAugPick(ids, p);
+    const b = ov.querySelector(`.aug-card[data-id="${id}"]`) || ov.querySelector('.aug-card');
+    addLog(`${pLabel(p)} · 고르는 시간이 다 되어 알아서 골랐습니다`, p.team);
+    if (b) b.click();
+  });
   ov.hidden = false;
   const cardsEl = ov.querySelector('.cards');
   ov.querySelectorAll('.aug-card').forEach((b, i) => b.style.setProperty('--i', i));
@@ -3574,8 +3701,9 @@ function renderDraft(p, offer, onPick) {
   if (offer.tier >= 1 && !reduceMotion) tierReveal(offer.tier, cardsEl);
   ov.querySelectorAll('.aug-card').forEach(b => b.addEventListener('click', () => {
     if (ov.querySelector('.reveal')) return;
+    stopPickTimer();
     ensureAudio(); sfx(900, 0.6, 0.09);
-    if (onPick) return onPick(b.dataset.id);
+    if (onPick) return onPick(b.dataset.id, offer);
     K.gainAug(w, p.id, b.dataset.id);
     drainEvents(); renderAll();
     if (w.dcr[p.id]) return showDecree(p, runPicks);
@@ -3666,7 +3794,7 @@ function renderMapCard() {
   const shots = w ? w.shots : 0, left = K.P.shrinkStart - shots;
   const shrinkTxt = w && w.shrink > 0 ? '<b>판이 줄어드는 중</b><small>한 수마다 반 칸씩</small>'
     : w && w.noShrink ? `<b>${shots}수</b><small>판 줄어듦 없음</small>` : `<b>${shots}수</b><small>수축까지 ${Math.max(0, left)}수</small>`;
-  const frogTxt = w && m.frog ? `<small class="frog-left">개구리까지 ${K.A.frogEvery - (shots % K.A.frogEvery)}수</small>` : '';
+  const frogTxt = w && m.frog ? (w.fish && w.fish.length ? '<small class="frog-left">금붕어가 한 번 더 뜀</small>' : `<small class="frog-left">금붕어까지 ${K.A.frogEvery - (shots % K.A.frogEvery)}수</small>`) : '';
   $('mapCard').innerHTML = `<canvas width="88" height="88" data-map="${m.id}" style="width:44px;height:44px;border-radius:3px"></canvas>
     <div><b>${m.name}</b><small>${m.short}</small></div>
     <div class="shrinkbar${w && w.shrink > 0 ? ' on' : ''}">${shrinkTxt}${frogTxt}</div>`;
@@ -3707,7 +3835,7 @@ function renderStrip() {
 }
 /* ---------- 조작 증강 단추 줄 ---------- */
 const localHuman = p => !!(p && !p.cpu && !p.remote);
-const SKILL_IDS = ['trap', 'curve', 'yi', 'squirrel', 'vortex', 'train', 'bounty', 'iki', 'pajuk', 'thrice', 'grit', 'late'];
+const SKILL_IDS = ['curve', 'yi', 'squirrel', 'vortex', 'train', 'bounty', 'iki', 'pajuk', 'thrice', 'grit', 'late'];
 function skillOwner() {
   const cp = G.players[G.current];
   if (localHuman(cp)) return cp;
@@ -3760,7 +3888,7 @@ function renderPlayers() {
     const active = G.started && !coinBusy() && (G.state === 'aim' || G.state === 'moving' || G.state === 'remote' || G.state === 'replay') && p.id === G.current;
     const items = uniq(p.augs).map(id => {
       const c = cnt(p, id), a = AUG[id];
-      return `<li><span class="seal seal-xs">${a.seal}</span><b>${a.name}${c > 1 ? ` ×${c}` : ''}${a.quest ? '<span class="quest-tag">퀘스트</span>' : ''}</b><small>${a.short()}</small></li>`;
+      return `<li class="tier-${a.tier}"><span class="seal seal-xs">${a.seal}</span><b><i class="tier-dot">${TIER[a.tier]}</i>${a.name}${c > 1 ? ` ×${c}` : ''}${a.quest ? '<span class="quest-tag">퀘스트</span>' : ''}</b><small>${a.short()}</small></li>`;
     }).join('');
     return `<div class="pcard card${active ? ' active' : ''}">
       <div class="pcard-head">${avatar(p)}<span class="pcard-who"><span class="pcard-name">${esc(pSelf(p))}</span><small>${teamName(p.team)} · ${charOf(p).title}</small></span>${p.cpu ? `<span class="chip">CPU ${LVL_NAME[G.cpuLevel] || ''}</span>` : ''}${active ? '<span class="chip turn">차례</span>' : ''}<span class="pcount">돌 ${n}</span></div>
@@ -4108,11 +4236,18 @@ function drainEvents() {
       case 'frog':
         pushFx({ k: 'frog', fx: e.fx, fy: e.fy, x: e.x, y: e.y, a: 0, life: e.t });
         { const t0 = [523, 784, 1047]; t0.forEach((f, i) => setTimeout(() => sfx(f, 0.16, 0.06), 60 * i)); }
-        addLog('연못 · 개구리가 뛰어나왔습니다'); break;
+        if (e.hop === 1) addLog('연못 · 금붕어가 뛰어나왔습니다'); break;
       case 'frogLand':
-        pushFx({ k: 'frogSplash', x: e.x, y: e.y, a: 0, life: 0.8 });
+        pushFx({ k: 'frogSplash', x: e.x, y: e.y, a: 0, life: 1.4 });
         sfx(130, 0.5, 0.18); sfx(260, 0.25, 0.12); G.shake = Math.max(G.shake, 0.1);
-        if (e.n) addLog(`개구리 · 착지한 둘레 3×3 칸의 돌 ${e.n}개를 1칸 밀어냈습니다`); break;
+        if (e.n) addLog(`금붕어 · 착지한 둘레 3×3 칸의 돌 ${e.n}개를 1칸 밀어냈습니다`); break;
+      case 'portal':
+        fxRing(e.fx, e.fy, e.a % 2 ? '#5fe0d0' : '#b58cff', 10, 70, 0.45); fxRing(e.x, e.y, e.a % 2 ? '#5fe0d0' : '#b58cff', 70, 10, 0.45);
+        sfx(1200, 0.25, 0.12); setTimeout(() => sfx(700, 0.25, 0.14), 90); break;
+      case 'fishGone':
+        for (const [x, y, px, py] of e.fish) pushFx({ k: 'fishDive', fx: x, fy: y, x: px, y: py, a: 0, life: 0.9 });
+        sfx(520, 0.2, 0.1); setTimeout(() => sfx(260, 0.25, 0.2), 500);
+        addLog('연못 · 금붕어가 연못으로 돌아갔습니다'); break;
       case 'pit':
         if (e.pond) { fxRing(e.x, e.y, '#9fd6d0', 10, 120, 0.7); fxRing(e.x, e.y, '#d8f0ec', 20, 90, 0.5); fxStamp(e.x, e.y - 100, '池', '연못에 빠짐', { size: 66 }); sfx(240, 0.5, 0.3); }
         else { fxInk(e.x, e.y, 80, { n: 10 }); fxStamp(e.x, e.y - 90, '陷', '숨은 함정', { size: 66 }); }
@@ -4625,6 +4760,7 @@ function drawMapThumb(cnv, mapId) {
   drawFeatures(g, MAPS[mapId].obs);
   drawPads(g, (MAPS[mapId].pads || []).map(p => Object.assign({ cd: 0 }, p)), 0, true);
   for (const p of MAPS[mapId].ponds || []) drawPond(g, Object.assign({ pond: true }, p), 0);
+  if (MAPS[mapId].portals) drawPortals(g, K.portalsOf({ map: mapId, shrink: 0 }), 0, true);
   const F = K.FORMATION['1v1'].base[0];
   for (const team of [0, 1]) for (const [r, c] of F) {
     const x = K.L(c), y = K.L(team === 0 ? r : 18 - r);
@@ -4777,20 +4913,94 @@ function drawTrapUI(w, p, now) {
   }
   ctx.restore();
 }
-/* ---------- 개구리 ---------- */
-function drawFrog(x, y, sc, ang) {
-  ctx.save(); ctx.translate(x, y); ctx.scale(sc, sc);
-  ctx.fillStyle = '#3f8a3a'; ctx.strokeStyle = '#1d3d1a'; ctx.lineWidth = 3;
-  for (const sx of [-1, 1]) { ctx.beginPath(); ctx.ellipse(sx * 22, 12, 14, 8, sx * 0.5, 0, TAU); ctx.fill(); ctx.stroke(); }   /* 뒷다리 */
-  ctx.beginPath(); ctx.ellipse(0, 0, 26, 20, 0, 0, TAU); ctx.fill(); ctx.stroke();
-  ctx.fillStyle = '#9fd27f'; ctx.beginPath(); ctx.ellipse(0, 6, 15, 10, 0, 0, TAU); ctx.fill();
-  for (const sx of [-1, 1]) {
-    ctx.fillStyle = '#3f8a3a'; ctx.beginPath(); ctx.arc(sx * 12, -16, 8, 0, TAU); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = '#fffbe8'; ctx.beginPath(); ctx.arc(sx * 12, -17, 5, 0, TAU); ctx.fill();
-    ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(sx * 12 + Math.cos(ang) * 1.5, -17 + Math.sin(ang) * 1.5, 2.6, 0, TAU); ctx.fill();
+/* ---------- 자리 증강(화점·벼랑·대마): 효과가 나는 자리와, 지금 효과를 받는 돌을 또렷하게 ---------- */
+function drawZones(w, now) {
+  const pulse = reduceMotion ? 0.5 : 0.5 + 0.5 * Math.sin(now / 380);
+  const tc = t => (t === 0 ? ['rgba(30,30,36,', '#1c1c22', '#f2ead8'] : ['rgba(255,252,240,', '#f6f1e4', '#1c140a']);
+  for (const p of G.players) {
+    const [rgba, solid] = tc(p.team);
+    if (cnt(p, 'star')) {
+      ctx.save();
+      for (const i of [3, 9, 15]) for (const j of [3, 9, 15]) {
+        const x = K.L(i), y = K.L(j);
+        if (w.holes.some(h => h.pond && hyp(h.x - x, h.y - y) < h.r + 4)) continue;
+        ctx.fillStyle = `rgba(255,214,120,${0.5 + 0.25 * pulse})`; ctx.beginPath(); ctx.arc(x, y, K.A.starD, 0, TAU); ctx.fill();
+        ctx.strokeStyle = rgba + '.95)'; ctx.lineWidth = 7; ctx.setLineDash([10, 7]); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = solid; ctx.beginPath(); ctx.arc(x, y, 9, 0, TAU); ctx.fill();
+      }
+      ctx.restore();
+    }
+    if (cnt(p, 'edge')) {   /* 벼랑: 방어력이 오르는 가장자리 띠 */
+      const lo = w.shrink, hi = S - w.shrink, D = K.A.edgeD;
+      ctx.save(); ctx.fillStyle = `rgba(255,214,120,${0.22 + 0.14 * pulse})`; ctx.strokeStyle = rgba + '.9)'; ctx.lineWidth = 6; ctx.setLineDash([16, 9]);
+      ctx.beginPath(); ctx.rect(lo, lo, hi - lo, hi - lo); ctx.rect(lo + D, lo + D, hi - lo - 2 * D, hi - lo - 2 * D); ctx.fill('evenodd');
+      ctx.strokeRect(lo + D, lo + D, hi - lo - 2 * D, hi - lo - 2 * D); ctx.restore();
+    }
+    if (cnt(p, 'dragon')) {   /* 대마: 뭉친 돌끼리 이은 선 */
+      const mine = w.stones.filter(s => !s.dead && s.falling <= 0 && s.team === p.team);
+      ctx.save(); ctx.strokeStyle = `rgba(255,200,90,${0.7 + 0.3 * pulse})`; ctx.lineWidth = 10; ctx.lineCap = 'round';
+      for (let a = 0; a < mine.length; a++) for (let b = a + 1; b < mine.length; b++) {
+        const A1 = mine[a], B1 = mine[b];
+        if (hyp(A1.x - B1.x, A1.y - B1.y) < K.A.dragonD) { ctx.beginPath(); ctx.moveTo(A1.x, A1.y); ctx.lineTo(B1.x, B1.y); ctx.stroke(); }
+      }
+      ctx.restore();
+    }
   }
-  ctx.strokeStyle = '#1d3d1a'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(0, -2, 9, 0.2 * Math.PI, 0.8 * Math.PI); ctx.stroke();
+}
+/* 지금 자리 증강 효과를 받는 돌 위에 작은 표 */
+function zoneBadges(w) {
+  for (const s of w.stones) {
+    if (s.dead || s.falling > 0) continue;
+    const p = G.players[s.owner]; if (!p) continue;
+    const tags = [];
+    if (cnt(p, 'star') && K.nearStar(s)) tags.push('星');
+    if (cnt(p, 'edge') && K.nearEdge(w, s)) tags.push('崖');
+    if (cnt(p, 'dragon') && K.inDragon(w, s)) tags.push('龍');
+    if (tags.length) markBadge(s.x + s.r * 0.75, s.y - s.r * 0.95, tags.join('') + ' 盾', '#ffd678', '#1c140a', Math.max(24, 11 / G.scale));   /* 방어력이 오른 돌 */
+  }
+}
+/* ---------- 금붕어 ---------- */
+function drawFish(x, y, sc, ang, t = 0) {
+  ctx.save(); ctx.translate(x, y); ctx.rotate(ang); ctx.scale(sc * 1.4, sc * 1.4);
+  const wag = Math.sin(t * 40) * 0.35;
+  ctx.fillStyle = '#ff8a2a'; ctx.strokeStyle = '#8a3a0c'; ctx.lineWidth = 3;
+  ctx.save(); ctx.translate(-24, 0); ctx.rotate(wag);   /* 꼬리 */
+  ctx.beginPath(); ctx.moveTo(4, 0); ctx.quadraticCurveTo(-14, -20, -22, -16); ctx.quadraticCurveTo(-14, 0, -22, 16); ctx.quadraticCurveTo(-14, 20, 4, 0); ctx.fill(); ctx.stroke(); ctx.restore();
+  ctx.beginPath(); ctx.ellipse(0, 0, 28, 17, 0, 0, TAU); ctx.fill(); ctx.stroke();   /* 몸 */
+  ctx.fillStyle = '#ffd08a'; ctx.beginPath(); ctx.ellipse(4, 6, 15, 7, 0, 0, TAU); ctx.fill();
+  ctx.fillStyle = '#ff6a12'; ctx.beginPath(); ctx.moveTo(-6, -15); ctx.quadraticCurveTo(4, -30, 12, -14); ctx.fill();   /* 등지느러미 */
+  ctx.fillStyle = '#fffbe8'; ctx.beginPath(); ctx.arc(15, -4, 5.5, 0, TAU); ctx.fill();
+  ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(16.5, -4, 2.8, 0, TAU); ctx.fill();
   ctx.restore();
+}
+/* 판 위에서 다음 뜀을 기다리는 금붕어 (파닥거림) */
+function drawRestFish(w, now) {
+  for (const f of w.fish || []) {
+    const hop = reduceMotion ? 0 : Math.abs(Math.sin(now / 160)) * 10;
+    ctx.save(); ctx.globalAlpha = 0.3; ctx.fillStyle = '#000'; ctx.beginPath(); ctx.ellipse(f.x, f.y + 8, 26, 9, 0, 0, TAU); ctx.fill(); ctx.restore();
+    drawFish(f.x, f.y - hop, 1, Math.atan2(f.y - f.py, f.x - f.px) + Math.sin(now / 90) * 0.15, now / 1000);
+    const B = K.A.frogBox;
+    ctx.save(); ctx.strokeStyle = 'rgba(255,150,70,.7)'; ctx.lineWidth = 4; ctx.setLineDash([10, 8]); ctx.lineDashOffset = reduceMotion ? 0 : -now / 40;
+    ctx.strokeRect(f.x - B, f.y - B, 2 * B, 2 * B); ctx.restore();   /* 다음에 뛸 때 밀려날 수 있는 둘레 */
+  }
+}
+/* ---------- 차원문 ---------- */
+function drawPortals(g, P, now, still) {
+  if (!P) return;
+  const R = K.A.portalR, cols = [['#b58cff', '#4a2a8a'], ['#5fe0d0', '#145c55']];
+  P.forEach(([x, y], i) => {
+    const [c1, c2] = cols[i % 2], t = still ? 0 : now / 900;
+    g.save();
+    const gr = g.createRadialGradient(x, y, 4, x, y, R); gr.addColorStop(0, '#0b0714'); gr.addColorStop(0.7, c2); gr.addColorStop(1, c1);
+    g.fillStyle = gr; g.beginPath(); g.arc(x, y, R, 0, TAU); g.fill();
+    g.strokeStyle = c1; g.lineWidth = 5; g.stroke();
+    g.translate(x, y); g.rotate(t * (i % 2 ? -1 : 1));
+    g.strokeStyle = 'rgba(255,255,255,.55)'; g.lineWidth = 3;
+    for (let k = 0; k < 3; k++) { g.beginPath(); g.arc(0, 0, R * (0.35 + 0.2 * k), k * 2.1, k * 2.1 + 2.4); g.stroke(); }
+    g.restore();
+    g.save(); g.font = `700 ${Math.round(R * 0.62)}px ${SERIF}`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = '#fff';
+    g.fillText(i % 2 ? '乙' : '甲', x, y + 1); g.restore();
+  });
 }
 /* ---------- 판 가장자리(떨어지는 선) ---------- */
 /* 돌의 가운데가 이 선을 넘으면 떨어짐: 바깥은 어둡게, 선은 밝게 또렷이 */
@@ -5027,11 +5237,9 @@ function render(now) {
     drawFeatures(ctx, w.obs, w.obsHits);
     drawPads(ctx, w.pads || [], now, false);
     drawHoles(ctx, w.holes.filter(h => h.seen || h.team === viewerTeam()), now);
-    for (const p of G.players) if (cnt(p, 'star')) {
-      ctx.save(); ctx.lineWidth = 4; ctx.strokeStyle = p.team === 0 ? 'rgba(20,20,24,.75)' : 'rgba(255,255,255,.9)'; ctx.fillStyle = 'rgba(232,205,142,.38)';
-      for (const i of [3, 9, 15]) for (const j of [3, 9, 15]) { if (w.holes.some(h => h.pond && hyp(h.x - K.L(i), h.y - K.L(j)) < h.r + 4)) continue; ctx.beginPath(); ctx.arc(K.L(i), K.L(j), K.A.starD, 0, TAU); ctx.fill(); ctx.stroke(); }
-      ctx.restore();
-    }
+    drawZones(w, now);
+    drawPortals(ctx, K.portalsOf(w), now, false);
+    drawRestFish(w, now);
     const tg = !MAPS[w.map].noTengen && G.players.find(p => cnt(p, 'tengen'));
     if (tg) {
       const pulse = reduceMotion ? 0 : Math.sin(now / 300) * 5;
@@ -5099,7 +5307,7 @@ function render(now) {
     }
     const tc = [K.teamCount(w, 0), K.teamCount(w, 1)];
     for (const s of w.stones) if (!s.dead) drawStone(s, G.started && tc[s.team] === 1);
-    drawStoneMarks(w, now);
+    drawStoneMarks(w, now); zoneBadges(w);
 
     if (humanAim && G.aim) {
       const a = aimInfo();
@@ -5137,7 +5345,7 @@ function stampShape(f, alpha, scale) {
   ctx.fillText(f.ch, 0, f.size * 0.04);
   ctx.restore();
 }
-const WHY_TXT = { self: '상대가 스스로 떨어뜨린 돌', shrink: '판 줄어듦으로 떨어진 돌', frog: '개구리에 밀려 떨어진 돌' };
+const WHY_TXT = { self: '상대가 스스로 떨어뜨린 돌', shrink: '판 줄어듦으로 떨어진 돌', frog: '금붕어에 밀려 떨어진 돌' };
 function drawFx(f) {
   const u = f.a / f.life;
   ctx.save();
@@ -5247,7 +5455,13 @@ function drawFx(f) {
     case 'frog': {   /* 연못에서 튀어 올라 착지 */
       const e2 = u * u * (3 - 2 * u), x = f.fx + (f.x - f.fx) * e2, y = f.fy + (f.y - f.fy) * e2 - Math.sin(Math.PI * u) * 1.8 * GAP, sc = 1 + 0.45 * Math.sin(Math.PI * u);
       ctx.globalAlpha = 0.35; ctx.fillStyle = '#000'; ctx.beginPath(); ctx.ellipse(f.fx + (f.x - f.fx) * e2, f.fy + (f.y - f.fy) * e2, 26 / sc, 12 / sc, 0, 0, TAU); ctx.fill();
-      ctx.globalAlpha = 1; drawFrog(x, y, sc, Math.atan2(f.y - f.fy, f.x - f.fx));
+      ctx.globalAlpha = 1; drawFish(x, y, sc, Math.atan2(f.y - f.fy, f.x - f.fx), u);
+      break;
+    }
+    case 'fishDive': {   /* 연못으로 돌아감 */
+      const e2 = u * u, x = f.fx + (f.x - f.fx) * e2, y = f.fy + (f.y - f.fy) * e2 - Math.sin(Math.PI * u) * 1.2 * GAP;
+      ctx.globalAlpha = 1 - Math.max(0, (u - 0.8) / 0.2); drawFish(x, y, 1 - 0.4 * u, Math.atan2(f.y - f.fy, f.x - f.fx), u);
+      if (u > 0.8) { ctx.globalAlpha = (1 - u) * 5; ctx.strokeStyle = '#bfeef2'; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(f.x, f.y, 20 + (u - 0.8) * 300, 0, TAU); ctx.stroke(); }
       break;
     }
     case 'frogSplash': {   /* 착지: 밀려나는 3×3 칸과 물결 */
@@ -5256,7 +5470,7 @@ function drawFx(f) {
       ctx.strokeRect(f.x - B, f.y - B, 2 * B, 2 * B); ctx.setLineDash([]);
       ctx.fillStyle = `rgba(143,209,122,${0.18 * al})`; ctx.fillRect(f.x - B, f.y - B, 2 * B, 2 * B);
       ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(f.x, f.y, 20 + u * B * 1.3, 0, TAU); ctx.stroke();
-      if (u < 0.35) { ctx.globalAlpha = 1 - u / 0.35; drawFrog(f.x, f.y, 1, 0); }
+
       break;
     }
     case 'shardFly': {   /* 흑요석 파편이 날아가 박힘 */
@@ -5533,7 +5747,7 @@ $('btnBook').addEventListener('click', () => {
   ov.addEventListener('click', e => { if (e.target === ov) close(); }, { once: true });
   $('bookClose').focus({ preventScroll: true });
 });
-const BAL = {"quick": ["clay", "millet", "grit", "late", "lone", "train", "curve", "thrice", "brand", "ice", "glut", "bounty", "iki", "yi", "vortex", "land", "bundle", "pass", "pajuk", "squirrel", "orleans"], "aug": {"iron": {"v": 17.5}, "aim": {"v": 17.2}, "grip": {"v": 14.6}, "root": {"v": 14.6}, "big": {"v": 13.9}, "momentum": {"v": 12.2}, "sand": {"v": 11.3}, "edge": {"v": 10.7}, "shackle": {"v": 10.1}, "reinforce": {"v": 9.8}, "fast": {"v": 8.7}, "first": {"v": 8.2}, "counter": {"v": 6.3}, "seal": {"v": 5.7}, "star": {"v": 4.2}, "trap": {"v": 27.4}, "pierce": {"v": 25.3}, "double": {"v": 22.1}, "marks": {"v": 21.2}, "wall": {"v": 19.2}, "hammer": {"v": 17.1}, "wedge": {"v": 16.2}, "thorns": {"v": 16.1}, "gust": {"v": 15.7}, "chain": {"v": 12.5}, "press": {"v": 8.6}, "shock": {"v": 7.0}, "bomb": {"v": 3.8}, "combo": {"v": 3.3}, "split": {"v": -4.8}, "last": {"v": 58.5}, "king": {"v": 39.9}, "tide": {"v": 36.7}, "tengen": {"v": 32.8}, "pillar": {"v": 24.2}, "thief": {"v": 23.0}, "buddy": {"v": 17.4}, "shaky": {"v": 16.6}, "clone": {"v": 16.4}, "ko": {"v": 16.0}, "dense": {"v": 15.1}, "bolt": {"v": 13.2}, "rewind": {"v": 11.2}, "revive": {"v": 10.5}, "dragon": {"v": 6.0}, "clay": {"v": 6.7}, "millet": {"v": 5}, "grit": {"v": 15}, "late": {"v": 6.7}, "lone": {"v": 16.7}, "train": {"v": 3.3}, "curve": {"v": 6.7}, "thrice": {"v": 21.7}, "brand": {"v": 20}, "ice": {"v": 0}, "glut": {"v": 15}, "bounty": {"v": 8.3}, "iki": {"v": 10}, "yi": {"v": 6.3}, "vortex": {"v": 15}, "land": {"v": 28.3}, "bundle": {"v": 26.7}, "pass": {"v": 12.5}, "pajuk": {"v": 8.3}, "squirrel": {"v": 28.8}, "orleans": {"v": 5}}, "tier": {"1": 11, "2": 14, "3": 22.5}, "abs": true, "health": {"flat": {"rounds": 635, "first": 0.512, "shots": 65.9, "comeback": 0.309, "picks": 2.8, "prism": 0.185, "both": 22}, "diamond": {"rounds": 662, "first": 0.488, "shots": 55, "comeback": 0.212, "picks": 2.76, "prism": 0.171, "both": 16}, "siege": {"rounds": 574, "first": 0.542, "shots": 60.8, "comeback": 0.378, "picks": 2.66, "prism": 0.176, "both": 13}, "boost": {"rounds": 893, "first": 0.493, "shots": 39.8, "comeback": 0.082, "picks": 2.86, "prism": 0.162, "both": 24}, "pond": {"rounds": 848, "first": 0.509, "shots": 69, "comeback": 0.216, "picks": 2.81, "prism": 0.168, "both": 19}}, "perMap": 722, "rounds": 3612, "random": true, "se": 4.7};
+const BAL = {"quick": ["clay", "millet", "grit", "late", "lone", "train", "curve", "thrice", "brand", "ice", "glut", "bounty", "iki", "yi", "vortex", "land", "bundle", "pass", "pajuk", "squirrel", "orleans", "dragon", "chain"], "aug": {"iron": {"v": 17.5}, "aim": {"v": 17.2}, "grip": {"v": 14.6}, "root": {"v": 14.6}, "big": {"v": 13.9}, "momentum": {"v": 12.2}, "sand": {"v": 11.3}, "edge": {"v": 10.7}, "shackle": {"v": 10.1}, "reinforce": {"v": 9.8}, "fast": {"v": 8.7}, "first": {"v": 8.2}, "counter": {"v": 6.3}, "seal": {"v": 5.7}, "star": {"v": 4.2}, "trap": {"v": 27.4}, "pierce": {"v": 25.3}, "double": {"v": 22.1}, "marks": {"v": 21.2}, "wall": {"v": 19.2}, "hammer": {"v": 17.1}, "wedge": {"v": 16.2}, "thorns": {"v": 16.1}, "gust": {"v": 15.7}, "chain": {"v": 15}, "press": {"v": 8.6}, "shock": {"v": 7.0}, "bomb": {"v": 3.8}, "combo": {"v": 3.3}, "split": {"v": -4.8}, "last": {"v": 58.5}, "king": {"v": 39.9}, "tide": {"v": 36.7}, "tengen": {"v": 32.8}, "pillar": {"v": 24.2}, "thief": {"v": 23.0}, "buddy": {"v": 17.4}, "shaky": {"v": 16.6}, "clone": {"v": 16.4}, "ko": {"v": 16.0}, "dense": {"v": 15.1}, "bolt": {"v": 13.2}, "rewind": {"v": 11.2}, "revive": {"v": 10.5}, "dragon": {"v": 11.4}, "clay": {"v": 6.7}, "millet": {"v": 5}, "grit": {"v": 15}, "late": {"v": 6.7}, "lone": {"v": 16.7}, "train": {"v": 3.3}, "curve": {"v": 6.7}, "thrice": {"v": 21.7}, "brand": {"v": 20}, "ice": {"v": 0}, "glut": {"v": 15}, "bounty": {"v": 8.3}, "iki": {"v": 10}, "yi": {"v": 6.3}, "vortex": {"v": 15}, "land": {"v": 28.3}, "bundle": {"v": 26.7}, "pass": {"v": 12.5}, "pajuk": {"v": 8.3}, "squirrel": {"v": 28.8}, "orleans": {"v": 5}}, "tier": {"1": 11, "2": 14, "3": 22.5}, "abs": true, "health": {"flat": {"rounds": 635, "first": 0.512, "shots": 65.9, "comeback": 0.309, "picks": 2.8, "prism": 0.185, "both": 22}, "diamond": {"rounds": 662, "first": 0.488, "shots": 55, "comeback": 0.212, "picks": 2.76, "prism": 0.171, "both": 16}, "siege": {"rounds": 574, "first": 0.542, "shots": 60.8, "comeback": 0.378, "picks": 2.66, "prism": 0.176, "both": 13}, "boost": {"rounds": 893, "first": 0.493, "shots": 39.8, "comeback": 0.082, "picks": 2.86, "prism": 0.162, "both": 24}, "pond": {"rounds": 848, "first": 0.509, "shots": 69, "comeback": 0.216, "picks": 2.81, "prism": 0.168, "both": 19}}, "perMap": 722, "rounds": 3612, "random": true, "se": 4.7};
 if (!BAL) $('balance').closest('details').hidden = true;
 if (BAL) {
   const fmt = v => (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v).toFixed(1);
@@ -5700,6 +5914,15 @@ function miniPads(g, glow = 0, closed = []) {
     g.fillStyle = '#e8cd8e'; g.font = `700 10px ${SERIF}`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(shut ? '닫힘' : '風門', X, Y + 1);
   });
 }
+function miniPortals(g, t = 0) {
+  const pts = [[0.5, 0.5], [17.5, 0.5], [17.5, 17.5], [0.5, 17.5]].map(([a, b]) => [mx(a / 18), mx(b / 18)]);
+  pts.forEach(([X, Y], i) => {
+    const R = 0.05 * MW, c = i % 2 ? '#5fe0d0' : '#b58cff';
+    const gr = g.createRadialGradient(X, Y, 1, X, Y, R); gr.addColorStop(0, '#0b0714'); gr.addColorStop(1, c);
+    g.fillStyle = gr; g.beginPath(); g.arc(X, Y, R, 0, TAU); g.fill(); g.strokeStyle = c; g.lineWidth = 2.5; g.stroke();
+    g.save(); g.translate(X, Y); g.rotate(t * 2 * (i % 2 ? -1 : 1)); g.strokeStyle = 'rgba(255,255,255,.6)'; g.lineWidth = 1.5; g.beginPath(); g.arc(0, 0, R * 0.55, 0, 4); g.stroke(); g.restore();
+  });
+}
 function miniPonds(g) {
   for (const px of [2.75 / 18, 15.25 / 18]) {
     const X = mx(px), Y = mx(0.5), R = 0.09 * MW;
@@ -5730,7 +5953,8 @@ const GUIDE = {
   siege: { marks: [{ x: 0.5, y: -0.06, text: '성벽 (위·아래)', tx: 0.5, ty: 0.2 }, { x: 0.02, y: 0.5, text: '양옆은 열림', tx: 0.24, ty: 0.5 }] },
   boost: { marks: [{ x: 3 / 18, y: 0.5, r: 0.07, text: '바람문', tx: 0.3, ty: 0.3 }, { x: 15 / 18, y: 0.5, r: 0.07, text: '바람문', tx: 0.7, ty: 0.7 }] },
   pond: { marks: [{ x: 2.75 / 18, y: 0.5, r: 0.09, text: '연못', tx: 0.3, ty: 0.3 }, { x: 15.25 / 18, y: 0.5, r: 0.09, text: '연못', tx: 0.7, ty: 0.7 }] },
-  random: { lines: ['국마다 다섯 지형 가운데 하나가 무작위로 나옵니다.', '같은 지형이 연달아 나오지는 않습니다.'] }
+  dim: { marks: [{ x: 0.5 / 18, y: 0.5 / 18, r: 0.06, text: '甲', tx: 0.18, ty: 0.16 }, { x: 17.5 / 18, y: 17.5 / 18, r: 0.06, text: '甲', tx: 0.82, ty: 0.84 }, { x: 17.5 / 18, y: 0.5 / 18, r: 0.06, text: '乙', tx: 0.82, ty: 0.16 }, { x: 0.5 / 18, y: 17.5 / 18, r: 0.06, text: '乙', tx: 0.18, ty: 0.84 }] },
+  random: { lines: ['국마다 여섯 지형 가운데 하나가 무작위로 나옵니다.', '같은 지형이 연달아 나오지는 않습니다.'] }
 };
 /* 지형 설명 그림: 지형의 특징을 그대로 그리고 짚어 줌 */
 function drawGuide(g, id, t = 0) {
@@ -5744,6 +5968,7 @@ function drawGuide(g, id, t = 0) {
   if (id === 'siege') miniWalls(g, 0);
   if (id === 'boost') miniPads(g, 0.3 + 0.3 * Math.sin(t * 4));
   if (id === 'pond') miniPonds(g);
+  if (id === 'dim') miniPortals(g, t);
   for (const [r, c] of K.FORMATION['1v1'].base[0]) { miniStone(g, c / 18, r / 18, 0, 0.85, 7); miniStone(g, c / 18, (18 - r) / 18, 1, 0.85, 7); }
   for (const m of (GUIDE[id] && GUIDE[id].marks) || []) miniMark(g, m, 1, t);
 }
@@ -5929,7 +6154,18 @@ const INTRO = {
       if (t > 3.4) miniLabel(g, 0.36, 0.42, `쓴 문은 ${K.P.gateCool}수 동안 닫힘`, seg(t, 3.4, 3.6), 13, '#ffd6c8');
     } }
 };
-INTRO.pond = { d: 6.8, lines: ['판 양쪽에 연못이 둘 있습니다.', '돌의 가운데가 연못에 들어가면 흑백 가리지 않고 떨어집니다.', '상대 돌은 연못 쪽으로 몰고, 내 돌은 연못에서 떨어뜨려 두세요.', '5수마다 개구리가 뛰어나와 착지한 둘레 3×3 칸의 돌을 1칸씩 밀어냅니다.'], at: [0, 1.4, 3.4, 4.6],
+INTRO.dim = { d: 6.4, lines: ['네 귀퉁이 가까이에 차원문이 넷 있습니다.', '문에 들어간 돌은 마주 보는 대각선 문으로 나와 그대로 갑니다.', '우리 진영 옆 문으로 쏘면 상대 진영 옆으로 나옵니다.', '판이 줄어들어도 문은 가장자리를 따라옵니다.'], at: [0, 1.4, 3.0, 4.6],
+  draw(g, t) {
+    miniBase(g); miniPortals(g, t);
+    for (const [r, c] of K.FORMATION['1v1'].base[0]) { miniStone(g, c / 18, (18 - r) / 18, 1, 0.85, 7); if (!(r === 15 && c === 3)) miniStone(g, c / 18, r / 18, 0, 0.85, 7); }
+    /* 흑 돌이 왼아래 문(乙)으로 들어가 오른위 문(乙)으로 나옴 */
+    const k1 = seg(t, 0.6, 1.6), k2 = seg(t, 1.6, 2.8);
+    if (t < 1.6) miniStone(g, lerp(3 / 18, 0.5 / 18, eo(k1)), lerp(15 / 18, 17.5 / 18, eo(k1)), 0, 1 - Math.max(0, (k1 - 0.85) / 0.15));
+    else miniStone(g, lerp(17.5 / 18, 15 / 18, eo(k2)), lerp(0.5 / 18, 3 / 18, eo(k2)), 0, Math.min(1, k2 * 6));
+    if (t > 1.5 && t < 2.4) { miniRing(g, 0.5 / 18, 17.5 / 18, seg(t, 1.5, 2.2), '95,224,208'); miniRing(g, 17.5 / 18, 0.5 / 18, seg(t, 1.6, 2.3), '95,224,208'); }
+    if (t > 1.7) miniLabel(g, 0.72, 0.22, '반대 대각선으로!', seg(t, 1.7, 1.9) * (1 - seg(t, 4.2, 4.6)), 14, '#bff3ec');
+  } };
+INTRO.pond = { d: 6.8, lines: ['판 양쪽에 연못이 둘 있습니다.', '돌의 가운데가 연못에 들어가면 흑백 가리지 않고 떨어집니다.', '상대 돌은 연못 쪽으로 몰고, 내 돌은 연못에서 떨어뜨려 두세요.', '5수마다 금붕어가 나와 두 번 뛰어오르며, 착지한 둘레 3×3 칸의 돌을 1칸씩 밀어냅니다.'], at: [0, 1.4, 3.4, 4.6],
   draw(g, t) {
     miniBase(g);
     for (const px of [0.15, 0.85]) {
