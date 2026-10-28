@@ -247,18 +247,25 @@ button,input{font:inherit;color:inherit}
 #log li:first-child{color:var(--ivory)}
 #log .stone-ico{width:9px;height:9px;transform:translateY(1px)}
 .rules{border-top:1px solid var(--hair);padding-top:12px}
-.rules summary{cursor:pointer;font-family:var(--font-display);font-weight:600;color:var(--muted);letter-spacing:.14em;font-size:13px}
-.rules ul{margin:10px 0 0;padding-left:18px;color:var(--muted);font-size:12.5px;display:grid;gap:5px}
+.rules summary{cursor:pointer;font-family:var(--font-display);font-weight:700;color:var(--ivory);letter-spacing:.12em;font-size:16px;padding:4px 0}
+.rules ul{margin:8px 0 0;padding-left:20px;color:#d8cfbf;font-size:14.5px;line-height:1.65;display:grid;gap:7px}
+.rules ul li::marker{color:var(--gold)}
+.rule-card{margin-top:12px;padding:10px 14px 12px;border:1px solid var(--hair);border-radius:8px;background:rgba(0,0,0,.18)}
+.rule-card .rule-h{margin:0}
+.gloss{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:8px 0 0;font-size:14.5px;line-height:1.55;color:#d8cfbf}
+.gloss dt{font-weight:800;color:var(--gold-hi);white-space:nowrap}
+.gloss dd{margin:0}
 .bal-note{margin:10px 0 0;color:var(--muted);font-size:12px}
 .book{display:grid;gap:12px;margin-top:10px}
-.book h3{margin:4px 0 0;font-size:11px;letter-spacing:.24em;font-weight:600}
+.book h3{margin:6px 0 2px;font-size:18px;letter-spacing:.2em;font-weight:800;padding-bottom:4px;border-bottom:2px solid currentColor}
 .book h3[data-tier="1"]{color:var(--silver)}.book h3[data-tier="2"]{color:var(--gold-hi)}.book h3[data-tier="3"]{background:var(--nacre);-webkit-background-clip:text;background-clip:text;color:transparent}
 .book ul{list-style:none;margin:0;padding:0;display:grid;gap:9px}
 .book li{display:grid;grid-template-columns:24px minmax(0,1fr);column-gap:10px;align-items:start}
 .book li .seal{grid-row:span 2;margin-top:2px}
-.book li b{font-size:13px;font-weight:600;color:var(--ivory)}
+.book li b{font-size:15px;font-weight:700;color:var(--ivory)}
 .book li b small{font-weight:400;color:var(--gold);font-size:11.5px;margin-left:6px}
-.book li span{color:var(--muted);font-size:12px;line-height:1.5}
+.book li span{color:var(--muted);font-size:13.5px;line-height:1.6}
+.book li .book-body{display:grid;gap:6px}
 .bal-wrap{overflow-x:auto;margin-top:8px}
 .bal{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-numeric:tabular-nums}
 .bal th{font-weight:500;color:var(--faint);font-size:11px;letter-spacing:.06em;text-align:left;padding:4px 6px;border-bottom:1px solid var(--hair)}
@@ -280,6 +287,17 @@ button,input{font:inherit;color:inherit}
 #ovBook{z-index:40}
 #ovTut,#ovIntro{z-index:45}
 .mini-card{width:min(100%,420px);text-align:center}
+.intro-pics{margin:12px 0 0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.intro-pics figure{margin:0;text-align:center}
+.intro-pics canvas{width:100%;aspect-ratio:1;border-radius:8px;border:1px solid var(--hair);display:block}
+.intro-pics figcaption{margin-top:5px;font-size:12.5px;color:var(--ivory)}
+.mini-card{max-height:calc(100dvh - 24px);overflow-y:auto}
+.map-guide{display:flex;gap:14px;align-items:center;margin-top:12px;padding:10px;border:1px solid var(--hair);border-radius:6px;background:rgba(0,0,0,.18)}
+.map-guide .guide-cv{width:150px;flex:none;margin:0}
+.map-guide .guide-txt b{font-family:var(--font-display);font-size:16px;color:var(--gold-hi)}
+.map-guide .mini-list{margin-top:6px}
+.map-guide .mini-list li{color:var(--ivory)}
+@media (max-width:520px){.map-guide{flex-direction:column;align-items:stretch}.map-guide .guide-cv{width:100%;max-width:240px;margin:0 auto}}
 .mini-card h2{margin:4px 0 10px;font-family:var(--font-display);font-size:24px}
 .mini-cv{display:block;width:min(100%,300px);aspect-ratio:1;margin:0 auto;border-radius:10px;border:1px solid var(--hair)}
 .mini-text{margin:12px 0 0;min-height:4.4em;color:var(--ivory);font-size:14px;line-height:1.6}
@@ -358,16 +376,16 @@ legend{font-size:11.5px;letter-spacing:.22em;color:var(--gold);margin-bottom:8px
 .seg label:hover{border-color:var(--gold)}
 .seg input:checked+label{border-color:var(--gold-hi);color:var(--gold-hi);background:rgba(201,164,92,.08)}
 .seg input:focus-visible+label{outline:1px solid var(--gold-hi);outline-offset:3px}
-.maps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.maps{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
 .maps label{display:flex;flex-direction:column;align-items:center;gap:7px;padding:10px 6px;text-align:center;font-size:13px}
 .maps canvas{width:100%;max-width:84px;aspect-ratio:1;border-radius:2px}
 .menu-actions,.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;align-items:center}
-.howto{margin:22px 0 0;padding:16px 0 0 0;border-top:1px solid var(--hair);color:var(--muted);font-size:13px;display:grid;gap:7px;list-style:none}
+.howto{margin:22px 0 0;padding:16px 0 0 0;border-top:1px solid var(--hair);color:#e6dccb;font-size:15px;line-height:1.6;display:grid;gap:9px;list-style:none}
 .howto li,.rule-sum li{display:grid;grid-template-columns:3em 1fr;gap:8px}
 .howto b,.rule-sum b{color:var(--gold);font-family:var(--font-display);font-weight:600}
 .howto .howto-more{display:block;font-size:12px;opacity:.8}
-.rule-h{margin:14px 0 0;font-family:var(--font-display);font-weight:600;font-size:13px;color:var(--ivory);letter-spacing:.06em}
-.rule-sum{margin:8px 0 0;padding:0;list-style:none;display:grid;gap:5px;color:var(--muted);font-size:12.5px}
+.rule-h{margin:14px 0 0;font-family:var(--font-display);font-weight:700;font-size:16px;color:var(--gold-hi);letter-spacing:.06em}
+.rule-sum{margin:8px 0 0;padding:0;list-style:none;display:grid;gap:8px;color:#e6dccb;font-size:15px;line-height:1.6}
 .online{display:grid;gap:10px;padding:14px;border:1px solid var(--hair);border-radius:2px;background:rgba(0,0,0,.18)}
 .online p{margin:0;color:var(--muted);font-size:12.5px}
 .online .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
@@ -387,15 +405,31 @@ legend{font-size:11.5px;letter-spacing:.22em;color:var(--gold);margin-bottom:8px
 .pmeta{display:flex;flex-wrap:wrap;gap:6px 12px;color:var(--muted);font-size:11.5px}
 .pmeta b{color:var(--ivory);font-weight:500}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-top:20px}
-.aug-card{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:9px;text-align:left;background:linear-gradient(#17130f,#100d0b) padding-box,var(--silver-leaf) border-box;border:1px solid transparent;border-radius:3px;padding:18px;cursor:pointer;transition:transform .2s,box-shadow .2s;min-width:0}
+.aug-card{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:9px;text-align:left;background:linear-gradient(180deg,#2a2e35,#15171b) padding-box,var(--silver-leaf) border-box;border:3px solid transparent;border-radius:6px;padding:18px;cursor:pointer;transition:transform .2s,box-shadow .2s;min-width:0;box-shadow:0 0 18px rgba(220,228,240,.22)}
+.aug-card .tier{position:relative;top:auto;right:auto;align-self:stretch;margin:-18px -18px 4px;padding:7px 18px;font-size:13px;font-weight:800;letter-spacing:.32em;color:#1c140a;background:var(--silver-leaf);border-radius:3px 3px 0 0;text-align:center}
+.aug-card[data-tier="1"] .aug-name{color:#eef1f5}
+.aug-card[data-tier="2"] .tier{background:var(--gold-leaf)}
+.aug-card[data-tier="2"] .aug-name{color:#f6d98a}
+.aug-card[data-tier="3"] .tier{background:var(--nacre);background-size:200% 100%;animation:tierShift 3s linear infinite}
+.aug-card[data-tier="3"] .aug-name{background:linear-gradient(100deg,#8fd6e4,#b9a6f2,#f2a9cb,#f1d38f,#9fe3c4);-webkit-background-clip:text;background-clip:text;color:transparent}
+@keyframes tierShift{to{background-position:200% 0}}
 .aug-card:hover{transform:translateY(-3px);box-shadow:0 16px 34px rgba(0,0,0,.5)}
-.aug-card[data-tier="2"]{background:linear-gradient(#17130f,#100d0b) padding-box,var(--gold-leaf) border-box}
-.aug-card[data-tier="3"]{background:linear-gradient(#17130f,#100d0b) padding-box,var(--nacre) border-box}
+.aug-card[data-tier="2"]{background:linear-gradient(180deg,#3a2c10,#1a130a) padding-box,var(--gold-leaf) border-box;box-shadow:0 0 22px rgba(232,190,90,.35)}
+.aug-card[data-tier="3"]{background:linear-gradient(180deg,#2a2240,#140f20) padding-box,linear-gradient(120deg,#bfe3ea,#d6c9f2,#f2cfe0,#f1e2bd,#c7ebdd,#bfe3ea) border-box;box-shadow:0 0 26px rgba(185,166,242,.45)}
 .aug-card[data-tier="3"]::after{content:"";position:absolute;inset:0;border-radius:3px;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.07) 45%,transparent 60%);background-size:250% 100%;animation:sheen 3.2s ease-in-out infinite;pointer-events:none}
 @keyframes sheen{from{background-position:120% 0}to{background-position:-60% 0}}
 .tier{position:absolute;top:16px;right:16px;font-size:10.5px;letter-spacing:.22em;color:var(--muted)}
 .aug-name{font-family:var(--font-display);font-weight:700;font-size:21px;letter-spacing:.06em;margin-top:6px}
-.aug-desc{color:var(--muted);font-size:13px;line-height:1.55}
+.aug-desc{color:var(--muted);font-size:14px;line-height:1.6}
+.stats{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0}
+.st{display:inline-flex;align-items:baseline;gap:6px;padding:4px 9px;border-radius:999px;font-size:13px;line-height:1.2;border:1px solid;white-space:nowrap}
+.st i{font-style:normal;font-size:11.5px;opacity:.8}
+.st b{font-weight:700}
+.st em{font-style:normal;font-weight:800;font-variant-numeric:tabular-nums}
+.st-up{color:#bfecc6;border-color:rgba(120,200,140,.55);background:rgba(60,140,80,.18)}
+.st-down{color:#ffc2b5;border-color:rgba(220,110,90,.55);background:rgba(180,64,46,.2)}
+.st-foe{color:#c9dcff;border-color:rgba(120,150,220,.55);background:rgba(70,100,180,.2)}
+.stat-key{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 0;font-size:13px;color:var(--muted)}
 .aug-own{font-size:12px;color:var(--gold-hi)}
 .owned{margin:18px 0 0;color:var(--faint);font-size:12.5px}
 /* 골드·프리즘 증강이 나오기 직전의 등장 연출 (실버는 그대로) */
@@ -447,6 +481,7 @@ legend{font-size:11.5px;letter-spacing:.22em;color:var(--gold);margin-bottom:8px
 /* 연출 뒤 카드가 한 장씩 뒤집혀 놓입니다 */
 .cards.deal .aug-card{animation:deal .55s cubic-bezier(.2,1.3,.4,1) both;animation-delay:calc(var(--i) * 110ms)}
 @keyframes deal{from{opacity:0;transform:perspective(700px) rotateY(80deg) translateY(18px)}}
+.ov-card.glow-1{box-shadow:0 0 0 1px rgba(220,228,240,.45),0 0 50px rgba(220,228,240,.18),0 40px 90px rgba(0,0,0,.6)}
 .ov-card.glow-2{box-shadow:0 0 0 1px rgba(232,205,142,.5),0 0 60px rgba(232,190,90,.25),0 40px 90px rgba(0,0,0,.6)}
 .ov-card.glow-3{animation:prism-glow 3s linear infinite}
 @keyframes prism-glow{0%,100%{box-shadow:0 0 0 1px #d6c9f2,0 0 70px rgba(214,201,242,.45),0 40px 90px rgba(0,0,0,.6)}33%{box-shadow:0 0 0 1px #bfe3ea,0 0 70px rgba(191,227,234,.45),0 40px 90px rgba(0,0,0,.6)}66%{box-shadow:0 0 0 1px #f2cfe0,0 0 70px rgba(242,207,224,.45),0 40px 90px rgba(0,0,0,.6)}}
@@ -485,6 +520,7 @@ legend{font-size:11.5px;letter-spacing:.22em;color:var(--gold);margin-bottom:8px
   .aug-card,.btn-ghost,.seg label{transition:none}
   .aug-card:hover{transform:none}
   .aug-card[data-tier="3"]::after{animation:none}
+  .aug-card[data-tier="3"] .tier{animation:none}
 }
 </style>
 
@@ -536,7 +572,7 @@ legend{font-size:11.5px;letter-spacing:.22em;color:var(--gold);margin-bottom:8px
     <canvas class="mini-cv" id="tutCv" width="300" height="300"></canvas>
     <p class="mini-text" id="tutText"></p>
     <div class="mini-dots" id="tutDots"></div>
-    <div class="actions"><button class="btn-ghost" id="tutPrev" type="button">이전</button><button class="btn-primary" id="tutNext" type="button">다음</button><button class="btn-ghost" id="tutClose" type="button">닫기</button></div>
+    <div class="actions"><button class="btn-ghost" id="tutPrev" type="button">이전</button><button class="btn-ghost" id="tutClose" type="button">닫기</button><button class="btn-primary" id="tutNext" type="button">다음</button></div>
   </div>
 </div>
 <div class="overlay" id="ovIntro" hidden>
@@ -544,6 +580,7 @@ legend{font-size:11.5px;letter-spacing:.22em;color:var(--gold);margin-bottom:8px
     <p class="eyebrow">지형 소개</p>
     <h2 id="introTitle"></h2>
     <canvas class="mini-cv" id="introCv" width="300" height="300"></canvas>
+    <div class="intro-pics" id="introPics" hidden></div>
     <ul class="mini-list" id="introText"></ul>
     <div class="mini-bar"><i id="introBar"></i></div>
     <div class="actions"><button class="btn-ghost" id="introAgain" type="button">다시 보기</button><button class="btn-primary" id="introSkip" type="button">건너뛰기</button></div>
@@ -590,6 +627,7 @@ legend{font-size:11.5px;letter-spacing:.22em;color:var(--gold);margin-bottom:8px
     <fieldset>
       <legend>지형</legend>
       <div class="seg maps" id="mapPick"></div>
+      <div class="map-guide"><canvas class="mini-cv guide-cv" id="guideCv" width="300" height="300"></canvas><div class="guide-txt"><b id="guideName"></b><ul class="mini-list" id="guideList"></ul></div></div>
     </fieldset>
     <fieldset>
       <legend>승리 조건</legend>
@@ -629,17 +667,21 @@ const L = i => INSET + i * GAP;
 /* physics + rules (tunable) */
 const P = {
   maxSpeed: 1720, decel: 700, drag: 1.1, rest: 0.92, wallRest: 0.72, bumpRest: 1.0, bumpKick: 160,
-  padMult: 1.7, padAdd: 900, padMaxV: 2600, padCool: 5, padStart: 3, rockHits: 3, rockMinV: 150, shrinkStart: 30, shrinkStep: GAP * 0.5, tengenR: 90, timeout: 16, lossPerPick: 3, lastKB: 0.35, pityAfter: 3
+  padMult: 1.3, padAdd: 500, padMaxV: 2200, padCool: 5, gateCool: 2, padStart: 0, padOn: 0, padOff: 0, rockHits: 7, rockMinV: 150, shrinkStart: 30, shrinkStep: GAP * 0.5, tengenR: 65, timeout: 16, lossPerPick: 3, lastKB: 0.35, pityAfter: 3
 };
 /* augment numbers (tunable) */
 const A = {
-  ironM: 1.0863, sizeN: 2, bigR: 1.25, bigM: 1.12, denseR: 0.72, denseM: 1.0, denseV: 1.28, fast: 1.055, massK: 0.5, reinforce: 1,
+  ironM: 1.0863, sizeN: 2, bigR: 1.25, bigM: 1.08, denseR: 0.72, denseM: 1.0, denseV: 1.28, fast: 1.06, massK: 0.5, reinforce: 1,
   shaky: 0.101, seal: 2, root: 1.15, aimNoise: 0.5194, shackle: 0.9333,
-  bombR: 170, bombF: 1100, bombBase: 240, oil: 0.8458, markD: 4 * GAP, markK: 1.32, combo: 1, comboRound: 2,
-  wedgeM: 1.25, splitImpact: 640, splitR: 0.8, splitM: 0.7, splitV: 0.7, splitN: 2, wallSave: 1,
-  pierce: 1.0, thorns: 0.3, traps: 2, trapR: 27, doubleV: 0.66,
-  revive: 2, buddy: 1, thief: 1, rewind: 3, kingR: 1.5, kingM: 1.5, kingV: 1.1, boltEvery: 2, boltV: 680,
-  clone: 1, cloneK: 1.0, buddyD: 500, lastN: 3, lastR: 1.15, lastM: 1.3, lastV: 1.05, tideD: GAP
+  bombR: 135, bombF: 800, bombBase: 180, oil: 0.8458, markD: 3 * GAP, markK: 1.16, combo: 1, comboRound: 2,
+  wedgeM: 1.18, splitImpact: 560, splitR: 0.85, splitM: 0.85, splitV: 0.7, splitN: 2, wallSave: 1,
+  pierce: 1.0, thorns: 0.33, traps: 2, trapR: 28, doubleV: 0.68,
+  revive: 2, buddy: 1, thief: 1, rewind: 2, kingR: 1.5, kingM: 1.5, kingV: 1.35, boltEvery: 2, boltV: 500,
+  clone: 1, cloneK: 1.0, buddyD: 500, lastN: 3, lastR: 1.15, lastM: 1.3, lastV: 1.18, tideD: GAP,
+  /* 새 증강 */
+  momV: 1.3, ctrV: 1.3, grip: 1.08, sand: 1.24, starM: 2.4, starD: 0.8 * GAP, edgeM: 2.6, edgeD: 1.6 * GAP, firstK: 1.8, firstN: 2,
+  gustD: 1.0 * GAP, hamM: 1.16, pressD: 2 * GAP, pressM: 0.37, shockR: 2 * GAP, shockD: 1.6 * GAP, chainK: 3.4,
+  dragonN: 1, dragonD: 2.2 * GAP, dragonM: 2.8, ko: 3, pillarR: 1.01, pillarM: 1.025, pillarV: 1.012, pillarCap: 20, pillarFree: 3
 };
 /* tier odds per pick: [silver, gold, prism]; always silver > gold > prism, a little richer on later picks */
 const TIER_ODDS = [[60, 30, 10], [50, 33, 17], [45, 35, 20]];
@@ -647,16 +689,19 @@ const TIER_ODDS = [[60, 30, 10], [50, 33, 17], [45, 35, 20]];
 const diamond = (cx, cy, h) => ({ kind: 'diamond', cx, cy, h, hs: h * R2 });
 const MAPS = {
   flat: { id: 'flat', name: '평야', short: '거칠 것 없는 맨판에서 실력으로 겨룹니다', obs: [], shrinkMax: CX - 1.5 * GAP },
-  diamond: { id: 'diamond', name: '흑요석 제단', short: '가운데 마름모 바위가 돌을 튕겨 내고, 세 번 맞으면 깨집니다', noTengen: true,
-    obs: [Object.assign(diamond(CX, CY, 3 * GAP), { breakAt: 3 })], shrinkMax: CX - 1.5 * GAP, crumbleAt: 4.2 * GAP },
+  diamond: { id: 'diamond', name: '흑요석 제단', short: '가운데 마름모 바위가 돌을 튕겨 내고, 세게 일곱 번 맞으면 깨집니다', noTengen: true,
+    obs: [Object.assign(diamond(CX, CY, 3 * GAP), { breakAt: P.rockHits })], shrinkMax: CX - 1.5 * GAP, crumbleAt: 4.2 * GAP },
   siege: { id: 'siege', name: '철옹성', short: '양 진영 뒤를 성벽이 막고, 성벽도 돌을 튕겨 냅니다', shrinkMax: CX - 1.5 * GAP, obs: [
     { kind: 'wall', side: 'top', x0: L(2), x1: L(16), y0: -80, y1: 18 },
     { kind: 'wall', side: 'bottom', x0: L(2), x1: L(16), y0: S - 18, y1: S + 80 }] }
 };
 /* 용오름: 판 한가운데를 가로지르는 바람길. 지나는 돌을 밀어 주고, 한 번 쓰이면 몇 수 뒤 다시 생깁니다 */
-MAPS.boost = { id: 'boost', name: '용오름', short: '가운데 바람길은 3수 뒤 열리고, 지나는 돌을 빠르게 합니다. 쓰이면 5수 뒤 다시 열립니다',
-  obs: [], pads: [{ kind: 'band', x: CX, y: CY, x0: INSET - 0.5 * GAP, x1: S - INSET + 0.5 * GAP, h: 0.32 * GAP }], shrinkMax: CX - 1.5 * GAP };
-const MAP_IDS = ['flat', 'diamond', 'siege', 'boost'];
+MAPS.boost = { id: 'boost', name: '용오름', short: '판 양쪽 가장자리 가까이의 바람문(가로 2칸·세로 1칸)을 지나는 돌은 빨라지고, 쓰인 문은 2수 동안 닫힙니다',
+  obs: [], pads: [{ kind: 'rect', gate: true, x: L(3), y: CY, hw: GAP, hh: 0.5 * GAP }, { kind: 'rect', gate: true, x: L(15), y: CY, hw: GAP, hh: 0.5 * GAP }], shrinkMax: CX - 1.5 * GAP };
+/* 연못: 판 양쪽의 두 연못. 흑백 가리지 않고 빠진 돌은 떨어집니다 */
+MAPS.pond = { id: 'pond', name: '연못', short: '판 양쪽 연못에 빠진 돌은 흑백 가리지 않고 떨어집니다', obs: [], shrinkMax: CX - 1.5 * GAP,
+  ponds: [{ x: L(2.75), y: CY, r: 0.85 * GAP }, { x: L(15.25), y: CY, r: 0.85 * GAP }] };
+const MAP_IDS = ['flat', 'diamond', 'siege', 'boost', 'pond'];
 for (const m of MAP_IDS) MAPS[m].obs.forEach((o, i) => { o.oi = i; });
 
 /* rows counted from the team's own back edge side: black uses rows as-is (bottom), white mirrors */
@@ -677,68 +722,98 @@ const f1 = x => Math.round(x * 100) / 100;
 const deg = x => Math.round(x * 180 / Math.PI);
 const AUG = {
   /* ---- silver ---- */
-  iron:      { name: '쇳덩이', seal: '鐵', tier: 1, max: 3, short: () => `무게 +${pct(A.ironM - 1)}%`,
-    desc: () => `내 돌이 모두 ${pct(A.ironM - 1)}% 무거워집니다. 맞아도 잘 밀리지 않고 더 묵직하게 밀어내지만, 그만큼 덜 나갑니다.` },
+  iron:      { name: '쇳덩이', seal: '鐵', tier: 1, max: 3, short: () => `무게 ×${f1(A.ironM)}`,
+    desc: () => `내 돌이 모두 무게 ×${f1(A.ironM)}가 됩니다. 덜 밀리고 부딪힐 때 상대를 더 멀리 밀어내며, 무거운 만큼 사거리는 조금 줄어듭니다.` },
   big:       { name: '큰 돌', seal: '巨', tier: 1, max: 1, short: () => `돌 ${A.sizeN}개 크기 +${pct(A.bigR - 1)}% · 무게 ×${f1(A.bigM)}`,
-    desc: () => `판 가운데에 가까운 내 돌 ${A.sizeN}개가 ${pct(A.bigR - 1)}% 커지고 무게가 ${f1(A.bigM)}배가 됩니다. 잘 밀려나지 않고, 부딪힐 때 상대를 훨씬 세게 밀어냅니다. 샷 힘은 그대로입니다.` },
-  dense:     { name: '차돌', seal: '小', tier: 1, max: 1, short: () => `돌 ${A.sizeN}개 크기 −${pct(1 - A.denseR)}% · 샷 힘 +${pct(A.denseV - 1)}%`,
-    desc: () => `판 가운데에 가까운 내 돌 ${A.sizeN}개가 ${pct(1 - A.denseR)}% 작아지고, 그 돌의 샷 힘이 ${pct(A.denseV - 1)}% 세집니다. 맞히기 어렵고 더 빠르게 멀리 나갑니다.` },
-  fast:      { name: '강속구', seal: '速', tier: 1, max: 2, short: () => `최대 힘 +${pct(A.fast - 1)}%`,
-    desc: () => `내 샷의 최대 힘이 ${pct(A.fast - 1)}% 세집니다. 작은 차이 같아도 사거리 싸움에서는 한발 먼저 닿습니다.` },
+    desc: () => `판 가운데에 가까운 내 돌 ${A.sizeN}개가 크기 +${pct(A.bigR - 1)}%, 무게 ×${f1(A.bigM)}가 됩니다. 힘은 그대로입니다.` },
+  fast:      { name: '강속구', seal: '速', tier: 1, max: 2, short: () => `힘 +${pct(A.fast - 1)}%`,
+    desc: () => `내 힘이 ${pct(A.fast - 1)}% 세집니다. 사거리 싸움에서 한발 먼저 닿습니다.` },
   reinforce: { name: '증원', seal: '援', tier: 1, max: 3, short: () => `돌 +${A.reinforce}`,
-    desc: () => `고르는 즉시 우리 진영에 내 돌이 ${A.reinforce}개 더 놓입니다.` },
-  shaky:     { name: '손떨림', seal: '震', tier: 1, max: 1, short: () => '상대 조준 흔들기',
-    desc: () => `상대가 조준하는 동안 화살표가 짧아지고 흔들립니다. 실제 샷도 최대 ${deg(A.shaky / 2)}°까지 빗나갑니다.` },
+    desc: () => `고르는 즉시 우리 진영에 내 돌이 ${A.reinforce}개 더 놓입니다. 늘어난 돌은 다음 증강까지 세는 기본 돌에 들어가지 않습니다.` },
   seal:      { name: '봉인', seal: '封', tier: 1, max: 2, short: () => `상대 돌 ${A.seal}개 봉인`,
-    desc: () => `고르는 즉시 상대 돌 ${A.seal}개를 봉인합니다. 봉인된 돌은 이번 국 동안 쏠 수 없습니다.` },
-  root:      { name: '뿌리', seal: '根', tier: 1, max: 2, short: () => `버틸 때 무게 +${pct(A.root - 1)}%`,
-    desc: () => `상대가 칠 때만 내 돌이 ${pct(A.root - 1)}% 무거워집니다. 버티는 힘만 세지고 내 샷은 그대로입니다.` },
+    desc: () => `고르는 즉시 상대 돌 ${A.seal}개를 봉인합니다. 봉인된 돌은 쏠 수 없고, 상대 돌이 하나 떨어질 때마다 봉인이 하나씩 풀립니다. 상대 돌이 모두 봉인되면 한꺼번에 풀리고, 상대 돌이 2개 이하일 때는 선택지에 나오지 않습니다.` },
+  root:      { name: '뿌리', seal: '根', tier: 1, max: 2, short: () => `방어력 ×${f1(A.root)}`,
+    desc: () => `내 돌의 방어력이 ×${f1(A.root)}가 됩니다. 상대 샷에 맞을 때 그만큼 덜 밀려나고, 내 샷에는 영향이 없습니다.` },
   aim:       { name: '정조준', seal: '準', tier: 1, max: 1, short: () => '첫 충돌까지 궤적 표시',
-    desc: () => '조준할 때 내 돌이 처음 부딪히는 곳까지의 궤적과, 맞은 돌이 날아갈 방향을 보여 줍니다.' },
-  shackle:   { name: '족쇄', seal: '鎖', tier: 1, max: 2, short: () => `상대 최대 힘 −${pct(1 - A.shackle)}%`,
-    desc: () => `상대 샷의 최대 힘이 ${pct(1 - A.shackle)}% 약해집니다. 상대 사거리가 그만큼 짧아집니다.` },
+    desc: () => '조준할 때 내 돌이 처음 부딪히는 곳까지의 궤적과, 맞은 돌이 날아갈 방향을 보여 줍니다. 상대의 손떨림에 걸려 있으면 보이지 않습니다.' },
+  shackle:   { name: '족쇄', seal: '鎖', tier: 1, max: 2, short: () => `상대 힘 −${pct(1 - A.shackle)}%`,
+    desc: () => `상대 힘이 ${pct(1 - A.shackle)}% 약해져, 상대 사거리가 그만큼 짧아집니다.` },
+  momentum:  { name: '기세', seal: '勢', tier: 1, max: 1, short: () => `떨어뜨리면 다음 샷 힘 +${pct(A.momV - 1)}%`,
+    desc: () => `내 샷으로 상대 돌을 떨어뜨리면, 바로 다음 샷의 힘이 ${pct(A.momV - 1)}% 세집니다.` },
+  counter:   { name: '반격', seal: '逆', tier: 1, max: 1, short: () => `잃으면 다음 샷 힘 +${pct(A.ctrV - 1)}%`,
+    desc: () => `상대 샷에 내 돌이 떨어지면, 바로 다음 샷의 힘이 ${pct(A.ctrV - 1)}% 세집니다.` },
+  grip:      { name: '디딤', seal: '踏', tier: 1, max: 1, short: () => `밀릴 때 마찰 +${pct(A.grip - 1)}%`,
+    desc: () => `상대 샷에 밀려 움직이는 내 돌의 마찰이 ${pct(A.grip - 1)}% 늘어, 덜 밀려납니다. 내 샷에는 영향이 없습니다.` },
+  sand:      { name: '모래', seal: '砂', tier: 1, max: 1, short: () => `상대가 쏜 돌 마찰 +${pct(A.sand - 1)}%`,
+    desc: () => `상대가 쏜 돌의 마찰이 ${pct(A.sand - 1)}% 늘어 덜 나갑니다. 멈춰 있는 상대 돌의 마찰은 그대로입니다.` },
+  star:      { name: '화점', seal: '星', tier: 1, max: 1, short: () => `화점 위 방어력 ×${f1(A.starM)}`,
+    desc: () => `바둑판 화점(굵은 점 9곳)에서 ${f1(A.starD / GAP)}칸 안에 있는 내 돌의 방어력이 ×${f1(A.starM)}가 됩니다. 판의 화점이 우리 편 색으로 빛납니다.` },
+  edge:      { name: '벼랑', seal: '崖', tier: 1, max: 1, short: () => `가장자리 방어력 ×${f1(A.edgeM)}`,
+    desc: () => `떨어질 수 있는 가장자리에서 ${f1(A.edgeD / GAP)}칸 안에 있는 내 돌의 방어력이 ×${f1(A.edgeM)}가 됩니다.` },
+  first:     { name: '선제', seal: '先', tier: 1, max: 1, short: () => `고른 뒤 ${A.firstN}샷 동안 첫 타격 +${pct(A.firstK - 1)}%`,
+    desc: () => `이 증강을 고른 뒤 내 샷 ${A.firstN}번 동안, 쏜 돌의 첫 타격이 ${pct(A.firstK - 1)}% 세집니다.` },
   /* ---- gold ---- */
   combo:     { name: '연타', seal: '連', tier: 2, max: 1, short: () => `떨어뜨리면 한 번 더 (${A.comboRound}회)`,
     desc: () => `내 샷으로 상대 돌을 떨어뜨리면 한 번 더 칩니다. 한 차례에 한 번, 이번 국에 ${A.comboRound}번까지 됩니다.` },
-  bomb:      { name: '시한폭탄', seal: '爆', tier: 2, max: 1, short: () => '쏜 돌이 멈추면 폭발',
-    desc: () => '내가 쏜 돌이 멈추는 순간 터지면서 주변 돌을 모두 밀어냅니다. 내 돌도 예외는 아닙니다.' },
-  marks:     { name: '명사수', seal: '射', tier: 2, max: 1, short: () => `${Math.round(A.markD / GAP)}칸 넘게 날아가 맞히면 +${pct(A.markK - 1)}%`,
-    desc: () => `내가 쏜 돌이 출발한 자리에서 ${Math.round(A.markD / GAP)}칸 넘게 날아가 상대 돌을 맞히면, 맞은 돌이 ${pct(A.markK - 1)}% 더 세게 튕겨 나갑니다. 멀리서 노릴수록 강해집니다.` },
+  bomb:      { name: '시한폭탄', seal: '爆', tier: 2, max: 1, short: () => `쏜 돌이 멈추면 ${f1(A.bombR / GAP)}칸 폭발`,
+    desc: () => `내가 쏜 돌이 멈추는 순간 터져 ${f1(A.bombR / GAP)}칸 안의 돌을 모두 밀어냅니다. 가까울수록 세게 밀리고, 내 돌도 예외는 아닙니다.` },
+  marks:     { name: '명사수', seal: '射', tier: 2, max: 1, short: () => `${Math.round(A.markD / GAP)}칸 넘게 날아가 맞히면 타격 +${pct(A.markK - 1)}%`,
+    desc: () => `쏜 돌이 출발한 자리에서 ${Math.round(A.markD / GAP)}칸 넘게 날아가 상대 돌을 맞히면, 그 첫 타격이 ${pct(A.markK - 1)}% 세집니다.` },
   wedge:     { name: '쐐기', seal: '楔', tier: 2, max: 1, short: () => `쏜 돌이 멈추면 무게 ×${f1(A.wedgeM)}`,
-    desc: () => `내가 쏜 돌이 멈춘 자리에 쐐기처럼 박혀, 다음 내 차례가 올 때까지 무게가 ${f1(A.wedgeM)}배가 됩니다. 어디에 세울지는 내가 정하고, 상대는 그 돌을 쉽게 밀어내지 못합니다.` },
+    desc: () => `내가 쏜 돌이 멈추면 그 자리에 박혀, 다음 내 차례가 올 때까지 무게 ×${f1(A.wedgeM)}가 됩니다.` },
   wall:      { name: '철벽', seal: '壁', tier: 2, max: 1, team: true, short: () => '우리 돌만 막는 뒤쪽 벽',
-    desc: () => `우리 진영 뒤 가장자리에 우리 돌만 막아 주는 고무벽이 생깁니다. 판이 줄어들면 벽도 따라 들어오고, 국마다 ${A.wallSave}번까지 밀려난 돌을 안으로 되돌려 줍니다.` },
-  split:     { name: '분열', seal: '分', tier: 2, max: 1, short: () => `세게 맞으면 둘로 (${A.splitN}회)`,
-    desc: () => `내 돌이 상대 돌에 세게 맞으면 작은 돌 두 개로 갈라집니다. 이번 국에 ${A.splitN}번까지 일어납니다.` },
-  pierce:    { name: '굳건', seal: '堅', tier: 2, max: 1, short: () => `첫 타격에 힘을 모두 실음 · 내 돌은 그 자리에`,
-    desc: () => `내가 쏜 돌이 처음 맞힌 상대 돌에 힘을 모두 실어 보냅니다. ${A.pierce > 1 ? `맞은 돌은 ${pct(A.pierce - 1)}% 더 빠르게 날아가고, ` : ''}내 돌은 그 자리에 굳건히 멈춥니다.` },
-  thorns:    { name: '가시', seal: '棘', tier: 2, max: 1, short: () => '나를 친 돌을 튕겨 냄',
-    desc: () => `상대 샷에서 내 돌과 부딪힌 상대 돌은 부딪힌 세기의 ${pct(A.thorns)}%만큼 더 튕겨 나갑니다.` },
+    desc: () => `우리 진영 뒤 가장자리에 우리 돌만 막아 주는 고무벽이 생겨, 뒤로 밀린 우리 돌이 튕겨 돌아옵니다. 판이 줄어들면 벽도 따라 들어오고, 그때 벽 밖에 남은 우리 돌을 ${A.wallSave}번 안으로 되돌려 줍니다.` },
+  split:     { name: '분열', seal: '分', tier: 2, max: 1, short: () => `강한 타격을 받으면 둘로 (${A.splitN}회)`,
+    desc: () => `상대 돌과 세게 부딪힌 내 돌(쏜 돌 제외)이 크기 −${pct(1 - A.splitR)}%, 무게 ×${f1(A.splitM)}인 돌 두 개로 갈라집니다. 이번 국에 ${A.splitN}번까지 일어나고, 기본 돌이 갈라진 조각은 다음 증강까지 셀 때 반 개씩 셉니다.` },
+  pierce:    { name: '굳건', seal: '堅', tier: 2, max: 1, short: () => '첫 타격에 힘을 모두 실음 · 쏜 돌은 멈춤',
+    desc: () => `쏜 돌이 처음 맞힌 상대 돌에 힘을 모두 실어 보내고, 쏜 돌은 그 자리에 멈춥니다.${A.pierce > 1 ? ` 그 타격은 ${pct(A.pierce - 1)}% 더 셉니다.` : ''}` },
+  thorns:    { name: '가시', seal: '棘', tier: 2, max: 1, short: () => `나와 부딪힌 상대 돌에 타격 ${pct(A.thorns)}% 되돌림`,
+    desc: () => `상대 샷 동안 내 돌과 부딪힌 상대 돌은, 부딪힌 세기의 ${pct(A.thorns)}%만큼 타격을 되돌려 받아 더 튕겨 나갑니다.` },
   trap:      { name: '함정', seal: '陷', tier: 2, max: 2, short: () => `상대 진영 앞 숨은 함정 ${A.traps}개`,
     desc: () => `고르는 즉시 상대 진영 앞에 함정 ${A.traps}개를 팝니다. 판이 줄어드는 후반에 고르면 판 가운데 가까이 팝니다. 상대 눈에는 보이지 않고, 상대 돌만 빠집니다. 빠진 돌은 탈락하고 그 함정은 드러납니다.` },
-  double:    { name: '쌍발', seal: '雙', tier: 2, max: 1, short: () => `같은 돌로 2번 · 최대 힘 −${pct(1 - A.doubleV)}%`,
-    desc: () => `매 차례 두 번씩 칩니다. 두 번째는 첫 번째로 친 돌로만 칠 수 있고, 내 샷의 최대 힘이 ${pct(1 - A.doubleV)}% 약해집니다.` },
+  double:    { name: '쌍발', seal: '雙', tier: 2, max: 1, short: () => `같은 돌로 2번 · 힘 −${pct(1 - A.doubleV)}%`,
+    desc: () => `매 차례 두 번씩 칩니다. 두 번째는 첫 번째로 친 돌로만 칠 수 있고, 내 힘이 ${pct(1 - A.doubleV)}% 줄어듭니다.` },
+  gust:      { name: '돌풍', seal: '颯', tier: 2, max: 1, short: () => `샷이 끝나면 가까운 상대 돌 ${f1(A.gustD / GAP)}칸 밀어냄`,
+    desc: () => `내 샷이 끝나면, 쏜 돌에서 가장 가까운 상대 돌 하나를 쏜 돌 반대쪽으로 ${f1(A.gustD / GAP)}칸 밀어냅니다.` },
+  hammer:    { name: '철퇴', seal: '鎚', tier: 2, max: 1, short: () => `쏜 돌 무게 ×${f1(A.hamM)}`,
+    desc: () => `내가 쏜 돌은 굴러가는 동안만 무게 ×${f1(A.hamM)}가 되어 더 세게 부딪힙니다. 힘은 줄지 않고, 멈추면 원래 무게로 돌아옵니다.` },
+  press:     { name: '압박', seal: '壓', tier: 2, max: 1, short: () => `쏜 돌 둘레 상대 돌 방어력 ×${f1(A.pressM)}`,
+    desc: () => `내가 쏜 돌이 멈춘 자리에서 ${f1(A.pressD / GAP)}칸 안의 상대 돌은, 다음 내 샷이 끝날 때까지 방어력이 ×${f1(A.pressM)}로 떨어집니다.` },
+  shock:     { name: '파문', seal: '波', tier: 2, max: 1, short: () => `첫 타격 때 둘레 상대 돌 ${f1(A.shockD / GAP)}칸 밀어냄`,
+    desc: () => `쏜 돌의 첫 타격 때, 그 자리에서 ${f1(A.shockR / GAP)}칸 안의 다른 상대 돌을 가장 가까운 가장자리 쪽으로 ${f1(A.shockD / GAP)}칸씩 밀어냅니다.` },
+  chain:     { name: '연쇄', seal: '環', tier: 2, max: 1, short: () => `상대 돌끼리의 타격 +${pct(A.chainK - 1)}%`,
+    desc: () => `내 샷 동안 상대 돌끼리 부딪히면 그 타격이 ${pct(A.chainK - 1)}% 세집니다. 몰려 있는 상대 돌을 줄줄이 밀어낼 수 있습니다.` },
   /* ---- prism ---- */
   revive:    { name: '부활', seal: '復', tier: 3, max: 1, short: () => `떨어진 자리로 복귀 (${A.revive}회)`,
     desc: () => `이번 국에 내 돌이 떨어지면 떨어진 자리(판 가장자리 안쪽)로 되돌아옵니다. ${A.revive}번까지 됩니다.` },
-  buddy:     { name: '길동무', seal: '伴', tier: 3, max: 1, short: () => `떨어질 때 상대 돌 하나 지목해 제거 (${A.buddy}회)`,
-    desc: () => `내 돌이 떨어지면, 판 위의 상대 돌 하나를 직접 골라 없앱니다. 이번 국에 ${A.buddy}번까지 됩니다.` },
+  buddy:     { name: '길동무', seal: '伴', tier: 3, max: 1, short: () => `떨어질 때 상대 돌 하나 데려가고 한 번 더 (${A.buddy}회)`,
+    desc: () => `내 돌이 떨어지면, 판 위의 상대 돌 하나를 직접 골라 함께 데려가고 내 차례를 한 번 더 진행합니다. 이번 국에 ${A.buddy}번까지 됩니다.` },
   tengen:    { name: '천원', seal: '天', tier: 3, max: 1, short: () => '천원을 지키면 승리',
     desc: () => `내 돌이 천원(정중앙 점) 둘레 ${Math.round(P.tengenR / GAP * 10) / 10}칸 안에 멈춘 채로 우리 차례가 다시 돌아오면 그 국을 이깁니다. 판에 둥근 표시가 생기고, 누군가 그 안에 들어서면 경고가 뜹니다.` },
   thief:     { name: '도둑', seal: '盜', tier: 3, max: 2, short: () => `상대 돌 ${A.thief}개 빼앗기`,
-    desc: () => `고르는 즉시 상대 돌 ${A.thief}개를 빼앗아 내 돌로 만듭니다.` },
+    desc: () => `고르는 즉시 상대 돌 ${A.thief}개를 빼앗아 내 돌로 만들고 우리 진영으로 데려옵니다. 상대는 기본 돌을 하나 잃은 것으로 셉니다.` },
   rewind:    { name: '되감기', seal: '返', tier: 3, max: 1, short: () => `상대 샷 무르기 (${A.rewind}회)`,
     desc: () => `상대 샷에 내 돌이 떨어지면 그 샷을 통째로 없던 일로 되돌립니다. 이번 국에 ${A.rewind}번까지 됩니다.` },
-  king:      { name: '왕돌', seal: '王', tier: 3, max: 1, short: () => `돌 하나 크기 +${pct(A.kingR - 1)}% · 무게 ×${f1(A.kingM)} · 샷 힘 +${pct(A.kingV - 1)}%`,
-    desc: () => `고르는 즉시 판 가운데에 가장 가까운 내 돌이 왕돌이 됩니다. 크기는 ${pct(A.kingR - 1)}% 커지고 무게는 ${f1(A.kingM)}배가 되며, 샷 힘도 ${pct(A.kingV - 1)}% 세집니다.` },
+  king:      { name: '왕돌', seal: '王', tier: 3, max: 1, short: () => `돌 하나 크기 +${pct(A.kingR - 1)}% · 무게 ×${f1(A.kingM)} · 힘 +${pct(A.kingV - 1)}%`,
+    desc: () => `고르는 즉시 판 가운데에 가장 가까운 내 돌이 왕돌이 되어 크기 +${pct(A.kingR - 1)}%, 무게 ×${f1(A.kingM)}, 힘 +${pct(A.kingV - 1)}%가 됩니다.` },
   bolt:      { name: '번개', seal: '雷', tier: 3, max: 1, short: () => `내 샷 ${A.boltEvery}번마다 낙뢰`,
-    desc: () => `내 샷이 ${A.boltEvery}번 끝날 때마다 상대 돌 하나에 번개가 떨어져 판 바깥쪽으로 튕겨 나갑니다.` },
+    desc: () => `내 샷이 ${A.boltEvery}번 끝날 때마다 상대 돌 하나에 번개가 떨어져 판 바깥쪽으로 밀어냅니다.` },
   clone:     { name: '분신', seal: '影', tier: 3, max: 1, short: () => `분신 +${A.clone} · 한 번 되살아남`,
-    desc: () => `고르는 즉시 우리 진영에 분신 ${A.clone}개가 놓입니다. ${A.cloneK >= 1 ? '분신은 내 돌과 크기·무게가 같고' : `분신은 내 돌보다 ${pct(1 - A.cloneK)}% 작고 가벼우며`}, 처음 판 밖으로 떨어질 때 한 번은 우리 진영으로 되돌아옵니다.` },
-  last:      { name: '배수진', seal: '背', tier: 3, max: 1, short: () => `${A.lastN}개 이하일 때 크기 +${pct(A.lastR - 1)}% · 무게 ×${f1(A.lastM)} · 샷 힘 +${pct(A.lastV - 1)}%`,
-    desc: () => `우리 돌이 ${A.lastN}개 이하로 줄면 남은 내 돌이 ${pct(A.lastR - 1)}% 커지고 무게가 ${f1(A.lastM)}배가 되며, 샷 힘도 ${pct(A.lastV - 1)}% 세집니다.` },
-  tide:      { name: '밀물', seal: '潮', tier: 3, max: 1, short: () => `내 샷마다 상대 돌 ${Math.round(A.tideD / GAP * 10) / 10}칸씩 밀어냄`,
-    desc: () => `내 샷이 끝날 때마다 상대 돌이 모두 가장 가까운 가장자리 쪽으로 ${Math.round(A.tideD / GAP * 10) / 10}칸씩 밀려납니다.` }
+    desc: () => `고르는 즉시 우리 진영에 분신 ${A.clone}개가 놓입니다. ${A.cloneK >= 1 ? '분신은 내 돌과 크기·무게가 같고' : `분신은 내 돌보다 ${pct(1 - A.cloneK)}% 작고 가벼우며`}, 처음 판 밖으로 떨어질 때 한 번은 우리 진영으로 되돌아옵니다. 분신은 다음 증강까지 세는 기본 돌에 들어가지 않습니다.` },
+  last:      { name: '배수진', seal: '背', tier: 3, max: 1, short: () => `${A.lastN}개 이하일 때 크기 +${pct(A.lastR - 1)}% · 무게 ×${f1(A.lastM)} · 힘 +${pct(A.lastV - 1)}%`,
+    desc: () => `우리 돌이 ${A.lastN}개 이하로 줄면 남은 내 돌이 크기 +${pct(A.lastR - 1)}%, 무게 ×${f1(A.lastM)}, 힘 +${pct(A.lastV - 1)}%가 됩니다.` },
+  dense:     { name: '차돌', seal: '小', tier: 3, max: 1, short: () => `돌 ${A.sizeN}개 크기 −${pct(1 - A.denseR)}% · 힘 +${pct(A.denseV - 1)}%`,
+    desc: () => `판 가운데에 가까운 내 돌 ${A.sizeN}개가 크기 −${pct(1 - A.denseR)}%, 힘 +${pct(A.denseV - 1)}%가 됩니다. 맞히기 어렵고 더 멀리 나갑니다.` },
+  shaky:     { name: '손떨림', seal: '震', tier: 3, max: 1, short: () => '상대 조준 흔들기',
+    desc: () => `상대가 조준하는 동안 화살표가 짧아지고 흔들리며, 상대 샷이 최대 ${deg(A.shaky / 2)}°까지 빗나갑니다.` },
+  dragon:    { name: '대마', seal: '龍', tier: 3, max: 1, short: () => `뭉친 돌 무게 ×${f1(A.dragonM)}`,
+    desc: () => `${f1(A.dragonD / GAP)}칸 안에 다른 내 돌이 ${A.dragonN}개 이상 있는 내 돌은 무게 ×${f1(A.dragonM)}가 됩니다. 방어할 때도 칠 때도 무겁고, 힘은 줄지 않습니다.` },
+  ko:        { name: '패', seal: '劫', tier: 3, max: 1, short: () => `내 돌을 잃으면 다음 차례 한 번 더 (${A.ko}회)`,
+    desc: () => `상대 샷에 내 돌이 떨어지면, 다음 내 차례에 한 번 더 칩니다. 이번 국에 ${A.ko}번까지 됩니다.` },
+  pillar:    { name: '주춧돌', seal: '礎', tier: 3, max: 1, short: () => `가운데 돌이 묶여 한 수마다 자람 · ${A.pillarFree}개 잃으면 풀림`,
+    desc: () => `고르는 즉시 판 가운데에 가장 가까운 내 돌이 주춧돌로 묶여 쏠 수 없게 됩니다. 대신 한 수가 지날 때마다 크기 +${f1((A.pillarR - 1) * 100)}%, 무게 +${f1((A.pillarM - 1) * 100)}%, 힘 +${f1((A.pillarV - 1) * 100)}%씩 자랍니다(${A.pillarCap}수까지, 최대 크기 +${pct(Math.pow(A.pillarR, A.pillarCap) - 1)}% · 무게 ×${f1(Math.pow(A.pillarM, A.pillarCap))} · 힘 +${pct(Math.pow(A.pillarV, A.pillarCap) - 1)}%). 묶여 있어도 상대나 내 돌에 밀려날 수 있어, 자라기 전에 떨어질 수도 있습니다. 우리 돌이 ${A.pillarFree}개 떨어지거나 다른 돌이 하나도 남지 않으면 풀려, 자란 그대로 쏠 수 있습니다.` },
+  tide:      { name: '밀물', seal: '潮', tier: 3, max: 1, short: () => `내 샷마다 상대 돌 ${Math.round(A.tideD / GAP * 10) / 10}칸 밀어냄`,
+    desc: () => `내 샷이 끝날 때마다 상대 돌을 모두 가장 가까운 가장자리 쪽으로 ${Math.round(A.tideD / GAP * 10) / 10}칸씩 밀어냅니다.` }
 };
 const AUG_IDS = Object.keys(AUG);
 const TIER_NAME = { 1: '실버', 2: '골드', 3: '프리즘' };
@@ -763,13 +838,29 @@ function statsFor(p, w) {
   return { r, m, heavy };
 }
 function maxV(w, p) {
-  let v = P.maxSpeed * Math.pow(A.fast, cnt(p, 'fast')) * Math.pow(statsFor(p, null).heavy, -A.massK) * (cnt(p, 'double') ? A.doubleV : 1);
+  let v = P.maxSpeed * Math.pow(A.fast, cnt(p, 'fast')) * (cnt(p, 'double') ? A.doubleV : 1);
   for (const q of w.players) if (q.team !== p.team) v *= Math.pow(A.shackle, cnt(q, 'shackle'));
   if (w && w.stones && cnt(p, 'last') && teamCount(w, p.team) <= A.lastN) v *= A.lastV;
+  if (w && w.mom && cnt(p, 'momentum') && w.mom[p.id]) v *= A.momV;
+  if (w && w.ctr && cnt(p, 'counter') && w.ctr[p.id]) v *= A.ctrV;
   return v;
 }
-const vmaxOf = (w, s) => maxV(w, w.players[s.owner]) * s.kv;
-function restat(w, s) { const st = statsFor(w.players[s.owner], w); s.r = st.r * s.rs * s.kr; s.m = st.m * s.ms * s.km; }
+/* 무게와 사거리: 같은 힘이면 무거운 돌은 덜 나가고(가벼운 돌은 더 나가고), 부딪힐 때는 무거운 쪽이 상대를 더 밀고 덜 밀림.
+   쐐기로 잠깐 무거워진 무게는 사거리에 넣지 않음 */
+const rangeMass = s => s.m / (s.wedge ? A.wedgeM : 1);
+const vmaxOf = (w, s) => maxV(w, w.players[s.owner]) * s.kv * Math.pow(rangeMass(s), -A.massK);
+/* 연마(내가 쏜 돌)·모래(상대가 쏜 돌): 쏜 돌의 바닥 마찰 배수 */
+function shotFric(w, pid) {
+  const p = w.players[pid];
+  let f = 1;
+  for (const q of w.players) if (q.team !== p.team) f *= Math.pow(A.sand, cnt(q, 'sand'));
+  return f;
+}
+function restat(w, s) {
+  const p = w.players[s.owner], st = statsFor(p, w);
+  s.r = st.r * s.rs * s.kr; s.m = st.m * s.ms * s.km;
+  s.fric = 1;
+}
 function restatAll(w) { for (const s of w.stones) if (!s.dead) restat(w, s); }
 function slotPos(team, row, col) { return { x: L(col), y: L(team === 0 ? row : N - 1 - row) }; }
 
@@ -828,12 +919,12 @@ function segObs(x0, y0, x1, y1, o, pad) {
 }
 
 /* ===== world ===== */
-const COUNTERS = ['reviveLeft', 'buddyLeft', 'rewindLeft', 'comboRound', 'boltCount', 'lost', 'picks', 'splitLeft'];
+const COUNTERS = ['reviveLeft', 'buddyLeft', 'rewindLeft', 'comboRound', 'boltCount', 'lost', 'picks', 'splitLeft', 'mom', 'ctr', 'fsd', 'koLeft', 'koArm', 'bdx', 'plk'];
 function blankWorld(players, mode, mapId) {
   const map = MAPS[mapId];
   const w = { players, mode, map: mapId, obs: map.obs, stones: [], walls: { top: false, bottom: false }, nextId: 1,
-    reviveLeft: {}, buddyLeft: {}, rewindLeft: {}, comboRound: {}, boltCount: {}, lost: {}, picks: {}, splitLeft: {},
-    wallSave: [0, 0], holes: [], mark: [], pads: (map.pads || []).map(p => Object.assign({ cd: P.padStart }, p)), obsHits: map.obs.map(() => 0), dbl: null,
+    reviveLeft: {}, buddyLeft: {}, rewindLeft: {}, comboRound: {}, boltCount: {}, lost: {}, picks: {}, splitLeft: {}, mom: {}, ctr: {}, fsd: {}, koLeft: {}, koArm: {}, bdx: {}, plk: {},
+    wallSave: [0, 0], holes: (map.ponds || []).map(p => ({ x: p.x, y: p.y, r: p.r, team: -1, seen: true, pond: true })), mark: [], pads: (map.pads || []).map(p => Object.assign({}, p, { cd: 0 })), obsHits: map.obs.map(() => 0), dbl: null,
     comboLeft: A.combo, doubleUsed: false, shot: null, events: [], sim: false, shots: 0, shrink: 0, snap: null };
   for (const p of players) for (const k of COUNTERS) w[k][p.id] = 0;
   return w;
@@ -843,14 +934,14 @@ function newWorld(players, mode, mapId) {
   const F = FORMATION[mode];
   for (const team of [0, 1]) {
     const tp = players.filter(p => p.team === team);
-    tp.forEach((p, i) => { for (const [r, c] of F.base[i]) addStone(w, p, slotPos(team, r, c)); });
+    tp.forEach((p, i) => { for (const [r, c] of F.base[i]) { const s = addStone(w, p, slotPos(team, r, c)); s.bw = 1; s.home = p.id; } });
   }
   for (const p of players) for (const id of p.augs) applyGain(w, p, id);
   return w;
 }
 function addStone(w, p, pos) {
   const s = { id: w.nextId++, owner: p.id, team: p.team, x: pos.x, y: pos.y, vx: 0, vy: 0, r: BASE_R, m: 1, fric: 1,
-    rs: 1, ms: 1, kr: 1, km: 1, kv: 1, gen: 0, king: false, sealed: false, falling: 0, dead: false, lastHit: null, oiled: false };
+    rs: 1, ms: 1, kr: 1, km: 1, kv: 1, gen: 0, king: false, sealed: false, falling: 0, dead: false, lastHit: null, oiled: false, bw: 0, home: -1, press: -1 };
   w.stones.push(s);
   restat(w, s);
   return s;
@@ -895,11 +986,20 @@ function nearSpot(w, x, y, r, self, team) {
   return null;
 }
 /* 길동무로 지목한 상대 돌 하나를 없앰 */
+/* 다음 증강까지 세는 돌: 처음 놓인 기본 돌만 (분열한 조각은 반 개씩, 증원·분신·빼앗은 돌은 세지 않음) */
+/* 돌이 하나 없어질 때: 주춧돌이 풀리는 셈을 올리고, 그 편의 봉인을 하나 풂 */
+function onLose(w, s) {
+  if (w.plk && w.stones.some(o => o.locked && live(o) && o.owner === s.owner && o !== s)) w.plk[s.owner] = (w.plk[s.owner] || 0) + 1;
+  const sealed = w.stones.find(o => live(o) && o !== s && o.owner === s.owner && o.sealed);
+  if (sealed) { sealed.sealed = false; emit(w, { type: 'unseal', x: sealed.x, y: sealed.y, pid: s.owner }); }
+}
+function countLoss(w, s) { if (s.bw && s.home === s.owner) w.lost[s.owner] = (w.lost[s.owner] || 0) + s.bw; }
 function markRemove(w, pid, id) {
   const s = byId(w, id), p = w.players[pid];
   if (!s || !live(s) || s.team === p.team) return false;
   s.dead = true; s.vx = 0; s.vy = 0;
-  w.lost[s.owner] = (w.lost[s.owner] || 0) + 1;
+  countLoss(w, s); onLose(w, s);
+  w.bdx[pid] = 1;   /* 길동무: 데려간 뒤 내 차례를 한 번 더 */
   emit(w, { type: 'buddy', x: s.x, y: s.y, id: s.id, pid });
   return true;
 }
@@ -961,6 +1061,15 @@ function makeKing(w, p) {
   restat(w, best);
   emit(w, { type: 'king', x: best.x, y: best.y, pid: p.id });
 }
+/* 주춧돌: 판 가운데에 가장 가까운 내 돌이 아주 무거워지고, 다른 돌이 남아 있는 동안은 쏠 수 없음 */
+function makePillar(w, p) {
+  let best = null, bd = Infinity;
+  for (const s of w.stones) { if (!live(s) || s.owner !== p.id || s.pillar) continue; const d = hyp(s.x - CX, s.y - CY); if (d < bd) { bd = d; best = s; } }
+  if (!best) return;
+  best.pillar = true; best.locked = true; best.pg = 0; best.sealed = false;
+  w.plk[p.id] = 0;
+  emit(w, { type: 'pillar', x: best.x, y: best.y, pid: p.id });
+}
 /* 큰 돌·차돌: 판 가운데에 가까운 내 돌 A.sizeN개에 몰아서 확실하게 바꿉니다
    큰 돌 — 크고 무거워져 잘 밀리지 않고 세게 칩니다 / 차돌 — 작아져 맞히기 어렵고 더 빠르게 멀리 나갑니다 */
 function sizeUp(w, p, id) {
@@ -995,9 +1104,11 @@ function applyGain(w, p, id) {
         const c = foes().filter(s => w.stones.filter(o => live(o) && o.owner === s.owner).length > 1);
         if (!c.length) break;
         const s = pickR(c);
-        w.lost[s.owner]++;
-        s.owner = p.id; s.team = team; s.sealed = false; restat(w, s);
-        emit(w, { type: 'steal', x: s.x, y: s.y, pid: p.id });
+        countLoss(w, s);
+        const from = { x: s.x, y: s.y };
+        s.owner = p.id; s.team = team; s.sealed = false; s.press = -1; s.locked = false; restat(w, s);
+        const pos = campSpot(w, team, s.r, s); if (pos) { s.x = pos.x; s.y = pos.y; }
+        emit(w, { type: 'steal', x: s.x, y: s.y, fx: from.x, fy: from.y, pid: p.id });
       }
       break;
     case 'wall': w.walls[team === 0 ? 'bottom' : 'top'] = true; w.wallSave[team] += A.wallSave; break;
@@ -1008,6 +1119,9 @@ function applyGain(w, p, id) {
     case 'split': w.splitLeft[p.id] += A.splitN; break;
     case 'trap': placeTraps(w, team); break;
     case 'king': makeKing(w, p); break;
+    case 'first': w.fsd[p.id] = 0; break;
+    case 'ko': w.koLeft[p.id] += A.ko; break;
+    case 'pillar': makePillar(w, p); break;
   }
 }
 function gainAug(w, pid, id) {
@@ -1032,6 +1146,7 @@ function canTake(w, p, id) {
   const a = AUG[id];
   if (cnt(p, id) > 0) return false;   /* 한 번 고른 증강은 그 국 안에서 다시 나오지 않습니다 */
   if (a.team && w.players.some(q => q.team === p.team && cnt(q, id) > 0)) return false;
+  if (id === 'seal' && teamCount(w, 1 - p.team) <= 2) return false;   /* 상대 돌이 2개 이하면 봉인은 나오지 않음 */
   return augAllowed(id, w.map);
 }
 /* 프리즘이 3번 연속 안 나오면 다음부터 프리즘 확률 2배 (프리즘이 나올 때까지, 대국 내내 이어짐) */
@@ -1056,8 +1171,11 @@ function rollOffer(w, pid, n = 3) {
 }
 function unsealIfStuck(w, pid) {
   const mine = w.stones.filter(s => live(s) && s.owner === pid);
-  if (mine.length && mine.every(s => s.sealed)) { mine.forEach(s => { s.sealed = false; }); return true; }
-  return false;
+  if (!mine.length || mine.some(s => !s.sealed && !s.locked)) return false;
+  let any = false;
+  for (const s of mine) if (s.sealed) { s.sealed = false; any = true; }
+  if (!any) for (const s of mine) if (s.locked) { s.locked = false; emit(w, { type: 'pillarFree', x: s.x, y: s.y, pid }); }
+  return true;
 }
 
 /* ===== physics ===== */
@@ -1067,6 +1185,32 @@ const rooted = (w, s, shT) => shT >= 0 && s.team !== shT && hasA(w, s.owner, 'ro
 /* the last stone of a team is pushed less (P.lastKB): as an effective-mass factor in collisions, a scale for blasts */
 const lastAlone = (w, s, shT) => shT >= 0 && s.team !== shT && teamCount(w, s.team) === 1;
 const lastMass = () => 2 / (1 - P.lastKB) - 1;
+const STARS = [3, 9, 15].flatMap(i => [3, 9, 15].map(j => [L(i), L(j)]));
+const nearStar = s => STARS.some(([x, y]) => hyp(s.x - x, s.y - y) < A.starD);
+function nearEdge(w, s) {
+  const lo = w.shrink, hi = S - w.shrink, d = [s.x - lo, hi - s.x];
+  if (!(w.walls.top && s.team === 1)) d.push(s.y - lo);
+  if (!(w.walls.bottom && s.team === 0)) d.push(hi - s.y);
+  return Math.min(...d) < A.edgeD;
+}
+function inDragon(w, s) {
+  let n = 0;
+  for (const o of w.stones) if (o !== s && live(o) && o.team === s.team && hyp(o.x - s.x, o.y - s.y) < A.dragonD && ++n >= A.dragonN) return true;
+  return false;
+}
+const dragonMul = (w, s) => (cnt(w.players[s.owner], 'dragon') && inDragon(w, s) ? A.dragonM : 1);
+/* 상대 샷에 맞을 때의 무게 배수 */
+function holdMul(w, s, shT) {
+  if (shT < 0 || s.team === shT) return 1;
+  const p = w.players[s.owner];
+  let k = 1;
+  if (cnt(p, 'root')) k *= A.root;
+  if (teamCount(w, s.team) === 1) k *= lastMass();
+  if (cnt(p, 'star') && nearStar(s)) k *= A.starM;
+  if (cnt(p, 'edge') && nearEdge(w, s)) k *= A.edgeM;
+  if (s.press >= 0 && w.players[s.press] && w.players[s.press].team === shT) k *= A.pressM;
+  return k;
+}
 
 function step(w) {
   const DT = w.dt || DT0;
@@ -1083,7 +1227,7 @@ function step(w) {
     }
     if (s.vx !== 0 || s.vy !== 0) {
       const sp = Math.sqrt(s.vx * s.vx + s.vy * s.vy);
-      const ns = Math.max(0, sp - (P.decel + P.drag * sp) * s.fric * (s.oiled ? A.oil : 1) * DT);
+      const ns = Math.max(0, sp - (P.decel + P.drag * sp) * s.fric * (sh && s.id === sh.stoneId ? sh.fk : 1) * (shT >= 0 && s.team !== shT && sh.grip[s.owner] ? A.grip : 1) * DT);
       const k = ns / sp;
       s.vx *= k; s.vy *= k;
       s.x += s.vx * DT; s.y += s.vy * DT;
@@ -1116,8 +1260,8 @@ function step(w) {
       if (d2 >= rr * rr) continue;
       const d = Math.sqrt(d2);
       const nx = d > 1e-6 ? dx / d : 1, ny = d > 1e-6 ? dy / d : 0;
-      const ma = a.m * (rooted(w, a, shT) ? A.root : 1) * (lastAlone(w, a, shT) ? lastMass() : 1);
-      const mb = b.m * (rooted(w, b, shT) ? A.root : 1) * (lastAlone(w, b, shT) ? lastMass() : 1);
+      let ma = a.m * holdMul(w, a, shT) * dragonMul(w, a), mb = b.m * holdMul(w, b, shT) * dragonMul(w, b);
+      if (sh && sh.hammer) { if (a.id === sh.stoneId) ma *= A.hamM; else if (b.id === sh.stoneId) mb *= A.hamM; }
       const ia = 1 / ma, ib = 1 / mb, it = ia + ib, ov = rr - d;
       a.x -= nx * ov * ia / it; a.y -= ny * ov * ia / it;
       b.x += nx * ov * ib / it; b.y += ny * ov * ib / it;
@@ -1127,9 +1271,30 @@ function step(w) {
         if (sh && sh.pierce && !sh.pierced && a.team !== b.team && (a.id === sh.stoneId || b.id === sh.stoneId)) {
           pre = a.id === sh.stoneId ? [a, b] : [b, a];
         }
-        const jimp = -(1 + P.rest) * rv / it;
+        let jimp = -(1 + P.rest) * rv / it;
+        /* 연쇄: 내 샷 동안 상대 돌끼리의 충돌이 더 셈 */
+        if (sh && sh.chain && a.team === b.team && a.team !== shT) { jimp *= A.chainK; if (!sh.chained) { sh.chained = true; emit(w, { type: 'chain', x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }); } }
+        const firstFoe = sh && !sh.firstHit && a.team !== b.team && (a.id === sh.stoneId || b.id === sh.stoneId);
+        const me0 = firstFoe ? (a.id === sh.stoneId ? a : b) : null, pvx = me0 ? me0.vx : 0, pvy = me0 ? me0.vy : 0;
         a.vx -= jimp * ia * nx; a.vy -= jimp * ia * ny;
         b.vx += jimp * ib * nx; b.vy += jimp * ib * ny;
+        if (firstFoe) {
+          sh.firstHit = true;
+          const foe0 = me0 === a ? b : a;
+          /* 관성: 처음 맞힌 뒤에도 맞히기 전 속도의 일부를 이어 감 */
+          if (sh.firstK && foe0.team !== shT) { foe0.vx *= A.firstK; foe0.vy *= A.firstK; emit(w, { type: 'firstHit', x: foe0.x, y: foe0.y }); }
+          /* 파문: 처음 맞힌 자리 둘레의 다른 상대 돌을 바깥으로 */
+          if (sh.shock) {
+            const cx = (a.x + b.x) / 2, cy = (a.y + b.y) / 2;
+            for (const o of w.stones) {
+              if (o === foe0 || !live(o) || o.team === shT) continue;
+              if (hyp(o.x - cx, o.y - cy) > A.shockR + o.r) continue;
+              const [ux, uy] = edgeDir(w, o), f = speedFor(A.shockD, o.fric) * (lastAlone(w, o, shT) ? 1 - P.lastKB : 1);
+              o.vx += ux * f; o.vy += uy * f; o.lastHit = me0.id;
+            }
+            emit(w, { type: 'shock', x: cx, y: cy });
+          }
+        }
         const impact = -rv;
         if (pre) { pre[1].vx *= A.pierce; pre[1].vy *= A.pierce; pre[0].vx = 0; pre[0].vy = 0; sh.pierced = true; emit(w, { type: 'pierce', x: pre[1].x, y: pre[1].y }); }
         if (a.team !== b.team) {
@@ -1161,18 +1326,20 @@ function step(w) {
     }
   }
   if (splits) for (const X of splits) doSplit(w, X);
-  for (const pd of w.pads) {
-    if (pd.cd !== 0) continue;
-    for (const s of st) {
-      if (!s._mv || s.falling > 0) continue;
-      if (!onPad(pd, s.x, s.y)) continue;
-      const sp = Math.sqrt(s.vx * s.vx + s.vy * s.vy);
-      if (sp < 1) continue;
-      const k = Math.min(P.padMaxV, Math.max(sp * P.padMult, sp + P.padAdd)) / sp;
-      s.vx *= k; s.vy *= k;
-      pd.cd = P.padCool + 1;
-      emit(w, { type: 'pad', id: s.id, x: pd.x, y: pd.y, sx: s.x, sy: s.y, vx: s.vx, vy: s.vy });
-      break;
+  /* 바람길: 흑·백이 함께 쓰는 하나의 길. 정해진 수에 열리고, 한 샷에 한 번만 밀어 줌 */
+  if (w.pads.length && sh && !sh.padUsed && padWait(w) === 0) {
+    for (const pd of w.pads) {
+      if (pd.cd > 0) continue;
+      for (const s of st) {
+        if (!s._mv || s.falling > 0 || !onPad(pd, s.x, s.y)) continue;
+        const sp = Math.sqrt(s.vx * s.vx + s.vy * s.vy);
+        if (sp < 1) continue;
+        const k = Math.min(P.padMaxV, Math.max(sp * P.padMult, sp + P.padAdd)) / sp;
+        s.vx *= k; s.vy *= k; sh.padUsed = true; pd.cd = P.gateCool + 1;   /* 쓰인 바람문은 2수 동안 닫힘 */
+        emit(w, { type: 'pad', team: shT, id: s.id, x: pd.x, y: pd.y, sx: s.x, sy: s.y, vx: s.vx, vy: s.vy });
+        break;
+      }
+      if (sh.padUsed) break;
     }
   }
   const holes = w.holes;
@@ -1188,7 +1355,7 @@ function step(w) {
         if (h.team !== s.team && (s.x - h.x) * (s.x - h.x) + (s.y - h.y) * (s.y - h.y) < h.r * h.r) {
           s.vx *= 0.2; s.vy *= 0.2; s.x = h.x; s.y = h.y;
           h.seen = true;
-          emit(w, { type: 'pit', x: h.x, y: h.y, pid: s.owner });
+          emit(w, { type: 'pit', x: h.x, y: h.y, pid: s.owner, pond: !!h.pond });
           handleFall(w, s);
           break;
         }
@@ -1198,7 +1365,16 @@ function step(w) {
   if (sh) sh.t += DT;
 }
 
+/* 바람길이 열리기까지 남은 수 (0이면 열림) */
+function padWait(w) {
+  const n = w.shots;
+  if (n < P.padStart) return P.padStart - n;
+  if (!P.padOff) return 0;
+  const k = (n - P.padStart) % (P.padOn + P.padOff);
+  return k < P.padOn ? 0 : P.padOn + P.padOff - k;
+}
 function onPad(pd, x, y) {
+  if (pd.kind === 'rect') return Math.abs(x - pd.x) < pd.hw && Math.abs(y - pd.y) < pd.hh;
   if (pd.kind === 'band') return y > pd.y - pd.h && y < pd.y + pd.h && x > pd.x0 && x < pd.x1;
   return (x - pd.x) * (x - pd.x) + (y - pd.y) * (y - pd.y) < pd.r * pd.r;
 }
@@ -1209,7 +1385,7 @@ function doSplit(w, X) {
   const sp = hyp(X.vx, X.vy), ang = sp > 1 ? Math.atan2(X.vy, X.vx) : rnd() * TAU, perp = ang + Math.PI / 2;
   const r2 = X.r * A.splitR;
   const kids = [-1, 1].map(sg => Object.assign({}, X, {
-    id: w.nextId++, r: r2, m: X.m * A.splitM, rs: X.rs * A.splitR, ms: X.ms * A.splitM, gen: 1,
+    id: w.nextId++, r: r2, m: X.m * A.splitM, rs: X.rs * A.splitR, ms: X.ms * A.splitM, gen: 1, bw: (X.bw || 0) / 2,
     x: X.x + Math.cos(perp) * sg * r2 * 0.95, y: X.y + Math.sin(perp) * sg * r2 * 0.95,
     vx: Math.cos(ang + sg * 0.45) * sp * A.splitV, vy: Math.sin(ang + sg * 0.45) * sp * A.splitV
   }));
@@ -1238,7 +1414,7 @@ function handleFall(w, s) {
     }
   }
   s.falling = FALL_T;
-  w.lost[s.owner] = (w.lost[s.owner] || 0) + 1;
+  countLoss(w, s); onLose(w, s);
   const sh = w.shot;
   if (sh) {
     sh.fell[s.team]++;
@@ -1292,6 +1468,25 @@ function strike(w, sh) {
   emit(w, { type: 'bolt', x: s.x, y: s.y, pid: sh.shooter });
   return true;
 }
+/* 돌에서 가장 가까운, 떨어질 수 있는 가장자리 쪽 방향 */
+function edgeDir(w, s) {
+  const lo = w.shrink, hi = S - w.shrink, opts = [[s.x - lo, -1, 0], [hi - s.x, 1, 0]];
+  if (!(w.walls.top && s.team === 1)) opts.push([s.y - lo, 0, -1]);
+  if (!(w.walls.bottom && s.team === 0)) opts.push([hi - s.y, 0, 1]);
+  let b = opts[0]; for (const o of opts) if (o[0] < b[0]) b = o;
+  return [b[1], b[2]];
+}
+function gust(w, sh) {
+  const T = w.players[sh.shooter].team, me = byId(w, sh.stoneId);
+  if (!me || !live(me)) return false;
+  let best = null, bd = Infinity;
+  for (const s of w.stones) if (live(s) && s.team !== T) { const d = hyp(s.x - me.x, s.y - me.y); if (d < bd) { bd = d; best = s; } }
+  if (!best) return false;
+  const d = Math.max(1, bd), v = speedFor(A.gustD, best.fric) * (lastAlone(w, best, T) ? 1 - P.lastKB : 1);
+  best.vx += (best.x - me.x) / d * v; best.vy += (best.y - me.y) / d * v; best.lastHit = me.id;
+  emit(w, { type: 'gust', x: best.x, y: best.y, pid: sh.shooter });
+  return true;
+}
 function tide(w, sh) {
   const T = w.players[sh.shooter].team, lo = w.shrink, hi = S - w.shrink, v = speedFor(A.tideD, 1);
   let any = false;
@@ -1311,7 +1506,7 @@ function tide(w, sh) {
 function snapshot(w) {
   return { stones: w.stones.filter(s => !s.dead).map(s => Object.assign({}, s)), reviveLeft: Object.assign({}, w.reviveLeft),
     buddyLeft: Object.assign({}, w.buddyLeft), lost: Object.assign({}, w.lost), wallSave: w.wallSave.slice(), nextId: w.nextId,
-    pads: w.pads.map(p => p.cd), mark: w.mark.slice(), obs: w.obs, obsHits: (w.obsHits || []).slice() };
+    mark: w.mark.slice(), obs: w.obs, obsHits: (w.obsHits || []).slice(), pads: w.pads.map(p => p.cd || 0) };
 }
 function tryRewind(w, sh) {
   const T = w.players[sh.shooter].team, E = 1 - T;
@@ -1321,10 +1516,10 @@ function tryRewind(w, sh) {
   const sn = w.snap;
   w.stones = sn.stones.map(s => Object.assign({}, s));
   Object.assign(w.reviveLeft, sn.reviveLeft); Object.assign(w.buddyLeft, sn.buddyLeft); Object.assign(w.lost, sn.lost);
-  (sn.pads || []).forEach((cd, i) => { if (w.pads[i]) w.pads[i].cd = cd; });
   w.wallSave = sn.wallSave.slice(); w.nextId = Math.max(w.nextId, sn.nextId);
   w.mark = (sn.mark || []).slice();
   if (sn.obs) { w.obs = sn.obs; w.obsHits = sn.obsHits.slice(); }
+  (sn.pads || []).forEach((cd, i) => { if (w.pads[i]) w.pads[i].cd = cd; });
   w.rewindLeft[q.id]--;
   sh.fell = [0, 0]; sh.shrunk = [0, 0]; sh.rewound = q.id;
   emit(w, { type: 'rewind', pid: q.id });
@@ -1353,9 +1548,11 @@ function updatePhase(w) {
   }
   if (sh.bolt && !sh.boltDone) { sh.boltDone = true; if (strike(w, sh)) return; }
   if (sh.tide && !sh.tideDone) { sh.tideDone = true; if (tide(w, sh)) return; }
+  if (sh.gust && !sh.gustDone) { sh.gustDone = true; if (gust(w, sh)) return; }
   if (!sh.counted) {
     sh.counted = true;
     w.shots++;
+    for (const p of w.stones) if (p.locked && live(p) && p.pg < A.pillarCap) { p.pg++; p.kr *= A.pillarR; p.km *= A.pillarM; p.kv *= A.pillarV; restat(w, p); }
     for (const pd of w.pads) if (pd.cd > 0 && --pd.cd === 0) emit(w, { type: 'padback', x: pd.x, y: pd.y });
     const smax = MAPS[w.map].shrinkMax;
     if (!w.noShrink && w.shots >= P.shrinkStart && w.shrink < smax) {
@@ -1398,7 +1595,8 @@ function startShot(w, pid, stoneId, vx, vy) {
   if (cnt(p, 'bolt')) { w.boltCount[pid]++; bolt = w.boltCount[pid] % A.boltEvery === 0; }
   w.shot = { shooter: pid, stoneId, phase: 'moving', collided: false, fell: [0, 0], shrunk: [0, 0], bombDone: false, counted: false,
     shrinking: false, t: 0, bomb: hasA(w, pid, 'bomb'), marks: hasA(w, pid, 'marks'), sx: s.x, sy: s.y, marked: false,
-    pierce: hasA(w, pid, 'pierce'), pierced: false, bolt, boltDone: false,
+    pierce: hasA(w, pid, 'pierce'), pierced: false, bolt, boltDone: false, firstHit: false, chained: false, fk: shotFric(w, pid), grip: w.players.map(q => cnt(q, 'grip') > 0), firstK: hasA(w, pid, 'first') && (w.fsd[pid] || 0) < A.firstN, gust: hasA(w, pid, 'gust'), gustDone: false,
+    hammer: hasA(w, pid, 'hammer'), shock: hasA(w, pid, 'shock'), chain: hasA(w, pid, 'chain'),
     tide: hasA(w, pid, 'tide'), tideDone: false, snapOn, rewindChecked: false, rewound: null };
 }
 /* real shot: shaky noise applies */
@@ -1409,6 +1607,7 @@ function fire(w, pid, id, ang, pw) {
   return ang;
 }
 /* replays a shot exactly as it was fired elsewhere (no aim noise) */
+const padCd = cd => (Array.isArray(cd) ? cd.slice() : [cd, cd]);
 function fireExact(w, pid, id, ang, pw) {
   const s = byId(w, id), v = Math.max(0, Math.min(1, pw)) * vmaxOf(w, s);
   startShot(w, pid, id, Math.cos(ang) * v, Math.sin(ang) * v);
@@ -1420,20 +1619,20 @@ function packWorld(w) {
   for (const k of COUNTERS) c[k] = Object.assign({}, w[k]);
   return { map: w.map, mode: w.mode, ns: w.noShrink ? 1 : 0, nid: w.nextId, sh: w.shots, sk: r1(w.shrink), og: MAPS[w.map].obs.reduce((m, o) => (w.obs.includes(o) ? m : m | (1 << o.oi)), 0), oh: (w.obsHits || []).slice(), db: w.dbl ? w.dbl.slice() : 0,
     wl: [w.walls.top ? 1 : 0, w.walls.bottom ? 1 : 0], ws: w.wallSave.slice(), cl: w.comboLeft, du: w.doubleUsed ? 1 : 0,
-    h: w.holes.map(h => [r1(h.x), r1(h.y), r1(h.r), h.team, h.seen ? 1 : 0]), mk: w.mark.slice(), c, pd: w.pads.map(p => p.cd),
+    h: w.holes.map(h => [r1(h.x), r1(h.y), r1(h.r), h.team, h.seen ? 1 : 0]), mk: w.mark.slice(), c, pd: w.pads.map(p => p.cd || 0),
     s: w.stones.filter(s => live(s)).map(s => [s.id, s.owner, r1(s.x), r1(s.y), +s.rs.toFixed(3), +s.ms.toFixed(3), s.kr, s.km, s.kv, s.gen,
-      (s.sealed ? 1 : 0) | (s.king ? 2 : 0) | (s.clone ? 4 : 0) | (s.wedge ? 8 : 0) | (s.big ? 16 : 0) | (s.small ? 32 : 0) | (s.cloneBack ? 64 : 0)]) };
+      (s.sealed ? 1 : 0) | (s.king ? 2 : 0) | (s.clone ? 4 : 0) | (s.wedge ? 8 : 0) | (s.big ? 16 : 0) | (s.small ? 32 : 0) | (s.cloneBack ? 64 : 0) | (s.pillar ? 128 : 0) | (s.locked ? 256 : 0), s.bw || 0, s.home == null ? -1 : s.home, s.press == null ? -1 : s.press, s.pg || 0]) };
 }
 function unpackWorld(o, players) {
   const w = blankWorld(players, o.mode, o.map);
   w.nextId = o.nid; w.shots = o.sh; w.shrink = o.sk; w.noShrink = !!o.ns; if (o.cr) w.obs = []; if (o.og) w.obs = MAPS[o.map].obs.filter(x => !((o.og >> x.oi) & 1)); if (o.oh) w.obsHits = o.oh.slice(); w.dbl = o.db ? o.db.slice() : null;
   w.walls = { top: !!o.wl[0], bottom: !!o.wl[1] }; w.wallSave = o.ws.slice(); w.comboLeft = o.cl; w.doubleUsed = !!o.du;
-  w.holes = o.h.map(([x, y, r, team, seen]) => ({ x, y, r, team, seen: !!seen })); w.mark = (o.mk || []).slice();
-  (o.pd || []).forEach((cd, i) => { if (w.pads[i]) w.pads[i].cd = cd; });
+  (o.pd || []).forEach((cd, i) => { if (w.pads[i] && typeof cd === 'number') w.pads[i].cd = cd; });
+  w.holes = o.h.map(([x, y, r, team, seen]) => ({ x, y, r, team, seen: !!seen, pond: team === -1 })); w.mark = (o.mk || []).slice();
   for (const k of COUNTERS) for (const id in (o.c[k] || {})) w[k][id] = o.c[k][id];
-  for (const [id, owner, x, y, rs, ms, kr, km, kv, gen, f] of o.s) {
+  for (const [id, owner, x, y, rs, ms, kr, km, kv, gen, f, bw = 0, home = -1, press = -1, pg = 0] of o.s) {
     w.stones.push({ id, owner, team: players[owner].team, x, y, vx: 0, vy: 0, r: BASE_R, m: 1, fric: 1, rs, ms, kr, km, kv, gen,
-      king: !!(f & 2), sealed: !!(f & 1), clone: !!(f & 4), wedge: !!(f & 8), big: !!(f & 16), small: !!(f & 32), cloneBack: !!(f & 64), falling: 0, dead: false, lastHit: null, oiled: false });
+      king: !!(f & 2), sealed: !!(f & 1), clone: !!(f & 4), wedge: !!(f & 8), big: !!(f & 16), small: !!(f & 32), cloneBack: !!(f & 64), pillar: !!(f & 128), locked: !!(f & 256), pg, bw, home, press, falling: 0, dead: false, lastHit: null, oiled: false });
   }
   restatAll(w);
   return w;
@@ -1447,6 +1646,7 @@ const hasStones = (w, pid) => w.stones.some(s => live(s) && s.owner === pid);
 /* 이번에 칠 수 있는 내 돌 (쌍발의 두 번째 샷은 첫 번째로 친 돌만) */
 function canShoot(w, p, s) {
   if (!s || !live(s) || s.owner !== p.id || s.sealed) return false;
+  if (s.locked) return false;
   if (!w.dbl || w.dbl[0] !== p.id || s.id === w.dbl[1]) return true;
   const L = byId(w, w.dbl[1]);
   return !(L && live(L) && L.owner === p.id && !L.sealed);   /* 첫 돌을 잃었으면 아무 돌이나 */
@@ -1463,6 +1663,27 @@ function afterShot(w) {
   if (!a0 && !a1) return { winner: 1 - t, reason: 'both' };
   if (!a0) return { winner: 1, reason: 'wipe' };
   if (!a1) return { winner: 0, reason: 'wipe' };
+  /* 주춧돌: 우리 돌을 정해진 만큼 잃었거나 다른 돌이 없으면 풀림 */
+  for (const p of w.stones) if (p.locked && live(p) && ((w.plk[p.owner] || 0) >= A.pillarFree || !w.stones.some(o => live(o) && o.owner === p.owner && o !== p))) {
+    p.locked = false; emit(w, { type: 'pillarFree', x: p.x, y: p.y, pid: p.owner });
+  }
+  /* 기세·반격·선제·패 */
+  const kn = knocked(sh, t);
+  w.mom[sp.id] = kn > 0 ? 1 : 0; w.ctr[sp.id] = 0; w.fsd[sp.id] = (w.fsd[sp.id] || 0) + 1;
+  if (kn > 0) for (const q of w.players) if (q.team !== t) {
+    w.ctr[q.id] = 1;
+    if (cnt(q, 'ko') && w.koLeft[q.id] > 0 && !w.koArm[q.id]) { w.koArm[q.id] = 1; emit(w, { type: 'koArm', pid: q.id }); }
+  }
+  /* 압박: 지난번 눌러 둔 돌은 풀고, 이번에 멈춘 자리 둘레를 새로 누름 */
+  for (const o of w.stones) if (o.press === sp.id) o.press = -1;
+  if (cnt(sp, 'press')) {
+    const ps = byId(w, sh.stoneId);
+    if (ps && live(ps)) {
+      let n = 0;
+      for (const o of w.stones) if (live(o) && o.team !== t && hyp(o.x - ps.x, o.y - ps.y) < A.pressD) { o.press = sp.id; n++; }
+      if (n) emit(w, { type: 'press', x: ps.x, y: ps.y, n });
+    }
+  }
   if (cnt(sp, 'wedge')) {
     const ws = byId(w, sh.stoneId);
     if (ws && live(ws) && !ws.wedge) { ws.wedge = true; ws.km *= A.wedgeM; restat(w, ws); emit(w, { type: 'wedge', x: ws.x, y: ws.y }); }
@@ -1472,6 +1693,8 @@ function afterShot(w) {
   }
   const ds = byId(w, sh.stoneId);
   if (cnt(sp, 'double') && !w.doubleUsed && ds && live(ds) && ds.owner === sp.id && !ds.sealed) { w.doubleUsed = true; w.dbl = [sp.id, ds.id]; return { again: true, double: true }; }
+  if (w.bdx[sp.id] && hasStones(w, sp.id)) { w.bdx[sp.id] = 0; return { again: true, buddy: true }; }
+  if (w.koArm[sp.id] && w.koLeft[sp.id] > 0 && hasStones(w, sp.id)) { w.koArm[sp.id] = 0; w.koLeft[sp.id]--; return { again: true, ko: true }; }
   w.comboLeft = A.combo; w.doubleUsed = false;
   return { next: true };
 }
@@ -1499,10 +1722,10 @@ function speedAfter(v0, d, fric) {
 }
 // straight-line reach, counting an active boost pad on the way
 function reachRay(w, s, ang, v) {
-  const fric = s.fric, base = travel(v, fric);
+  const fric = s.fric * shotFric(w, s.owner), base = travel(v, fric);
   const ux = Math.cos(ang), uy = Math.sin(ang);
   let best = null;
-  const act = (w.pads || []).filter(pd => pd.cd === 0);
+  const act = w.pads && w.pads.length && padWait(w) === 0 ? w.pads.filter(p => !p.cd) : [];
   if (act.length) for (let t = 0; t < base && best === null; t += 6) if (act.some(pd => onPad(pd, s.x + ux * t, s.y + uy * t))) best = t;
   if (best === null) return base;
   const ve = speedAfter(v, best, fric);
@@ -1541,18 +1764,18 @@ function exitDist(w, x, y, ux, uy, r, team) {
   return t;
 }
 function knockMargin(w, s, t) {
-  const vmax = vmaxOf(w, s);
+  const vmax = vmaxOf(w, s), sf = s.fric * shotFric(w, s.owner);
   const dx = t.x - s.x, dy = t.y - s.y, D = hyp(dx, dy) || 1;
   const d1 = Math.max(0, D - s.r - t.r);
-  if (d1 >= travel(vmax, s.fric)) return -Infinity;
+  if (d1 >= travel(vmax, sf)) return -Infinity;
   const ux = dx / D, uy = dy / D;
   const e = exitDist(w, t.x, t.y, ux, uy, t.r, t.team);
   if (e === Infinity) return -Infinity;
   if (!segClear(w, s.x, s.y, t.x, t.y, s.r, s, t)) return -Infinity;
-  const tm = t.m * (hasA(w, t.owner, 'root') ? A.root : 1) * (teamCount(w, t.team) === 1 ? lastMass() : 1);
-  const v1 = speedAfter(vmax, d1, s.fric);
-  const vt = v1 * (1 + P.rest) * s.m / (s.m + tm);
-  return travel(vt, t.fric * (hasA(w, s.owner, 'oil') ? A.oil : 1)) - e;
+  const tm = t.m * holdMul(w, t, s.team) * dragonMul(w, t), sm = s.m * (hasA(w, s.owner, 'hammer') ? A.hamM : 1) * dragonMul(w, s);
+  const v1 = speedAfter(vmax, d1, sf);
+  const vt = v1 * (1 + P.rest) * sm / (sm + tm);
+  return travel(vt, t.fric) - e;
 }
 /* how many `def` stones can team `att` knock off with one shot */
 function threats(w, att) {
@@ -1759,7 +1982,7 @@ function predictPath(w, pid, id, ang, pw) {
 return { N, GAP, INSET, S, BASE_R, DT, FALL_T, TAU, CX, CY, L, P, A, MAPS, MAP_IDS, FORMATION, AUG, AUG_IDS, TIER_NAME, TIER_ODDS,
   setRandom, cnt, hasA, live, maxV, vmaxOf, statsFor, augAllowed, newWorld, gainAug, pendingPick, picksOwed, rollOffer, tierOdds, pityOn, canTake,
   unsealIfStuck, step, updatePhase, startShot, fire, fireExact, packWorld, unpackWorld, runShot, afterShot, onTengen, byId, teamAlive, hasStones, knocked, cpuPlan,
-  predictPath, travel, reachRay, threats, teamCount, obsLocal, markRemove, cpuMark, CPU_LEVEL, canShoot };
+  predictPath, travel, reachRay, threats, teamCount, obsLocal, markRemove, cpuMark, CPU_LEVEL, canShoot, padWait, restatAll };
 })();
 if (typeof module !== 'undefined') module.exports = CORE;
 
@@ -1792,32 +2015,44 @@ const RULE_SUM = [
   ['목표', '상대 돌을 판 밖으로 모두 떨어뜨리면 이깁니다.'],
   ['쏘기', '내 돌을 뒤로 당겼다 놓으면 반대쪽으로 날아갑니다. 많이 당길수록 셉니다.'],
   ['차례', '한 번씩 번갈아 칩니다. 처음엔 상대 돌까지 닿지 않으니 먼저 다가가세요.'],
-  ['증강', `국을 시작할 때, 그리고 내 돌을 ${K.P.lossPerPick}개 잃을 때마다 능력 카드를 1장 고릅니다.`]
+  ['증강', `국을 시작할 때, 그리고 처음 놓인 내 기본 돌을 ${K.P.lossPerPick}개 잃을 때마다 능력 카드를 1장 고릅니다.`]
+];
+const GLOSSARY = [
+  ['힘', '내가 쏜 돌이 나가는 힘. 셀수록 멀리, 세게 나갑니다.'],
+  ['무게', '무거운 돌은 같은 힘으로 쏴도 덜 나가지만, 부딪히면 상대를 더 멀리 밀어내고 자신은 덜 밀립니다. 가벼운 돌은 그 반대입니다.'],
+  ['방어력', '상대 샷에 맞을 때 버티는 힘(그때만 적용되는 무게 배수). 높을수록 덜 밀려납니다.'],
+  ['타격', '내 샷에 맞은 상대 돌이 튕겨 나가는 세기입니다.'],
+  ['크기 · 마찰', '크기는 돌의 지름, 마찰은 바닥에 걸리는 정도입니다. 마찰이 클수록 덜 미끄러집니다.'],
+  ['칸', '바둑판 한 칸만큼의 거리입니다.']
 ];
 const RULE_GROUPS = [
+  ['용어', GLOSSARY.map(([k, v]) => `<b>${k}</b> — ${v}`)],
   ['쏘는 법', [
     '내 돌을 누른 채 뒤로 당겼다가 놓습니다. 당긴 반대쪽으로, 당긴 만큼 세게 나갑니다.',
     '돌을 톡 눌러 고른 뒤 판 아무 데서나 끌어도 됩니다. 가장자리 돌을 칠 때 편합니다.',
-    '조준 취소: 컴퓨터는 마우스 오른쪽 단추, 휴대폰은 다른 손가락으로 화면을 한 번 더 누릅니다.'
+    '무거운 돌은 같은 힘으로 덜 나가지만 부딪히면 상대를 더 멀리 밀고 자신은 덜 밀립니다. 가벼운 돌은 더 멀리 나가지만 맞으면 더 밀립니다.',
+    '조준 취소: 컴퓨터는 마우스 오른쪽 단추, 휴대폰은 다른 손가락으로 화면을 한 번 더 누릅니다.',
+    '조작 실수를 막으려고, 누르자마자 놓은 샷은 쏘지 않고 차례가 막 넘어온 순간의 클릭도 잠깐 받지 않습니다.'
   ]],
   ['이기고 지기', [
     '돌의 가운데가 판 밖으로 나가면 떨어집니다.',
     '상대 돌을 모두 떨어뜨리면 그 국을 이깁니다.',
     '양쪽 마지막 돌이 함께 떨어지면 친 쪽이 집니다.',
     `한 편에 하나 남은 마지막 돌은 ${Math.round(K.P.lastKB * 100)}% 덜 밀립니다.`,
-    '국에서 진 쪽이 다음 국을 먼저 칩니다.'
+    '국마다 두 사람이 증강을 모두 고른 뒤 동전을 던져 흑·백 중 먼저 칠 쪽을 정합니다. 동전이 떨어질 때까지는 돌을 움직일 수 없습니다.'
   ]],
   ['증강', [
-    `국 시작에 1장, 내 돌을 ${K.P.lossPerPick}개 잃을 때마다 1장 더 고릅니다.`,
+    `국 시작에 1장, 처음 놓인 기본 돌을 ${K.P.lossPerPick}개 잃을 때마다 1장 더 고릅니다. 증원·분신·도둑으로 늘어난 돌은 세지 않고, 분열한 조각은 반 개로 셉니다.`,
     '한 번에 같은 등급 카드 3장이 나옵니다. 실버가 가장 흔하고 골드, 프리즘 순으로 드뭅니다. 늦게 받을수록 높은 등급이 조금 더 잘 나옵니다.',
     `프리즘이 ${K.P.pityAfter}번 연속 안 나오면, 나올 때까지 프리즘 확률이 2배가 됩니다.`,
     '한 번 고른 증강은 그 국에서 다시 나오지 않고, 국이 끝나면 모두 사라집니다.'
   ]],
   ['지형', [
-    '처음 자리에서는 끝까지 당겨도 상대 돌에 닿지 않습니다. 용오름의 바람길을 타면 닿습니다.',
+    '증강 없이 처음 자리에서는 끝까지 당겨도 상대 돌에 닿지 않습니다. 차돌 같은 증강이나 용오름의 바람문을 타면 닿을 수 있습니다.',
     '흑요석 제단의 바위, 철옹성의 성벽에 맞은 돌은 힘을 잃지 않고 튕겨 나옵니다.',
     `흑요석 바위는 세게 ${K.P.rockHits}번 맞으면 깨지며 둘레 돌을 밀어냅니다.`,
-    `용오름 한가운데 바람길은 대국 시작 ${K.P.padStart}수 뒤 열리고, 지나는 돌을 훨씬 빠르게 합니다. 한 번 쓰이면 ${K.P.padCool}수 뒤 다시 열립니다.`,
+    `용오름: 판 양쪽 가장자리 가까이에 바람문(가로 2칸 · 세로 1칸)이 둘 있습니다. 흑·백 누구의 샷이든 열린 문을 지나는 돌은 한 샷에 한 번 빨라지고, 쓰인 문은 ${K.P.gateCool}수 동안 닫힙니다. 처음 자리에서 바로 상대 돌을 떨어뜨릴 만큼 세지는 않습니다.`,
+    '연못: 판 양쪽 두 연못에 돌의 가운데가 들어가면 흑백 가리지 않고 떨어집니다.',
     `'판 줄어듦'을 '있음'으로 고르면 ${K.P.shrinkStart}수 뒤부터 한 수마다 판이 반 칸씩 좁아지고, 바깥 돌은 떨어집니다.`
   ]],
   ['그 밖에', [
@@ -1970,7 +2205,7 @@ function newMatch() {
     const op = netProfOf(netOpponent());
     G.players[1].name = profName(op); G.players[1].char = op.c;
   }
-  G.score = [0, 0]; G.round = 0; G.lastLoser = null; G.log = []; G.fx = []; G.introMap = null; G.wallRise = [1, 1]; G.wallGlow = [0, 0];
+  G.score = [0, 0]; G.round = 0; G.titleRound = 0; G.lastLoser = null; G.log = []; G.fx = []; G.introMap = null; G.wallRise = [1, 1]; G.wallGlow = [0, 0];
   G.aim = null; G.cpuAnim = null; G.thinking = false; G.started = true;
   G.world = K.newWorld(G.players, G.mode, mapFor(1)); G.world.noShrink = !!G.noShrink;
   $('ovMenu').hidden = true; $('ovRound').hidden = true;
@@ -2056,7 +2291,9 @@ function showPick(pid) {
 }
 function startRound() {
   const map = mapFor(G.round);
-  const first = G.round === 1 ? 0 : G.lastLoser;
+  const first = Math.random() < 0.5 ? 0 : 1; /* 동전 던지기: 두 사람이 증강을 다 고른 뒤 국마다 선공을 정함 */
+  G.lastLoser = first;
+  addLog(`동전 던지기 · ${teamName(first)}이 나와 ${josa(teamLabel(first), '이/가')} 먼저 칩니다`, first);
   G.teamPtr = G.mode === '2v2' ? [(G.round - 1) % 2, (G.round - 1) % 2] : [0, 0];
   addLog(`제${G.round}국 · ${MAPS[map].name} · ${teamLabel(first)} 선공`, first);
   const tp = G.players.filter(p => p.team === first);
@@ -2073,7 +2310,7 @@ function beginTurn(newTurn) {
     fxEnso(s.x, s.y, 80, C.goldHi, { w: 14 }); fxStamp(s.x, s.y - 100, '天', '천원 수호', { size: 86, big: true });
     return endRound(p.team, `${josa(teamLabel(p.team), '이/가')} 천원을 끝까지 지켜 냈습니다`);
   }
-  if (K.unsealIfStuck(w, p.id)) addLog(`${pLabel(p)}: 남은 돌이 모두 봉인돼서 봉인이 풀렸습니다`, p.team);
+  if (K.unsealIfStuck(w, p.id)) { drainEvents(); addLog(`${pLabel(p)}: 쏠 수 있는 돌이 없어 봉인이 풀렸습니다`, p.team); }
   G.aim = null; G.cpuAnim = null; G.sel = null;
   if (newTurn) roundTitle();
   if (p.remote) return netWait('aim', p.id);
@@ -2088,7 +2325,7 @@ function beginTurn(newTurn) {
       G.thinking = false;
       G.cpuAnim = { ...plan, t0: performance.now() };
       renderStrip();
-    }, 380);
+    }, Math.max(380, (G.coinUntil || 0) - performance.now() + 250));
   }
   renderAll();
 }
@@ -2109,7 +2346,7 @@ function fire(pid, id, ang, pw) {
   const fa = K.fire(G.world, pid, id, ang, pw);
   netShot(pid, id, fa, pw);
   G.state = 'moving';
-  sfx(1700, Math.min(0.6, 0.2 + pw * 0.4), 0.05);
+  flickSnd(pw);
   renderStrip();
 }
 /* 길동무 지목: 이 화면에서 고를 수 있는 사람(CPU·이 화면의 사람)의 지목을 먼저 처리합니다.
@@ -2172,10 +2409,10 @@ function endShot() {
     return endRound(out.winner, reason);
   }
   if (out.again) {
-    const nm = out.double ? '쌍발' : '연타';
-    addLog(out.double ? `쌍발 · ${pLabel(sp)} 방금 친 돌로 한 번 더` : `연타 · ${pLabel(sp)} 한 번 더`, t);
+    const nm = out.double ? '쌍발' : out.ko ? '패' : out.buddy ? '길동무' : '연타';
+    addLog(out.double ? `쌍발 · ${pLabel(sp)} 방금 친 돌로 한 번 더` : out.ko ? `패 · ${pLabel(sp)} 한 번 더` : out.buddy ? `길동무 · ${pLabel(sp)} 한 번 더` : `연타 · ${pLabel(sp)} 한 번 더`, t);
     const s = (out.double && w.dbl ? K.byId(w, w.dbl[1]) : null) || w.stones.find(o => live(o) && o.owner === sp.id);
-    if (s) fxStamp(s.x, s.y - 84, out.double ? '雙' : '連', nm, { size: 62 });
+    if (s) fxStamp(s.x, s.y - 84, out.double ? '雙' : out.ko ? '劫' : out.buddy ? '伴' : '連', nm, { size: 62 });
   }
   G.after = out.again ? 'again' : 'next';
   runPicks();
@@ -2193,6 +2430,7 @@ function endRound(winTeam, reason) {
   G.result = { winTeam, reason };
   addLog(`제${G.round}국 · ${teamLabel(winTeam)} 승리 (${G.score[0]}:${G.score[1]})`, winTeam);
   fxPetals(CX, CY - 40, 28); fxStamp(CX, CY - 40, '勝', `${teamLabel(winTeam)} 승리`, { size: 190, life: 2.4, big: true });
+  winChord(G.score[winTeam] >= G.target);
   netSync('result', -1);
   renderAll();
   const tk = G.token;
@@ -2254,7 +2492,7 @@ function netOnPeers(ch) {
     NET.actSeen = act.q;
     G.state = 'replay'; acc = 0;
     K.fireExact(G.world, act.pid, act.id, act.a, act.p);
-    sfx(1700, 0.4, 0.05);
+    flickSnd(act.p);
     renderStrip();
   }
   if (st && st.q > NET.seq) {
@@ -2269,7 +2507,7 @@ function netAdopt(st) {
     const fresh = !G.started || !G.online || st.rd < G.round || (st.rd === 1 && G.round > 1);
     G.online = true; G.started = true; G.token++;
     if (fresh || G.players.length !== 2) { G.players = makePlayers('1v1', false); G.log = G.log || []; }
-    if (fresh) G.introMap = null;
+    if (fresh) { G.introMap = null; G.titleRound = 0; }
     netMarkSeats();
     G.mode = st.mode; G.mapSet = st.ms; G.mapSeq = st.mq || null; G.noShrink = !!st.ns; G.target = st.tg; G.round = st.rd; G.score = st.sc.slice(); G.lastLoser = st.ll;
     G.current = st.cu; G.teamPtr = st.tp.slice(); G.after = st.af; G.pickQueue = st.pq.slice(); G.alone = st.al.slice(); G.result = st.rs;
@@ -2298,7 +2536,7 @@ function netAdopt(st) {
     }
     NET.waitKind = 'pick2'; NET.waitPid = 1 - me; G.state = 'remote'; return renderAll();
   }
-  if (st.ph === 'result' && G.result) { G.state = 'roundEnd'; renderAll(); showResult(G.result.winTeam, G.result.reason); return; }
+  if (st.ph === 'result' && G.result) { if (G.state !== 'roundEnd' && G.state !== 'matchEnd') winChord(G.score[G.result.winTeam] >= G.target); G.state = 'roundEnd'; renderAll(); showResult(G.result.winTeam, G.result.reason); return; }
   const mine = st.ctl === NET.seat;
   if (st.ph === 'pick') { if (mine) return showPick(st.ctl); NET.waitKind = 'pick'; NET.waitPid = st.ctl; G.state = 'remote'; return renderAll(); }
   if (st.ph === 'aim') roundTitle();
@@ -2391,12 +2629,63 @@ function renderNetPanel() {
 })();
 
 /* ---------- overlays ---------- */
+/* 증강마다 바뀌는 능력치를 [대상, 능력치, 값, 종류]로 — 종류: up(내게 이득) · down(대가) · foe(상대를 약하게) */
+const pc = x => Math.round(x * 100), fx = x => Math.round(x * 100) / 100, cell = x => Math.round(x / K.GAP * 10) / 10;
+const STATS = () => { const A = K.A, P = K.P; return {
+  iron: [['내 돌', '무게', `×${fx(A.ironM)}`, 'up']],
+  big: [[`돌 ${A.sizeN}개`, '크기', `+${pc(A.bigR - 1)}%`, 'up'], [`돌 ${A.sizeN}개`, '무게', `×${fx(A.bigM)}`, 'up']],
+  fast: [['내 돌', '힘', `+${pc(A.fast - 1)}%`, 'up']],
+  reinforce: [['우리 진영', '돌', `+${A.reinforce}`, 'up']],
+  seal: [[`상대 돌 ${A.seal}개`, '봉인', '쏠 수 없음', 'foe']],
+  root: [['내 돌', '방어력', `×${fx(A.root)}`, 'up']],
+  aim: [['조준', '궤적', '첫 충돌까지', 'up']],
+  shackle: [['상대 돌', '힘', `−${pc(1 - A.shackle)}%`, 'foe']],
+  momentum: [['떨어뜨린 다음 샷', '힘', `+${pc(A.momV - 1)}%`, 'up']],
+  counter: [['잃은 다음 샷', '힘', `+${pc(A.ctrV - 1)}%`, 'up']],
+  grip: [['밀리는 내 돌', '마찰', `+${pc(A.grip - 1)}%`, 'up']],
+  sand: [['상대가 쏜 돌', '마찰', `+${pc(A.sand - 1)}%`, 'foe']],
+  star: [['화점 위 내 돌', '방어력', `×${fx(A.starM)}`, 'up']],
+  edge: [['가장자리 내 돌', '방어력', `×${fx(A.edgeM)}`, 'up']],
+  first: [[`고른 뒤 ${A.firstN}샷`, '타격', `+${pc(A.firstK - 1)}%`, 'up']],
+  combo: [['떨어뜨리면', '한 번 더', `${A.comboRound}회`, 'up']],
+  bomb: [['멈춘 자리', '폭발', `${cell(A.bombR)}칸`, 'up']],
+  marks: [[`${Math.round(A.markD / K.GAP)}칸 넘게 날면`, '타격', `+${pc(A.markK - 1)}%`, 'up']],
+  wedge: [['멈춘 쏜 돌', '무게', `×${fx(A.wedgeM)}`, 'up']],
+  wall: [['우리 뒤쪽', '벽', `되돌리기 ${A.wallSave}번`, 'up']],
+  split: [['세게 맞은 내 돌', '둘로 갈라짐', `${A.splitN}회`, 'up'], ['조각', '크기', `−${pc(1 - A.splitR)}%`, 'down']],
+  pierce: [['첫 타격', '힘', '모두 실음', 'up'], ['쏜 돌', '멈춤', '그 자리', 'down']],
+  thorns: [['나와 부딪힌 상대 돌', '타격', `${pc(A.thorns)}% 되돌림`, 'foe']],
+  trap: [['상대 진영 앞', '숨은 함정', `${A.traps}개`, 'foe']],
+  double: [['매 차례', '샷', '2번', 'up'], ['내 돌', '힘', `−${pc(1 - A.doubleV)}%`, 'down']],
+  gust: [['가까운 상대 돌', '밀어냄', `${cell(A.gustD)}칸`, 'foe']],
+  hammer: [['쏜 돌', '무게', `×${fx(A.hamM)}`, 'up']],
+  press: [['둘레 상대 돌', '방어력', `×${fx(A.pressM)}`, 'foe']],
+  shock: [['둘레 상대 돌', '밀어냄', `${cell(A.shockD)}칸`, 'foe']],
+  chain: [['상대 돌끼리', '타격', `+${pc(A.chainK - 1)}%`, 'foe']],
+  revive: [['떨어진 돌', '복귀', `${A.revive}회`, 'up']],
+  buddy: [['떨어지면', '상대 돌 데려감', `${A.buddy}회`, 'up'], ['그 뒤', '한 번 더', '샷 +1', 'up']],
+  tengen: [[`천원 ${cell(P.tengenR)}칸`, '지키면', '승리', 'up']],
+  thief: [['상대 돌', '빼앗기', `${A.thief}개`, 'up']],
+  rewind: [['상대 샷', '무르기', `${A.rewind}회`, 'up']],
+  king: [['왕돌', '크기', `+${pc(A.kingR - 1)}%`, 'up'], ['왕돌', '무게', `×${fx(A.kingM)}`, 'up'], ['왕돌', '힘', `+${pc(A.kingV - 1)}%`, 'up']],
+  bolt: [[`${A.boltEvery}샷마다`, '낙뢰', '상대 돌 1개', 'foe']],
+  clone: [['분신', '돌', `+${A.clone}`, 'up'], ['분신', '되살아남', '1번', 'up']],
+  last: [[`${A.lastN}개 이하`, '크기', `+${pc(A.lastR - 1)}%`, 'up'], [`${A.lastN}개 이하`, '무게', `×${fx(A.lastM)}`, 'up'], [`${A.lastN}개 이하`, '힘', `+${pc(A.lastV - 1)}%`, 'up']],
+  dense: [[`돌 ${A.sizeN}개`, '크기', `−${pc(1 - A.denseR)}%`, 'up'], [`돌 ${A.sizeN}개`, '힘', `+${pc(A.denseV - 1)}%`, 'up']],
+  shaky: [['상대 샷', '빗나감', `최대 ${Math.round(A.shaky / 2 * 180 / Math.PI)}°`, 'foe']],
+  dragon: [['뭉친 내 돌', '무게', `×${fx(A.dragonM)}`, 'up']],
+  ko: [['내 돌을 잃으면', '한 번 더', `${A.ko}회`, 'up']],
+  pillar: [['주춧돌 (한 수마다)', '크기', `+${fx((A.pillarR - 1) * 100)}%`, 'up'], ['주춧돌 (한 수마다)', '무게', `+${fx((A.pillarM - 1) * 100)}%`, 'up'], ['주춧돌 (한 수마다)', '힘', `+${fx((A.pillarV - 1) * 100)}%`, 'up'], ['주춧돌', '쏠 수 없음', `${A.pillarFree}개 잃으면 풀림`, 'down']],
+  tide: [['상대 돌 모두', '밀어냄', `${Math.round(A.tideD / K.GAP * 10) / 10}칸`, 'foe']]
+}; };
+const statHTML = id => { const st = STATS()[id] || []; return st.length ? `<span class="stats">${st.map(([who, k, v, kind]) => `<span class="st st-${kind}"><i>${who}</i><b>${k}</b><em>${v}</em></span>`).join('')}</span>` : ''; };
 function cardHTML(id, i, p) {
   const a = AUG[id], own = cnt(p, id);
   return `<button class="aug-card" type="button" data-tier="${a.tier}" data-id="${id}">
-    <span class="seal seal-lg stamp-in" style="animation-delay:${i * 110}ms">${a.seal}</span>
     <span class="tier">${TIER[a.tier]}</span>
+    <span class="seal seal-lg stamp-in" style="animation-delay:${i * 110}ms">${a.seal}</span>
     <span class="aug-name">${a.name}</span>
+    ${statHTML(id)}
     <span class="aug-desc">${a.desc()}</span>
     ${own ? `<span class="aug-own">보유 ×${own} → ×${own + 1}</span>` : ''}
   </button>`;
@@ -2434,7 +2723,7 @@ function tierReveal(tier, cardsEl) {
 function renderDraft(p, offer, onPick) {
   const ov = $('ovDraft'), w = G.world, nth = w.picks[p.id] + 1;
   const owned = uniq(p.augs).map(id => AUG[id].name + (cnt(p, id) > 1 ? ` ×${cnt(p, id)}` : '')).join(', ') || '없음';
-  const why = (nth === 1 ? '국을 시작하며 받는 증강입니다' : `돌을 ${w.lost[p.id]}개 잃어서 받는 ${nth}번째 증강입니다`) + (onPick && G.online ? ' · 상대도 지금 함께 고르고 있습니다' : '');
+  const why = (nth === 1 ? '국을 시작하며 받는 증강입니다' : `기본 돌을 ${Math.floor(w.lost[p.id])}개 잃어서 받는 ${nth}번째 증강입니다`) + (onPick && G.online ? ' · 상대도 지금 함께 고르고 있습니다' : '');
   ov.innerHTML = `<div class="ov-card" role="dialog" aria-modal="true" aria-labelledby="draftTitle">
     <p class="eyebrow">제${G.round}국 · ${MAPS[w.map].name}</p>
     <h2 class="draft-who" id="draftTitle">${avatar(p)}${esc(p.name)}, 하나를 고르세요</h2>
@@ -2447,7 +2736,7 @@ function renderDraft(p, offer, onPick) {
   ov.hidden = false;
   const cardsEl = ov.querySelector('.cards');
   ov.querySelectorAll('.aug-card').forEach((b, i) => b.style.setProperty('--i', i));
-  if (offer.tier >= 2) ov.querySelector('.ov-card').classList.add('glow-' + offer.tier);
+  if (offer.tier >= 1) ov.querySelector('.ov-card').classList.add('glow-' + offer.tier);
   if (offer.tier >= 1) cardsEl.classList.add('deal');
   if (offer.tier >= 1 && !reduceMotion) tierReveal(offer.tier, cardsEl);
   ov.querySelectorAll('.aug-card').forEach(b => b.addEventListener('click', () => {
@@ -2471,7 +2760,7 @@ function showResult(winTeam, reason) {
     <div class="result-head"><span class="stone-ico xl ${stoneCls(winTeam)}"></span><h2 id="resTitle">${esc(teamLabel(winTeam))} ${done ? '최종 승리' : '승리'}</h2><span class="seal seal-lg stamp-in res-seal" aria-hidden="true">勝</span></div>
     <div class="res-who">${avatar(G.players.find(q => q.team === winTeam), { bust: true, stone: false })}<div><p class="reason">${esc(reason)} · ${G.world.shots}수</p><p class="res-quote">“${charOf(G.players.find(q => q.team === winTeam)).quote}”</p></div></div>
     <div class="bigscore"><span class="stone-ico lg b"></span><span>${G.score[0]}</span><span class="colon">:</span><span>${G.score[1]}</span><span class="stone-ico lg w"></span></div>
-    ${done ? `<p class="note">${G.target === 1 ? '단판 승부 끝' : G.target + '선승 달성'}</p>` : `<p class="note">다음 국은 <b id="resNext">${nextMap}</b> · ${teamLabel(nf)} 선공 · 증강은 모두 사라지고 새로 고릅니다</p>`}
+    ${done ? `<p class="note">${G.target === 1 ? '단판 승부 끝' : G.target + '선승 달성'}</p>` : `<p class="note">다음 국은 <b id="resNext">${nextMap}</b> · 선공은 증강을 다 고른 뒤 동전 던지기로 · 증강은 모두 사라지고 새로 고릅니다</p>`}
     <div class="res-maps"><p class="res-maps-h">${done ? '다음 대국 지형' : '다음 국 지형'}${G.online && NET.seat !== 0 ? ' · 방장이 고릅니다' : ''}</p><div class="res-map-row" id="resMaps"></div></div>
     <div class="actions">${done
       ? '<button class="btn-primary" id="btnAgain" type="button">같은 설정으로 다시</button><button class="btn-ghost" id="btnToMenu" type="button">설정 바꾸기</button>'
@@ -2526,7 +2815,9 @@ function addLog(text, team = null) {
   renderLog();
 }
 function renderLog() {
-  $('log').innerHTML = G.log.slice(0, 9).map(l =>
+  /* 동전이 떨어지기 전에는 선공 기록을 숨김 */
+  const hide = coinBusy() ? (l => l.text.startsWith('동전 던지기') || / 선공$/.test(l.text)) : () => false;
+  $('log').innerHTML = G.log.filter(l => !hide(l)).slice(0, 9).map(l =>
     `<li>${l.team === null ? '<span class="stone-ico" style="visibility:hidden"></span>' : `<span class="stone-ico ${stoneCls(l.team)}"></span>`}<span>${esc(l.text)}</span></li>`
   ).join('') || '<li><span>아직 기록이 없습니다</span></li>';
 }
@@ -2553,6 +2844,7 @@ function renderStrip() {
   else if (st === 'draft') html = `<span class="turn-name">증강 선택 중</span>`;
   else if (st === 'remote' && (NET.waitKind === 'pick' || NET.waitKind === 'pick2')) html = `<span class="turn-name">${esc(pLabel(G.players[NET.waitPid] || curP()))} 증강 선택 중</span><span class="turn-hint">상대가 고르고 있습니다</span>`;
   else if (st === 'roundEnd' || st === 'matchEnd') html = '<span class="turn-name">국 종료</span>';
+  else if (coinBusy() && (st === 'aim' || (st === 'remote' && NET.waitKind === 'aim'))) html = '<span class="turn-name">동전 던지기</span><span class="turn-hint">흑·백 중 먼저 칠 쪽을 정하고 있습니다 · 동전이 떨어질 때까지 돌을 움직일 수 없습니다</span>';
   else if (st === 'mark') html = `${avatar(G.players[G.markPid])}<span class="turn-name">${esc(pLabel(G.players[G.markPid]))} · 길동무</span><span class="turn-hint${G.hintFlash > 0 ? ' flash' : ''}">없앨 상대 돌을 하나 누르세요</span>`;
   else {
     const p = curP();
@@ -2577,7 +2869,7 @@ function renderPlayers() {
   const list = G.started ? G.players : makePlayers('1v1', false);
   $('players').innerHTML = list.map(p => {
     const n = w ? w.stones.filter(s => live(s) && s.owner === p.id).length : 0;
-    const active = G.started && (G.state === 'aim' || G.state === 'moving' || G.state === 'remote' || G.state === 'replay') && p.id === G.current;
+    const active = G.started && !coinBusy() && (G.state === 'aim' || G.state === 'moving' || G.state === 'remote' || G.state === 'replay') && p.id === G.current;
     const items = uniq(p.augs).map(id => {
       const c = cnt(p, id), a = AUG[id];
       return `<li><span class="seal seal-xs">${a.seal}</span><b>${a.name}${c > 1 ? ` ×${c}` : ''}</b><small>${a.short()}</small></li>`;
@@ -2592,10 +2884,13 @@ function renderPlayers() {
 function pmeta(w, p) {
   const out = [];
   const left = Math.max(0, w.picks[p.id] * K.P.lossPerPick - w.lost[p.id]);
-  if (w.picks[p.id] > 0) out.push(`다음 증강까지 <b>돌 ${left}개</b>`);
+  if (w.picks[p.id] > 0) out.push(`다음 증강까지 <b>기본 돌 ${Math.round(left * 10) / 10}개</b>`);
   const ch = [['부활', w.reviveLeft[p.id]], ['길동무', w.buddyLeft[p.id]], ['되감기', w.rewindLeft[p.id]], ['연타', cnt(p, 'combo') ? w.comboRound[p.id] : 0]];
   if (cnt(p, 'wall')) ch.push(['철벽 되돌리기', w.wallSave[p.team]]);
   if (cnt(p, 'bolt')) ch.push(['번개까지 샷', K.A.boltEvery - (w.boltCount[p.id] % K.A.boltEvery)]);
+  if (cnt(p, 'ko')) ch.push(['패', w.koLeft[p.id]]);
+  if (w.stones.some(s => s.locked && s.owner === p.id && live(s))) ch.push(['주춧돌 풀림까지', Math.max(0, K.A.pillarFree - (w.plk[p.id] || 0))]);
+  for (const [on, k] of [[cnt(p, 'ko') && w.koArm[p.id], '패 준비'], [cnt(p, 'momentum') && w.mom[p.id], '기세 준비'], [cnt(p, 'counter') && w.ctr[p.id], '반격 준비'], [cnt(p, 'first') && (w.fsd[p.id] || 0) < K.A.firstN, `선제 ${K.A.firstN - (w.fsd[p.id] || 0)}번`]]) if (on) out.push(`<b>${k}</b>`);
   for (const [k, v] of ch) if (v) out.push(`${k} <b>${v}</b>`);
   return out.join('');
 }
@@ -2641,6 +2936,72 @@ function sfx(freq, vol, dur) {
   src.connect(bp); bp.connect(g); g.connect(AC.destination);
   src.start(t); src.stop(t + dur + 0.02);
 }
+/* ---------- 손맛 소리 ----------
+   집기: 바둑돌을 집어 드는 가벼운 '딸깍'
+   당기기: 고무줄이 늘어나는 낮은 장력 소리, 당길수록 높고 진해짐(손을 멈추면 조용함)
+   놓기: 줄이 튕기는 '슉' + 손끝이 돌을 때리는 '딱' + 힘만큼 묵직한 울림 */
+function stoneTap(vol, f = 2300) {
+  if (!AC || muted) return;
+  const t = AC.currentTime;
+  const src = AC.createBufferSource(); src.buffer = NOISE;
+  const bp = AC.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = f * 1.4; bp.Q.value = 2.5;
+  const g = AC.createGain(); g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.025);
+  src.connect(bp); bp.connect(g); g.connect(AC.destination); src.start(t, Math.random() * 0.3); src.stop(t + 0.04);
+  const o = AC.createOscillator(), og = AC.createGain();
+  o.type = 'sine'; o.frequency.setValueAtTime(f, t); o.frequency.exponentialRampToValueAtTime(f * 0.72, t + 0.04);
+  og.gain.setValueAtTime(vol * 0.7, t); og.gain.exponentialRampToValueAtTime(0.0001, t + 0.05);
+  o.connect(og); og.connect(AC.destination); o.start(t); o.stop(t + 0.06);
+}
+let bowLast = 0, bowT = 0;
+function bowCreak(pw) {
+  if (!AC || muted) return;
+  const t = AC.currentTime;
+  if (t - bowT < 0.05) return;
+  bowT = t;
+  const f = 220 + 520 * pw, d = 0.11;
+  const src = AC.createBufferSource(); src.buffer = NOISE;
+  const bp = AC.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = 7;
+  bp.frequency.setValueAtTime(f * 2.2, t); bp.frequency.linearRampToValueAtTime(f * 2.5, t + d);
+  const g = AC.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.05 + 0.1 * pw, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+  src.connect(bp); bp.connect(g); g.connect(AC.destination); src.start(t, Math.random() * 0.3); src.stop(t + d + 0.02);
+  const o = AC.createOscillator(), lp = AC.createBiquadFilter(), og = AC.createGain();
+  o.type = 'triangle'; o.frequency.setValueAtTime(f, t); o.frequency.linearRampToValueAtTime(f * 1.05, t + d);
+  lp.type = 'lowpass'; lp.frequency.value = 1200;
+  og.gain.setValueAtTime(0.0001, t); og.gain.exponentialRampToValueAtTime(0.025 + 0.05 * pw, t + 0.02); og.gain.exponentialRampToValueAtTime(0.0001, t + d);
+  o.connect(lp); lp.connect(og); og.connect(AC.destination); o.start(t); o.stop(t + d + 0.02);
+}
+function flickSnd(pw) {
+  if (!AC || muted) return;
+  const t = AC.currentTime, k = 0.45 + 0.55 * pw;
+  /* 줄이 튕기는 '슉' */
+  const src = AC.createBufferSource(); src.buffer = NOISE;
+  const bp = AC.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = 1.4;
+  bp.frequency.setValueAtTime(5200, t); bp.frequency.exponentialRampToValueAtTime(700, t + 0.09);
+  const g = AC.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.14 * k, t + 0.008); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.1);
+  src.connect(bp); bp.connect(g); g.connect(AC.destination); src.start(t, Math.random() * 0.3); src.stop(t + 0.12);
+  /* 손끝이 돌을 때리는 '딱' */
+  stoneTap(0.2 + 0.22 * pw, 1900 + 500 * pw);
+  /* 힘만큼 묵직한 울림 */
+  const o = AC.createOscillator(), og = AC.createGain();
+  o.type = 'sine'; o.frequency.setValueAtTime(170, t); o.frequency.exponentialRampToValueAtTime(70, t + 0.12);
+  og.gain.setValueAtTime(0.0001, t); og.gain.exponentialRampToValueAtTime(0.02 + 0.14 * pw * pw, t + 0.006); og.gain.exponentialRampToValueAtTime(0.0001, t + 0.14);
+  o.connect(og); og.connect(AC.destination); o.start(t); o.stop(t + 0.16);
+}
+/* 놓은 줄이 힘없이 풀릴 때(취소·짧게 놓음): 낮게 내려가는 짧은 소리 */
+function slackSnd() {
+  if (!AC || muted) return;
+  const t = AC.currentTime, o = AC.createOscillator(), g = AC.createGain();
+  o.type = 'triangle'; o.frequency.setValueAtTime(320, t); o.frequency.exponentialRampToValueAtTime(150, t + 0.12);
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.09, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.14);
+  o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t + 0.16);
+}
+/* 내 차례가 왔을 때 짧은 목탁 소리 */
+function turnCue() { wood(660, 0.14); setTimeout(() => wood(990, 0.09), 90); }
+/* 국 승리 · 대국 승리 화음 */
+function winChord(big) {
+  const fs = big ? [523, 659, 784, 1047, 1319] : [587, 740, 880];
+  fs.forEach((f, i) => setTimeout(() => bell(f, big ? 0.2 : 0.16, big ? 2.2 : 1.5), 380 + i * (big ? 120 : 100)));
+}
 function sfxHit(v) {
   if (!AC) return;
   const now = AC.currentTime;
@@ -2684,12 +3045,26 @@ function fxSparks(x, y, n, col, sp0 = 300) {
 function fxRing(x, y, c, r0, r1, life) { pushFx({ k: 'r', x, y, c, r0, r1, a: 0, life }); }
 function fxTitle(big, small) { const r = seeded(); pushFx({ k: 'title', big, small, a: 0, life: 2.2, jit: Array.from({ length: 24 }, () => r() - 0.5) }); }
 const HANNUM = ['', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十'];
+const COIN_MS = 1900;
+function coinBusy() { return G.started && performance.now() < (G.coinUntil || 0); }
 function roundTitle() {
   if (!G.world || G.world.shots !== 0 || G.titleRound === G.round) return;
   G.titleRound = G.round;
   const t = curP() ? curP().team : 0;
-  fxTitle(`第${HANNUM[G.round] || G.round}局`, `${MAPS[G.world.map].name} · ${teamLabel(t)} 선공`);
-  bell(392, 0.22, 2.2); setTimeout(() => bell(587, 0.14, 1.8), 160);
+  {
+    /* 동전 던지기: 동전이 떨어질 때까지(COIN_MS) 돌을 움직일 수 없음 */
+    const rd = G.round;
+    pushFx({ k: 'coin', face: t, a: 0, life: 2.1 });
+    G.coinUntil = performance.now() + COIN_MS;
+    [0, 90, 180, 280, 390, 510, 640].forEach((d, i) => setTimeout(() => sfx(1500 - i * 60, 0.05, 0.05), d));
+    setTimeout(() => { bell(784, 0.16, 1.2); }, 1150);
+    setTimeout(() => { if (G.round === rd) renderAll(); }, COIN_MS + 20);
+    setTimeout(() => {
+      if (G.round !== rd) return;
+      fxTitle(`第${HANNUM[G.round] || G.round}局`, `${MAPS[G.world.map].name} · ${teamLabel(t)} 선공`);
+      bell(392, 0.22, 2.2); setTimeout(() => bell(587, 0.14, 1.8), 160);
+    }, COIN_MS);
+  }
 }
 function drainEvents() {
   const w = G.world;
@@ -2713,7 +3088,7 @@ function drainEvents() {
         sfx(480, 0.45, 0.14); setTimeout(() => sfx(1350, 0.4, 0.26), 60); break;
       case 'padback':
         G.padBack = 1; bell(880, 0.14, 1.3);
-        addLog(G.world && G.world.shots <= K.P.padStart ? '바람길이 열렸습니다' : '바람길이 다시 열렸습니다'); break;
+        addLog('바람문이 다시 열렸습니다'); break;
       case 'fall': sfx(320, 0.55, 0.18); fxInk(e.x, e.y, 64, { n: 8, life: 0.9, peak: 0.55, col: e.shrink ? '181,64,46' : '19,16,14' }); panel = true; break;
       case 'shrink': sfx(200, 0.5, 0.25); G.shake = 0.12; panel = true; break;
       case 'wallsave':
@@ -2734,11 +3109,11 @@ function drainEvents() {
         addLog(`분열 · ${p.name}의 돌이 둘로 갈라졌습니다`, p.team); panel = true; break;
       case 'buddyArm':
         fxStamp(e.x, e.y - 80, '伴', '길동무', { size: 60, quiet: true });
-        addLog(`길동무 · ${p.name}의 돌이 떨어져 상대 돌 하나를 지목할 수 있습니다`, p.team); break;
+        addLog(`길동무 · ${p.name}의 돌이 떨어져 상대 돌 하나를 골라 데려갈 수 있습니다`, p.team); break;
       case 'buddy':
-        fxInk(e.x, e.y, 80, { n: 10, col: '181,64,46', peak: 0.6 }); fxSparks(e.x, e.y, 12, C.inju, 280); fxStamp(e.x, e.y - 92, '伴', '길동무 지목', { size: 72 });
+        fxInk(e.x, e.y, 80, { n: 10, col: '181,64,46', peak: 0.6 }); fxSparks(e.x, e.y, 12, C.inju, 280); fxStamp(e.x, e.y - 92, '伴', '길동무', { size: 72 });
         sfx(260, 0.55, 0.2);
-        addLog(`길동무 · ${josa(p.name, '이/가')} 상대 돌 하나를 지목해 없앴습니다`, p.team); panel = true; break;
+        addLog(`길동무 · ${josa(p.name, '이/가')} 상대 돌 하나를 데려갔습니다 · 내 차례에 한 번 더 칩니다`, p.team); panel = true; break;
       case 'marks': fxRing(e.x, e.y, C.goldHi, 10, 80, 0.4); fxSparks(e.x, e.y, 12, C.goldHi, 340); fxStamp(e.x, e.y - 84, '射', '명사수', { size: 62 }); sfx(1900, 0.45, 0.08); break;
       case 'steal':
         fxEnso(e.x, e.y, 62, C.goldHi, { w: 10 }); fxSparks(e.x, e.y, 12, C.goldHi, 260); fxStamp(e.x, e.y - 92, '盜', '도둑', { size: 72 });
@@ -2749,7 +3124,33 @@ function drainEvents() {
       case 'gain': addLog(`${pLabel(p)} · ${AUG[e.id].name} 획득`, p.team); panel = true; if (e.id === 'wall') { G.wallRise[p.team] = 0.001; G.wallGlow[p.team] = 1; sfx(220, 0.6, 0.4); } break;
       case 'spawn': fxEnso(e.x, e.y, 56, C.goldHi, { w: 9, life: 0.9 }); panel = true; break;
       case 'trap': addLog(e.center ? `함정 · 판이 줄어드는 때라 판 가운데 가까이 함정 ${e.n}개를 팠습니다` : `함정 · ${teamName(1 - e.team)} 진영 앞에 함정 ${e.n}개를 팠습니다`, e.team); break;
-      case 'pit': fxInk(e.x, e.y, 80, { n: 10 }); fxStamp(e.x, e.y - 90, '陷', '숨은 함정', { size: 66 }); break;
+      case 'pit':
+        if (e.pond) { fxRing(e.x, e.y, '#9fd6d0', 10, 120, 0.7); fxRing(e.x, e.y, '#d8f0ec', 20, 90, 0.5); fxStamp(e.x, e.y - 100, '池', '연못에 빠짐', { size: 66 }); sfx(240, 0.5, 0.3); }
+        else { fxInk(e.x, e.y, 80, { n: 10 }); fxStamp(e.x, e.y - 90, '陷', '숨은 함정', { size: 66 }); }
+        break;
+      case 'firstHit': fxRing(e.x, e.y, C.goldHi, 8, 60, 0.35); fxStamp(e.x, e.y - 80, '先', '선제', { size: 56, quiet: true }); break;
+      case 'gust':
+        pushFx({ k: 'curl', x: e.x, y: e.y, a: 0, life: 0.8 }); fxRing(e.x, e.y, '#d6f6fa', 8, 70, 0.45);
+        fxStamp(e.x, e.y - 84, '颯', '돌풍', { size: 58, quiet: true }); sfx(600, 0.35, 0.2); break;
+      case 'shock':
+        fxRing(e.x, e.y, C.teal, 10, K.A.shockR, 0.5); fxRing(e.x, e.y, '#d6f6fa', 20, K.A.shockR * 0.7, 0.4);
+        fxStamp(e.x, e.y - 90, '波', '파문', { size: 62 }); sfx(520, 0.45, 0.18); break;
+      case 'chain': fxSparks(e.x, e.y, 10, C.goldHi, 300); fxStamp(e.x, e.y - 80, '環', '연쇄', { size: 54, quiet: true }); break;
+      case 'press':
+        fxRing(e.x, e.y, '#a98bd6', 10, K.A.pressD, 0.6); fxStamp(e.x, e.y - 90, '壓', '압박', { size: 60, quiet: true });
+        addLog(`압박 · 상대 돌 ${e.n}개가 짓눌렸습니다 (다음 내 샷까지 가벼움)`); break;
+      case 'pillar':
+        fxEnso(e.x, e.y, 80, C.goldHi, { w: 12, life: 1.2 }); fxStamp(e.x, e.y - 100, '礎', '주춧돌', { size: 76, big: true }); G.shake = 0.15;
+        addLog(`주춧돌 · ${p.name}의 돌 하나가 주춧돌로 묶였습니다 (한 수마다 자람)`, p.team); panel = true; break;
+      case 'pillarFree':
+        fxEnso(e.x, e.y, 90, C.goldHi, { w: 14, life: 1.2 }); fxSparks(e.x, e.y, 18, C.goldHi, 380); fxStamp(e.x, e.y - 104, '礎', '주춧돌 풀림', { size: 78, big: true });
+        G.shake = 0.2; sfx(180, 0.8, 0.4);
+        addLog(`주춧돌 · ${p.name}의 주춧돌이 풀려 이제 쏠 수 있습니다`, p.team); panel = true; break;
+      case 'unseal':
+        fxStamp(e.x, e.y - 80, '解', '봉인 풀림', { size: 56, quiet: true });
+        addLog(`봉인 · ${p.name}의 돌 하나가 풀렸습니다`, p.team); panel = true; break;
+      case 'koArm':
+        addLog(`패 · ${pLabel(p)} 다음 차례에 한 번 더 칩니다`, p.team); panel = true; break;
       case 'grow': fxRing(e.x, e.y, '#e8b860', 10, 90, 0.45); fxStamp(e.x, e.y - 96, '巨', '큰 돌', { size: 64, quiet: true }); sfx(180, 0.5, 0.2); break;
       case 'shrinkStone': fxRing(e.x, e.y, C.teal, 70, 8, 0.4); fxStamp(e.x, e.y - 80, '小', '차돌', { size: 56, quiet: true }); sfx(1400, 0.35, 0.07); break;
       case 'king':
@@ -2776,7 +3177,7 @@ function drainEvents() {
         fxInk(e.x, e.y, e.h * 1.6, { n: 24, life: 1.4, peak: 0.7 }); fxSparks(e.x, e.y, 34, '#ff9a5a', 620); fxSparks(e.x, e.y, 20, '#3a3546', 480);
         fxRing(e.x, e.y, C.goldHi, e.h * 0.6, e.h + 2 * GAP, 0.6); fxStamp(e.x, e.y, '碎', '바위가 깨졌다', { size: 116, big: true });
         G.shake = 0.45; sfx(80, 1, 0.7); setTimeout(() => sfx(140, 0.8, 0.4), 90);
-        addLog('흑요석 바위가 세 번 맞고 깨졌습니다'); panel = true; break;
+        addLog(`흑요석 바위가 ${K.P.rockHits}번 맞고 깨졌습니다`); panel = true; break;
       case 'crumble':
         fxInk(CX, CY, 320, { n: 22, life: 1.4, peak: 0.6 }); fxStamp(CX, CY, '崩', '제단 붕괴', { size: 124, big: true });
         G.shake = 0.4; sfx(90, 1, 0.6); addLog('흑요석 제단이 무너졌습니다'); break;
@@ -2867,7 +3268,7 @@ function drawFeatures(g, obs, hits) {
       const nh = hits ? hits[o.oi] || 0 : 0;
       if (o.breakAt && nh > 0) drawCracks(g, o, nh, breathe);
       if (o.breakAt && hits) {
-        /* 남은 횟수: 바위 아래 세 칸 */
+        /* 남은 횟수: 바위 아래 칸 */
         for (let k = 0; k < o.breakAt; k++) {
           const x = o.cx + (k - (o.breakAt - 1) / 2) * 30, y = o.cy + o.h + 34;
           g.fillStyle = k < nh ? 'rgba(207,63,46,.95)' : 'rgba(239,230,212,.35)';
@@ -2928,7 +3329,7 @@ const CRACKS = [
   [[-0.3, -0.42], [-0.6, -0.3]], [[0.34, 0.36], [0.2, 0.62]]
 ];
 function drawCracks(g, o, n, breathe) {
-  const show = Math.min(CRACKS.length, n * 2 + (n >= 2 ? 1 : 0));
+  const show = Math.min(CRACKS.length, Math.ceil(n / (o.breakAt || 3) * CRACKS.length));
   g.save();
   g.lineCap = 'round'; g.lineJoin = 'round';
   for (const pass of [[`rgba(255,120,60,${0.25 + 0.25 * breathe * (n / 3)})`, 12], ['#ffcf8a', 3.5]]) {
@@ -2949,8 +3350,33 @@ function viewerTeam() {
   const c = G.players[G.current];
   return c ? c.team : 0;
 }
-function drawHoles(g, holes) {
+function drawPond(g, h, now) {
+  const t = now ? now / 1000 : 0;
+  g.save();
+  const gr = g.createRadialGradient(h.x - h.r * 0.3, h.y - h.r * 0.3, h.r * 0.1, h.x, h.y, h.r);
+  gr.addColorStop(0, '#3f7f86'); gr.addColorStop(0.7, '#1f4d58'); gr.addColorStop(1, '#16343d');
+  g.fillStyle = gr; g.beginPath(); g.arc(h.x, h.y, h.r, 0, TAU); g.fill();
+  g.strokeStyle = '#7a6a4a'; g.lineWidth = 7; g.stroke();
+  g.strokeStyle = 'rgba(232,205,142,.7)'; g.lineWidth = 2; g.beginPath(); g.arc(h.x, h.y, h.r + 5, 0, TAU); g.stroke();
+  g.beginPath(); g.arc(h.x, h.y, h.r - 3, 0, TAU); g.clip();
+  for (let k = 0; k < 2; k++) {
+    const ph = reduceMotion ? 0.5 : ((t * 0.35 + k * 0.5) % 1);
+    g.strokeStyle = `rgba(214,240,236,${0.35 * (1 - ph)})`; g.lineWidth = 2;
+    g.beginPath(); g.arc(h.x + h.r * 0.15, h.y + h.r * 0.1, h.r * (0.15 + ph * 0.8), 0, TAU); g.stroke();
+  }
+  /* 연잎 두 장과 연꽃 */
+  for (const [dx, dy, rr, a] of [[-0.42, 0.28, 0.3, 0.6], [0.38, -0.36, 0.24, 2.2]]) {
+    g.fillStyle = '#4f8a46'; g.beginPath(); g.moveTo(h.x + dx * h.r, h.y + dy * h.r);
+    g.arc(h.x + dx * h.r, h.y + dy * h.r, rr * h.r, a, a + TAU - 0.5); g.closePath(); g.fill();
+  }
+  const fx = h.x + 0.3 * h.r, fy = h.y + 0.3 * h.r;
+  g.fillStyle = '#f2c7d5'; for (let k = 0; k < 6; k++) { const a = k / 6 * TAU; g.beginPath(); g.ellipse(fx + Math.cos(a) * 7, fy + Math.sin(a) * 7, 8, 4, a, 0, TAU); g.fill(); }
+  g.fillStyle = '#e8cd8e'; g.beginPath(); g.arc(fx, fy, 4, 0, TAU); g.fill();
+  g.restore();
+}
+function drawHoles(g, holes, now) {
   for (const h of holes) {
+    if (h.pond) { drawPond(g, h, now); continue; }
     const gr = g.createRadialGradient(h.x, h.y, h.r * 0.2, h.x, h.y, h.r);
     gr.addColorStop(0, '#05070d'); gr.addColorStop(0.8, '#141a2b'); gr.addColorStop(1, 'rgba(20,26,43,.6)');
     g.fillStyle = gr; g.beginPath(); g.arc(h.x, h.y, h.r, 0, TAU); g.fill();
@@ -2958,10 +3384,67 @@ function drawHoles(g, holes) {
     g.beginPath(); g.arc(h.x, h.y, h.r + 5, 0, TAU); g.stroke(); g.restore();
   }
 }
+/* 바람길 기운은 흑·백이 따로: 판에는 지금 차례인 편의 상태를 그립니다 */
+const padTeam = () => (G.started && G.players[G.current] ? G.players[G.current].team : 0);
+const padLeft = () => (G.world && G.started ? K.padWait(G.world) : 0);
+/* 용오름 바람 발판: 2×2칸 네모, 소용돌이 무늬가 돌고 '風' 인장 */
+function drawRectPad(g, pd, now, still) {
+  const x0 = pd.x - pd.hw, y0 = pd.y - pd.hh, w = pd.hw * 2, h = pd.hh * 2, glow = still ? 0 : (G.padGlow || 0);
+  g.save();
+  g.shadowColor = `rgba(127,195,201,${0.35 + glow * 0.5})`; g.shadowBlur = 24 + glow * 30;
+  const gr = g.createLinearGradient(x0, y0, x0 + w, y0 + h); gr.addColorStop(0, 'rgba(127,195,201,.55)'); gr.addColorStop(1, 'rgba(40,90,100,.55)');
+  g.fillStyle = gr; g.beginPath(); g.roundRect ? g.roundRect(x0, y0, w, h, 14) : g.rect(x0, y0, w, h); g.fill();
+  g.shadowBlur = 0;
+  g.beginPath(); g.roundRect ? g.roundRect(x0, y0, w, h, 14) : g.rect(x0, y0, w, h); g.clip();
+  const ph = still || reduceMotion ? 0 : now / 700;
+  g.strokeStyle = 'rgba(232,248,246,.55)'; g.lineWidth = 4; g.lineCap = 'round';
+  for (let k = 0; k < 3; k++) {
+    g.beginPath();
+    for (let t = 0; t <= 1.0001; t += 0.05) { const rr = pd.hw * (0.15 + 0.75 * t), a = ph + k * TAU / 3 + t * 2.6; const x = pd.x + Math.cos(a) * rr, y = pd.y + Math.sin(a) * rr; t ? g.lineTo(x, y) : g.moveTo(x, y); }
+    g.stroke();
+  }
+  g.restore();
+  g.strokeStyle = C.gold; g.lineWidth = 4; g.beginPath(); g.roundRect ? g.roundRect(x0, y0, w, h, 14) : g.rect(x0, y0, w, h); g.stroke();
+  if (glow > 0) { g.save(); g.globalAlpha = glow; g.strokeStyle = C.goldHi; g.lineWidth = 12; g.beginPath(); g.roundRect ? g.roundRect(x0 - 4, y0 - 4, w + 8, h + 8, 16) : g.rect(x0 - 4, y0 - 4, w + 8, h + 8); g.stroke(); g.restore(); }
+  g.fillStyle = 'rgba(19,16,14,.55)'; g.beginPath(); g.arc(pd.x, pd.y, 26, 0, TAU); g.fill();
+  g.fillStyle = C.goldHi; g.font = `700 30px ${SERIF}`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('風', pd.x, pd.y + 1);
+}
+/* 용오름 바람문: 가로 2칸 · 세로 1칸, 양 끝에 붉은 기둥. 쓰이면 2수 동안 닫힘 */
+function drawGate(g, pd, now, still) {
+  const x0 = pd.x - pd.hw, y0 = pd.y - pd.hh, w = pd.hw * 2, h = pd.hh * 2, open = !pd.cd, glow = still ? 0 : (G.padGlow || 0);
+  g.save();
+  if (open) { g.shadowColor = `rgba(127,195,201,${0.4 + glow * 0.5})`; g.shadowBlur = 22 + glow * 30; }
+  g.fillStyle = open ? 'rgba(127,195,201,.5)' : 'rgba(70,70,70,.28)';
+  g.fillRect(x0, y0, w, h);
+  g.restore();
+  if (open) {
+    g.save(); g.beginPath(); g.rect(x0, y0, w, h); g.clip();
+    const ph = still || reduceMotion ? 0 : (now / 9) % 60;
+    g.strokeStyle = 'rgba(232,248,246,.75)'; g.lineWidth = 3; g.lineCap = 'round';
+    for (let r = 0; r < 3; r++) { const yy = y0 + h * (0.25 + r * 0.25); for (let x = x0 - 60 + ph + r * 20; x < x0 + w; x += 60) { g.beginPath(); g.moveTo(x, yy); g.lineTo(x + 26, yy); g.stroke(); } }
+    g.restore();
+  } else {
+    g.save(); g.setLineDash([8, 7]); g.strokeStyle = 'rgba(201,164,92,.6)'; g.lineWidth = 3; g.strokeRect(x0, y0, w, h); g.restore();
+  }
+  /* 양 끝 기둥 */
+  for (const px of [x0, x0 + w]) {
+    g.fillStyle = open ? '#9e2f22' : '#5a3a34'; g.fillRect(px - 9, y0 - 12, 18, h + 24);
+    g.fillStyle = C.goldHi; g.fillRect(px - 12, y0 - 16, 24, 6); g.fillRect(px - 12, y0 + h + 10, 24, 6);
+  }
+  if (open) { g.strokeStyle = C.gold; g.lineWidth = 3; g.strokeRect(x0, y0, w, h); }
+  if (glow > 0 && open) { g.save(); g.globalAlpha = glow; g.strokeStyle = C.goldHi; g.lineWidth = 10; g.strokeRect(x0 - 3, y0 - 3, w + 6, h + 6); g.restore(); }
+  const lab = open ? '風門' : `${pd.cd}수 뒤`;
+  g.font = `700 ${open ? 24 : 22}px ${open ? SERIF : SANS}`; g.textAlign = 'center'; g.textBaseline = 'middle';
+  const tw = g.measureText(lab).width + 18;
+  g.fillStyle = 'rgba(19,16,14,.75)'; g.fillRect(pd.x - tw / 2, pd.y - 15, tw, 30);
+  g.fillStyle = open ? C.goldHi : '#d8cfbf'; g.fillText(lab, pd.x, pd.y + 1);
+}
 function drawPads(g, pads, now, still) {
   for (const pd of pads) {
+    if (pd.gate) { drawGate(g, pd, now, still); continue; }
+    if (pd.kind === 'rect') { drawRectPad(g, pd, now, still); continue; }
     if (pd.kind === 'band') { drawBand(g, pd, now, still); continue; }
-    const on = pd.cd === 0, r = pd.r;
+    const on = padLeft(pd, padTeam()) === 0, r = pd.r;
     g.save();
     g.shadowColor = 'rgba(20,10,0,.45)'; g.shadowBlur = 22; g.shadowOffsetY = 8;
     const base = g.createRadialGradient(pd.x, pd.y - r * 0.3, r * 0.1, pd.x, pd.y, r);
@@ -2990,7 +3473,7 @@ function drawPads(g, pads, now, still) {
     } else {
       g.save(); g.strokeStyle = 'rgba(201,164,92,.45)'; g.lineWidth = 3; g.setLineDash([8, 9]);
       g.beginPath(); g.arc(pd.x, pd.y, r - 4, 0, TAU); g.stroke(); g.restore();
-      const left = pd.cd;
+      const left = padLeft(pd, padTeam());
       g.save(); g.strokeStyle = C.gold; g.lineWidth = 5; g.lineCap = 'round';
       const frac = Math.max(0, Math.min(1, 1 - (left - 1) / Math.max(1, K.P.padCool)));
       g.beginPath(); g.arc(pd.x, pd.y, r * 0.62, -Math.PI / 2, -Math.PI / 2 + TAU * frac); g.stroke(); g.restore();
@@ -3006,7 +3489,7 @@ function drawCurl(g, x, y, r) {
 }
 /* 용오름 바람길: 평소엔 은은하게 흐르고, 쓰이면 거의 지워진 채 양 끝에서부터 금선이 차오름 */
 function drawBand(g, pd, now, still) {
-  const on = pd.cd === 0, y = pd.y, h = pd.h, x0 = Math.max(pd.x0, 0), x1 = Math.min(pd.x1, S), wd = x1 - x0;
+  const vt = padTeam(), on = padLeft(pd, vt) === 0, y = pd.y, h = pd.h, x0 = Math.max(pd.x0, 0), x1 = Math.min(pd.x1, S), wd = x1 - x0;
   const moving = !still && !reduceMotion;
   g.save();
   if (on) {
@@ -3033,7 +3516,7 @@ function drawBand(g, pd, now, still) {
       g.fillStyle = gg; g.fillRect(x0, y - h * 2.6, wd, h * 5.2); g.globalAlpha = 1;
     }
   } else {
-    const left = Math.min(pd.cd, K.P.padCool);
+    const left = Math.min(padLeft(pd, vt), K.P.padCool);
     g.strokeStyle = 'rgba(201,164,92,.2)'; g.lineWidth = 2; g.setLineDash([10, 12]);
     g.beginPath(); g.moveTo(x0, y); g.lineTo(x1, y); g.stroke(); g.setLineDash([]);
     const frac = Math.max(0, Math.min(1, 1 - (left - 1) / Math.max(1, K.P.padCool)));
@@ -3110,6 +3593,7 @@ function drawMapThumb(cnv, mapId) {
   g.setTransform(R / S, 0, 0, R / S, 0, 0);
   drawFeatures(g, MAPS[mapId].obs);
   drawPads(g, (MAPS[mapId].pads || []).map(p => Object.assign({ cd: 0 }, p)), 0, true);
+  for (const p of MAPS[mapId].ponds || []) drawPond(g, Object.assign({ pond: true }, p), 0);
   const F = K.FORMATION['1v1'].base[0];
   for (const team of [0, 1]) for (const [r, c] of F) {
     const x = K.L(c), y = K.L(team === 0 ? r : 18 - r);
@@ -3173,6 +3657,21 @@ function drawStone(s, alone) {
     ctx.fillStyle = s.team === 0 ? C.goldHi : '#8a6a2c'; ctx.font = `900 ${Math.round(r * 0.9)}px ${SERIF}`;
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('王', s.x, s.y + r * 0.04); ctx.restore();
   }
+  if (s.pillar && !s.falling) {
+    ctx.save(); ctx.globalAlpha = alpha;
+    if (s.locked) {   /* 묶인 주춧돌: 둘레에 금빛 사슬 */
+      ctx.strokeStyle = 'rgba(232,205,142,.9)'; ctx.lineWidth = 3; ctx.setLineDash([7, 5]);
+      ctx.beginPath(); ctx.arc(s.x, s.y, r + 15, 0, TAU); ctx.stroke(); ctx.setLineDash([]);
+    }
+    ctx.strokeStyle = '#8a6a2c'; ctx.lineWidth = 7; ctx.beginPath(); ctx.arc(s.x, s.y, r + 3, 0, TAU); ctx.stroke();
+    ctx.strokeStyle = C.goldHi; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(s.x, s.y, r + 9, 0, TAU); ctx.stroke();
+    ctx.fillStyle = s.team === 0 ? C.goldHi : '#6e5422'; ctx.font = `900 ${Math.round(r * 0.85)}px ${SERIF}`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('礎', s.x, s.y + r * 0.04); ctx.restore();
+  }
+  if (s.press >= 0 && !s.falling) {
+    ctx.save(); ctx.globalAlpha = alpha * 0.9; ctx.strokeStyle = '#a98bd6'; ctx.lineWidth = 4; ctx.setLineDash([5, 6]);
+    ctx.beginPath(); ctx.arc(s.x, s.y, r + 7, 0, TAU); ctx.stroke(); ctx.restore();
+  }
   if (s.big && !s.falling) {
     ctx.save(); ctx.globalAlpha = alpha; ctx.strokeStyle = '#b8863a'; ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(s.x, s.y, r + 4, 0, TAU); ctx.stroke();
     ctx.strokeStyle = 'rgba(242,214,150,.85)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(s.x, s.y, r + 9, 0, TAU); ctx.stroke(); ctx.restore();
@@ -3200,20 +3699,13 @@ function drawAim(s, pw, ang, pull, shaky, now, p) {
   ctx.save(); ctx.strokeStyle = 'rgba(242,236,223,.95)'; ctx.lineWidth = 4;
   ctx.beginPath(); ctx.arc(s.x, s.y, s.r + 9, 0, TAU); ctx.stroke(); ctx.restore();
   if (pw < 0.02) return;
-  const reach = K.reachRay(G.world, s, ang, pw * K.vmaxOf(G.world, s));
   if (!shaky && pull && cnt(p, 'aim')) drawPrediction(s, ang, pw, p);
-  let a = ang, len = reach * 0.42;
+  /* 화살표는 당긴 정도만 짧게 보여 주고, 실제로 어디까지 가는지는 그리지 않음 (거리는 손감각으로) */
+  let a = ang, len = 46 + 130 * pw;
   if (shaky) { a += Math.sin(now / 85) * 0.13 + Math.sin(now / 37) * 0.05; len *= 0.45; }
   const col = `rgb(${HANJI_RGB.map((h, i) => Math.round(h + (INJU_RGB[i] - h) * pw)).join(',')})`;
   const cx = Math.cos(a), cy = Math.sin(a);
   const sx = s.x + cx * (s.r + 14), sy = s.y + cy * (s.r + 14), ex = sx + cx * len, ey = sy + cy * len;
-  if (!shaky) {
-    const rx = s.x + cx * reach, ry = s.y + cy * reach;
-    ctx.save(); ctx.globalAlpha = 0.75; ctx.strokeStyle = col; ctx.lineWidth = 4; ctx.setLineDash([8, 12]);
-    ctx.beginPath(); ctx.moveTo(ex, ey); ctx.lineTo(rx, ry); ctx.stroke();
-    ctx.setLineDash([]); ctx.lineWidth = 4;
-    ctx.beginPath(); ctx.arc(rx, ry, s.r, 0, TAU); ctx.stroke(); ctx.restore();
-  }
   ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 12; ctx.lineCap = 'round';
   ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex - cx * 22, ey - cy * 22); ctx.stroke();
   ctx.beginPath(); ctx.moveTo(ex + cx * 12, ey + cy * 12);
@@ -3289,7 +3781,12 @@ function render(now) {
   if (w) {
     drawFeatures(ctx, w.obs, w.obsHits);
     drawPads(ctx, w.pads || [], now, false);
-    drawHoles(ctx, w.holes.filter(h => h.seen || h.team === viewerTeam()));
+    drawHoles(ctx, w.holes.filter(h => h.seen || h.team === viewerTeam()), now);
+    for (const p of G.players) if (cnt(p, 'star')) {
+      ctx.save(); ctx.lineWidth = 4; ctx.strokeStyle = p.team === 0 ? 'rgba(20,20,24,.75)' : 'rgba(255,255,255,.9)'; ctx.fillStyle = 'rgba(232,205,142,.38)';
+      for (const i of [3, 9, 15]) for (const j of [3, 9, 15]) { if (w.holes.some(h => h.pond && hyp(h.x - K.L(i), h.y - K.L(j)) < h.r + 4)) continue; ctx.beginPath(); ctx.arc(K.L(i), K.L(j), K.A.starD, 0, TAU); ctx.fill(); ctx.stroke(); }
+      ctx.restore();
+    }
     const tg = !MAPS[w.map].noTengen && G.players.find(p => cnt(p, 'tengen'));
     if (tg) {
       const pulse = reduceMotion ? 0 : Math.sin(now / 300) * 5;
@@ -3334,7 +3831,7 @@ function render(now) {
     }
 
     const p = G.started ? curP() : null;
-    const humanAim = G.state === 'aim' && p && !p.cpu;
+    const humanAim = G.state === 'aim' && p && !p.cpu && !coinBusy();
     if (humanAim && !G.aim && G.sel != null) {
       const ss = K.byId(w, G.sel);
       if (ss && live(ss)) { ctx.save(); ctx.strokeStyle = C.goldHi; ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(ss.x, ss.y, ss.r + 12, 0, TAU); ctx.stroke(); ctx.restore(); }
@@ -3519,6 +4016,34 @@ function drawFx(f) {
       ctx.fillStyle = C.goldHi; ctx.font = `600 ${Math.round(small)}px ${SERIF}`; ctx.fillText(f.small, CX, y + big * 0.42 + small * 0.2);
       break;
     }
+    case 'coin': {
+      /* 동전 던지기: 흑·백 두 면의 동전이 튀어 올라 돌다가 선공 쪽 면으로 떨어집니다 */
+      const R = Math.max(165, 58 / G.scale), fl = Math.min(1, u / 0.55), land = u > 0.55;
+      const al = u < 0.08 ? u / 0.08 : u < 0.86 ? 1 : Math.max(0, 1 - (u - 0.86) / 0.14);
+      const ang = 9 * Math.PI * (1 - Math.pow(1 - fl, 2.2)), c = Math.cos(ang);
+      const face = c >= 0 ? 1 - f.face : f.face;
+      const y = CY - 30 - Math.sin(Math.PI * fl) * R * 2.2, sq = land ? 1 : Math.max(0.06, Math.abs(c));
+      ctx.globalAlpha = al * 0.55; ctx.fillStyle = '#15110e';
+      ctx.beginPath(); ctx.ellipse(CX, CY - 30 + R * 0.9, R * (0.8 - 0.35 * Math.sin(Math.PI * fl)), R * 0.16, 0, 0, TAU); ctx.fill();
+      ctx.globalAlpha = al;
+      if (land) { const gl = Math.min(1, (u - 0.55) / 0.12); ctx.globalAlpha = al * 0.45 * gl; ctx.strokeStyle = C.goldHi; ctx.lineWidth = 10; ctx.beginPath(); ctx.arc(CX, y, R * (1.1 + 0.25 * gl), 0, TAU); ctx.stroke(); ctx.globalAlpha = al; }
+      ctx.save(); ctx.translate(CX, y); ctx.scale(1, sq);
+      const g = ctx.createRadialGradient(-R * 0.35, -R * 0.4, R * 0.05, 0, 0, R);
+      if (face === 0) { g.addColorStop(0, '#5d6168'); g.addColorStop(0.32, '#26282c'); g.addColorStop(1, '#09090b'); }
+      else { g.addColorStop(0, '#ffffff'); g.addColorStop(0.5, '#f1ebdf'); g.addColorStop(1, '#bfb5a2'); }
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, R, 0, TAU); ctx.fill();
+      ctx.lineWidth = R * 0.07; ctx.strokeStyle = C.gold || '#b08a3e'; ctx.beginPath(); ctx.arc(0, 0, R * 0.94, 0, TAU); ctx.stroke();
+      ctx.lineWidth = 2; ctx.strokeStyle = face === 0 ? 'rgba(255,255,255,.18)' : 'rgba(80,64,40,.25)'; ctx.beginPath(); ctx.arc(0, 0, R * 0.78, 0, TAU); ctx.stroke();
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = face === 0 ? '#efe6d2' : '#1c140a';
+      ctx.font = `900 ${Math.round(R * 1.0)}px ${SERIF}`; ctx.fillText(face === 0 ? '黑' : '白', 0, R * 0.04);
+      ctx.restore();
+      const small = Math.max(40, 14 / G.scale);
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = `700 ${Math.round(small)}px ${SERIF}`;
+      const lb = teamLabel(f.face), txt = land ? (lb === teamName(f.face) || G.mode === '2v2' ? `${lb} 선공` : `${teamName(f.face)} · ${lb} 선공`) : '동전 던지기';
+      ctx.lineWidth = 8; ctx.strokeStyle = 'rgba(21,17,14,.85)'; ctx.strokeText(txt, CX, CY - 30 + R * 1.45);
+      ctx.fillStyle = land ? C.goldHi : C.hanji; ctx.fillText(txt, CX, CY - 30 + R * 1.45);
+      break;
+    }
     case 'r': {
       ctx.globalAlpha = Math.max(0, 1 - u); ctx.strokeStyle = f.c; ctx.lineWidth = 8 * (1 - u) + 1;
       ctx.beginPath(); ctx.arc(f.x, f.y, f.r0 + (f.r1 - f.r0) * (1 - Math.pow(1 - u, 3)), 0, TAU); ctx.stroke();
@@ -3552,6 +4077,10 @@ function frame(now) {
   } else {
     drainEvents();
   }
+  if (G.state !== G.lastState) {
+    if (G.state === 'aim') { G.inputReadyAt = now + TURN_GUARD; const cp = curP(); if (cp && !cp.cpu && !cp.remote && !coinBusy() && G.world && G.world.shots > 0) turnCue(); }
+    G.lastState = G.state;
+  }
   if (G.cpuAnim && G.state === 'aim' && now - G.cpuAnim.t0 > 800) {
     const c = G.cpuAnim; G.cpuAnim = null; fire(G.current, c.id, c.ang, c.pw);
   }
@@ -3573,6 +4102,7 @@ function toWorld(e) {
   return { x: (e.clientX - r.left) / G.scale - M, y: (e.clientY - r.top) / G.scale - M };
 }
 const myStoneOK = (s, p) => K.canShoot(G.world, p, s);
+const AIM_HOLD = 160, TURN_GUARD = 350;   /* 쏘려면 최소한 누르고 있어야 하는 시간, 차례가 넘어온 직후 클릭을 막는 시간 (ms) */
 /* 조준 취소: 컴퓨터는 마우스 오른쪽 단추, 휴대폰은 다른 손가락으로 화면을 한 번 더 누르기 */
 function cancelAim() {
   if (!G.aim) return;
@@ -3581,7 +4111,7 @@ function cancelAim() {
   cv.classList.remove('dragging');
   G.hintNote = '조준을 취소했습니다'; G.hintFlash = 1.2;
   clearTimeout(G.hintNoteT); G.hintNoteT = setTimeout(() => { G.hintNote = null; renderStrip(); }, 1400);
-  sfx(420, 0.3, 0.06);
+  slackSnd();
   renderStrip();
 }
 cv.addEventListener('contextmenu', e => { e.preventDefault(); if (G.aim) cancelAim(); });
@@ -3593,6 +4123,8 @@ cv.addEventListener('pointerdown', e => {
   if (G.state !== 'aim' || !G.started) return;
   const p = curP();
   if (p.cpu || p.remote) return;
+  if (coinBusy()) return;   /* 동전이 떨어지기 전에는 돌을 움직일 수 없음 */
+  if (performance.now() < (G.inputReadyAt || 0)) return;   /* 차례가 막 넘어온 직전의 클릭은 받지 않음 */
   const pt = toWorld(e), slop = Math.max(24, 22 / G.scale);
   let best = null, bd = Infinity;
   for (const s of G.world.stones) {
@@ -3602,12 +4134,14 @@ cv.addEventListener('pointerdown', e => {
   }
   if (best) {
     /* pull straight back from the stone */
-    G.aim = { id: best.id, px: pt.x, py: pt.y, pointer: e.pointerId, free: false };
+    G.aim = { id: best.id, px: pt.x, py: pt.y, pointer: e.pointerId, free: false, t0: performance.now() };
     G.sel = best.id;
   } else if (G.sel != null && myStoneOK(K.byId(G.world, G.sel), p)) {
     /* a stone is already picked: drag from anywhere, like a slingshot band starting under the finger */
-    G.aim = { id: G.sel, ox: pt.x, oy: pt.y, px: pt.x, py: pt.y, pointer: e.pointerId, free: true };
+    G.aim = { id: G.sel, ox: pt.x, oy: pt.y, px: pt.x, py: pt.y, pointer: e.pointerId, free: true, t0: performance.now() };
   } else { G.hintFlash = 1.4; renderStrip(); return; }
+  stoneTap(0.12, 2600);
+  bowLast = 0;
   cv.setPointerCapture(e.pointerId);
   cv.classList.add('dragging');
   e.preventDefault();
@@ -3617,12 +4151,20 @@ cv.addEventListener('pointermove', e => {
   if (e.pointerType === 'mouse' && (e.buttons & 2)) { cancelAim(); return; }
   const pt = toWorld(e);
   G.aim.px = pt.x; G.aim.py = pt.y;
+  const ai = aimInfo();
+  if (ai) { if (ai.pw - bowLast >= 0.07) { bowCreak(ai.pw); bowLast = ai.pw; } else if (ai.pw < bowLast - 0.12) bowLast = ai.pw; }
 });
 function releaseAim(e, cancel) {
   if (!G.aim || e.pointerId !== G.aim.pointer) return;
-  const a = aimInfo();
+  const a = aimInfo(), held = performance.now() - (G.aim.t0 || 0);
   G.aim = null;
   cv.classList.remove('dragging');
+  /* 누르자마자 놓은 샷은 쏘지 않음 (조작 실수 방지) */
+  if (!cancel && a && a.pw >= 0.05 && held < AIM_HOLD) {
+    G.hintNote = '조금 더 천천히 당겼다가 놓아 주세요'; G.hintFlash = 1.2;
+    clearTimeout(G.hintNoteT); G.hintNoteT = setTimeout(() => { G.hintNote = null; renderStrip(); }, 1600);
+    slackSnd(); renderStrip(); return;
+  }
   if (!cancel && a && a.pw >= 0.05 && G.state === 'aim') { G.sel = null; fire(G.current, a.s.id, a.ang, a.pw); return; }
   renderStrip();
 }
@@ -3655,18 +4197,21 @@ drawMysteryThumb($('mapPick').querySelector('canvas[data-random]'));
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawMysteryThumb($('mapPick').querySelector('canvas[data-random]')));
 const sumHTML = () => RULE_SUM.map(([k, t]) => `<li><b>${k}</b>${t}</li>`).join('');
 $('howto').innerHTML = sumHTML() + '<li class="howto-more">자세한 규칙은 대국 화면 오른쪽 아래 \'규칙\'에 있습니다.</li>';
-$('rulesList').innerHTML = `<p class="rule-h">한눈에 보기</p><ol class="rule-sum">${sumHTML()}</ol>` +
-  RULE_GROUPS.map(([h, list]) => `<p class="rule-h">${h}</p><ul>${list.map(r => `<li>${r}</li>`).join('')}</ul>`).join('');
+$('rulesList').innerHTML = `<div class="rule-card"><p class="rule-h">한눈에 보기</p><ol class="rule-sum">${sumHTML()}</ol></div>` +
+  `<div class="rule-card"><p class="rule-h">용어</p><dl class="gloss">${GLOSSARY.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl></div>` +
+  RULE_GROUPS.filter(([h]) => h !== '용어').map(([h, list]) => `<div class="rule-card"><p class="rule-h">${h}</p><ul>${list.map(r => `<li>${r}</li>`).join('')}</ul></div>`).join('');
 /* 증강 설명표: 등급별로 모든 증강의 효과를 한눈에 */
 const bookHTML = () => [1, 2, 3].map(t => `<div><h3 data-tier="${t}">${TIER[t]}</h3><ul>${K.AUG_IDS.filter(id => AUG[id].tier === t)
-  .map(id => `<li><span class="seal seal-xs">${AUG[id].seal}</span><b>${AUG[id].name}<small>${AUG[id].short()}</small></b><span>${AUG[id].desc()}</span></li>`).join('')}</ul></div>`).join('');
+  .map(id => `<li><span class="seal seal-xs">${AUG[id].seal}</span><b>${AUG[id].name}</b><span class="book-body">${statHTML(id)}<span>${AUG[id].desc()}</span></span></li>`).join('')}</ul></div>`).join('');
 $('augBook').innerHTML = `<div class="book">${bookHTML()}</div>`;
 /* 첫 화면에서도 증강 설명표를 펼쳐 볼 수 있습니다 */
 $('btnBook').addEventListener('click', () => {
   const ov = $('ovBook');
   ov.innerHTML = `<div class="ov-card bookcard" role="dialog" aria-modal="true" aria-labelledby="bookTitle">
     <p class="eyebrow">增 · 증강 설명표</p><h2 id="bookTitle">모든 증강 한눈에 보기</h2>
-    <p class="why">한 국에서 내 돌을 ${K.P.lossPerPick}개 잃을 때마다 하나씩 더 고릅니다. 한 번 고른 증강은 그 국 안에서 다시 나오지 않습니다.</p>
+    <p class="why">한 국에서 처음 놓인 기본 돌을 ${K.P.lossPerPick}개 잃을 때마다 하나씩 더 고릅니다. 한 번 고른 증강은 그 국 안에서 다시 나오지 않습니다.</p>
+    <dl class="gloss">${GLOSSARY.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
+    <p class="stat-key"><span class="st st-up"><b>초록</b><em>내게 이득</em></span><span class="st st-foe"><b>파랑</b><em>상대를 약하게</em></span><span class="st st-down"><b>빨강</b><em>대가</em></span></p>
     <div class="book">${bookHTML()}</div>
     <div class="actions"><button class="btn-primary" id="bookClose" type="button">닫기</button></div></div>`;
   ov.hidden = false;
@@ -3675,7 +4220,7 @@ $('btnBook').addEventListener('click', () => {
   ov.addEventListener('click', e => { if (e.target === ov) close(); }, { once: true });
   $('bookClose').focus({ preventScroll: true });
 });
-const BAL = {"aug": {"root": {"v": 14.3}, "iron": {"v": 14.2}, "dense": {"v": 14.0}, "reinforce": {"v": 13.0}, "shaky": {"v": 11.1}, "shackle": {"v": 9.5}, "big": {"v": 8.5}, "aim": {"v": 8.4}, "fast": {"v": 7.3}, "seal": {"v": 0.8}, "thorns": {"v": 20.4}, "wedge": {"v": 18.5}, "wall": {"v": 16.6}, "trap": {"v": 15.5}, "marks": {"v": 14.8}, "combo": {"v": 8.4}, "double": {"v": 7.9}, "bomb": {"v": 6.9}, "pierce": {"v": 6.7}, "split": {"v": 4.6}, "last": {"v": 50.5}, "king": {"v": 44.6}, "tengen": {"v": 35.4}, "tide": {"v": 19.5}, "clone": {"v": 19.5}, "rewind": {"v": 17.9}, "bolt": {"v": 15.6}, "buddy": {"v": 14.0}, "thief": {"v": 11.1}, "revive": {"v": 2.3}}, "tier": {"1": 10.1, "2": 12, "3": 23}, "abs": true, "health": {"flat": {"rounds": 558, "first": 0.482, "shots": 63.4, "comeback": 0.199, "picks": 2.79, "prism": 0.16, "both": 16}, "diamond": {"rounds": 561, "first": 0.488, "shots": 60.5, "comeback": 0.239, "picks": 2.82, "prism": 0.183, "both": 15}, "siege": {"rounds": 537, "first": 0.52, "shots": 64.6, "comeback": 0.283, "picks": 2.74, "prism": 0.188, "both": 18}, "boost": {"rounds": 777, "first": 0.436, "shots": 46, "comeback": 0.083, "picks": 2.8, "prism": 0.164, "both": 15}}, "perMap": 608, "rounds": 2433, "random": true, "se": 4.9};
+const BAL = {"aug": {"iron": {"v": 17.5}, "aim": {"v": 17.2}, "grip": {"v": 14.6}, "root": {"v": 14.6}, "big": {"v": 13.9}, "momentum": {"v": 12.2}, "sand": {"v": 11.3}, "edge": {"v": 10.7}, "shackle": {"v": 10.1}, "reinforce": {"v": 9.8}, "fast": {"v": 8.7}, "first": {"v": 8.2}, "counter": {"v": 6.3}, "seal": {"v": 5.7}, "star": {"v": 4.2}, "trap": {"v": 27.4}, "pierce": {"v": 25.3}, "double": {"v": 22.1}, "marks": {"v": 21.2}, "wall": {"v": 19.2}, "hammer": {"v": 17.1}, "wedge": {"v": 16.2}, "thorns": {"v": 16.1}, "gust": {"v": 15.7}, "chain": {"v": 12.5}, "press": {"v": 8.6}, "shock": {"v": 7.0}, "bomb": {"v": 3.8}, "combo": {"v": 3.3}, "split": {"v": -4.8}, "last": {"v": 58.5}, "king": {"v": 39.9}, "tide": {"v": 36.7}, "tengen": {"v": 32.8}, "pillar": {"v": 24.2}, "thief": {"v": 23.0}, "buddy": {"v": 17.4}, "shaky": {"v": 16.6}, "clone": {"v": 16.4}, "ko": {"v": 16.0}, "dense": {"v": 15.1}, "bolt": {"v": 13.2}, "rewind": {"v": 11.2}, "revive": {"v": 10.5}, "dragon": {"v": 6.0}}, "tier": {"1": 11, "2": 14, "3": 22.5}, "abs": true, "health": {"flat": {"rounds": 635, "first": 0.512, "shots": 65.9, "comeback": 0.309, "picks": 2.8, "prism": 0.185, "both": 22}, "diamond": {"rounds": 662, "first": 0.488, "shots": 55, "comeback": 0.212, "picks": 2.76, "prism": 0.171, "both": 16}, "siege": {"rounds": 574, "first": 0.542, "shots": 60.8, "comeback": 0.378, "picks": 2.66, "prism": 0.176, "both": 13}, "boost": {"rounds": 893, "first": 0.493, "shots": 39.8, "comeback": 0.082, "picks": 2.86, "prism": 0.162, "both": 24}, "pond": {"rounds": 848, "first": 0.509, "shots": 69, "comeback": 0.216, "picks": 2.81, "prism": 0.168, "both": 19}}, "perMap": 722, "rounds": 3612, "random": true, "se": 4.7};
 if (!BAL) $('balance').closest('details').hidden = true;
 if (BAL) {
   const fmt = v => (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v).toFixed(1);
@@ -3779,7 +4324,7 @@ function miniRing(g, x, y, k, col = '232,205,142') {
 }
 /* 흑요석 바위 (가운데, 반대각선 0.17) */
 const ROCK = 0.17;
-function miniRock(g, hits, a = 1, t = 0) {
+function miniRock(g, hits, a = 1, t = 0, max = K.P.rockHits) {
   if (a <= 0) return;
   const X = mx(0.5), Y = mx(0.5), d = ROCK * MW;
   const path = q => { g.beginPath(); g.moveTo(X, Y - q); g.lineTo(X + q, Y); g.lineTo(X, Y + q); g.lineTo(X - q, Y); g.closePath(); };
@@ -3791,16 +4336,16 @@ function miniRock(g, hits, a = 1, t = 0) {
     g.lineCap = 'round';
     for (const [col, lw] of [['rgba(255,120,60,.45)', 7], ['#ffcf8a', 2.2]]) {
       g.strokeStyle = col; g.lineWidth = lw;
-      for (let i = 0; i < Math.min(CRACKS.length, hits * 2 + (hits >= 2 ? 1 : 0)); i++) {
+      for (let i = 0; i < Math.min(CRACKS.length, Math.ceil(hits / max * CRACKS.length)); i++) {
         g.beginPath(); CRACKS[i].forEach(([x, y], k) => { const px = X + x * d, py = Y + y * d; if (k) g.lineTo(px, py); else g.moveTo(px, py); }); g.stroke();
       }
     }
   }
   g.restore();
-  for (let k = 0; k < 3; k++) {
-    const px = X + (k - 1) * 18, py = Y + d + 22;
+  for (let k = 0; k < max; k++) {
+    const px = X + (k - (max - 1) / 2) * 14, py = Y + d + 22;
     g.fillStyle = k < hits ? 'rgba(207,63,46,.95)' : 'rgba(239,230,212,.45)';
-    g.beginPath(); g.moveTo(px, py - 6); g.lineTo(px + 6, py); g.lineTo(px, py + 6); g.lineTo(px - 6, py); g.closePath(); g.fill();
+    g.beginPath(); g.moveTo(px, py - 5); g.lineTo(px + 5, py); g.lineTo(px, py + 5); g.lineTo(px - 5, py); g.closePath(); g.fill();
   }
 }
 function miniShards(g, k) {
@@ -3832,6 +4377,62 @@ function miniBand(g, open, glow = 0) {
   if (open) { g.strokeStyle = `rgba(214,246,250,${0.6 + glow * 0.4})`; g.lineWidth = 2; for (let x = MP - 10; x < MP + MW + 10; x += 22) { g.beginPath(); g.moveTo(x, y + 4); g.quadraticCurveTo(x + 6, y - 6, x + 12, y + 4); g.stroke(); } }
   else { g.setLineDash([6, 6]); g.strokeStyle = 'rgba(19,16,14,.5)'; g.lineWidth = 2; g.strokeRect(MP - 18, y - h / 2, MW + 36, h); }
   g.restore();
+}
+function miniPads(g, glow = 0, closed = []) {
+  [3 / 18, 15 / 18].forEach((px, i) => {
+    const X = mx(px), Y = mx(0.5), hw = MW / 11, hh = MW / 22, shut = closed[i];
+    g.save(); if (!shut) { g.shadowColor = `rgba(127,195,201,${0.4 + glow * 0.5})`; g.shadowBlur = 10 + glow * 12; }
+    g.fillStyle = shut ? 'rgba(70,70,70,.35)' : `rgba(127,195,201,${0.55 + glow * 0.3})`; g.fillRect(X - hw, Y - hh, 2 * hw, 2 * hh); g.restore();
+    for (const px2 of [X - hw, X + hw]) { g.fillStyle = shut ? '#5a3a34' : '#9e2f22'; g.fillRect(px2 - 3, Y - hh - 4, 6, 2 * hh + 8); }
+    g.fillStyle = '#e8cd8e'; g.font = `700 10px ${SERIF}`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(shut ? '닫힘' : '風門', X, Y + 1);
+  });
+}
+function miniPonds(g) {
+  for (const px of [2.75 / 18, 15.25 / 18]) {
+    const X = mx(px), Y = mx(0.5), R = 0.09 * MW;
+    const gr = g.createRadialGradient(X - R * 0.3, Y - R * 0.3, 2, X, Y, R); gr.addColorStop(0, '#3f7f86'); gr.addColorStop(1, '#16343d');
+    g.fillStyle = gr; g.beginPath(); g.arc(X, Y, R, 0, TAU); g.fill(); g.strokeStyle = '#7a6a4a'; g.lineWidth = 3; g.stroke();
+    g.fillStyle = '#4f8a46'; g.beginPath(); g.arc(X - R * 0.4, Y + R * 0.3, R * 0.3, 0, TAU); g.fill();
+  }
+}
+/* 짚어 주기: 지형의 특징을 금빛 고리로 가리키고 이름표를 붙임 */
+function miniMark(g, m, a = 1, t = 0) {
+  if (a <= 0) return;
+  g.save(); g.globalAlpha = c01(a);
+  if (m.r) {
+    const pulse = reduceMotion ? 0 : Math.sin(t * 6) * 3;
+    g.strokeStyle = '#ffd36a'; g.lineWidth = 3; g.setLineDash([6, 4]);
+    g.beginPath(); g.arc(mx(m.x), mx(m.y), m.r * MW + 6 + pulse, 0, TAU); g.stroke(); g.setLineDash([]);
+  }
+  if (m.tx != null) {
+    g.strokeStyle = 'rgba(255,211,106,.85)'; g.lineWidth = 2;
+    g.beginPath(); g.moveTo(mx(m.tx), mx(m.ty)); g.lineTo(mx(m.x), mx(m.y) + (m.ty < m.y ? -(m.r || 0) * MW - 6 : (m.r || 0) * MW + 6)); g.stroke();
+  }
+  g.restore();
+  miniLabel(g, m.tx != null ? m.tx : m.x, m.ty != null ? m.ty : m.y, m.text, a, 13, '#ffe6a8');
+}
+const GUIDE = {
+  flat: { lines: ['기믹이 없는 맨판입니다.', '실력과 증강만으로 겨룹니다.'], marks: [{ x: 0.5, y: 0.5, text: '거칠 것 없는 맨판' }] },
+  diamond: { marks: [{ x: 0.5, y: 0.5, r: 0.17, text: '흑요석 바위', tx: 0.5, ty: 0.1 }] },
+  siege: { marks: [{ x: 0.5, y: -0.06, text: '성벽 (위·아래)', tx: 0.5, ty: 0.2 }, { x: 0.02, y: 0.5, text: '양옆은 열림', tx: 0.24, ty: 0.5 }] },
+  boost: { marks: [{ x: 3 / 18, y: 0.5, r: 0.07, text: '바람문', tx: 0.3, ty: 0.3 }, { x: 15 / 18, y: 0.5, r: 0.07, text: '바람문', tx: 0.7, ty: 0.7 }] },
+  pond: { marks: [{ x: 2.75 / 18, y: 0.5, r: 0.09, text: '연못', tx: 0.3, ty: 0.3 }, { x: 15.25 / 18, y: 0.5, r: 0.09, text: '연못', tx: 0.7, ty: 0.7 }] },
+  random: { lines: ['국마다 다섯 지형 가운데 하나가 무작위로 나옵니다.', '같은 지형이 연달아 나오지는 않습니다.'] }
+};
+/* 지형 설명 그림: 지형의 특징을 그대로 그리고 짚어 줌 */
+function drawGuide(g, id, t = 0) {
+  miniBase(g);
+  if (id === 'random') {
+    g.fillStyle = 'rgba(19,16,14,.82)'; g.fillRect(0, 0, MN, MN);
+    g.fillStyle = '#e8cd8e'; g.font = `700 120px ${SERIF}`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('?', MN / 2, MN / 2 + 6);
+    return;
+  }
+  if (id === 'diamond') miniRock(g, 0, 1, t);
+  if (id === 'siege') miniWalls(g, 0);
+  if (id === 'boost') miniPads(g, 0.3 + 0.3 * Math.sin(t * 4));
+  if (id === 'pond') miniPonds(g);
+  for (const [r, c] of K.FORMATION['1v1'].base[0]) { miniStone(g, c / 18, r / 18, 0, 0.85, 7); miniStone(g, c / 18, (18 - r) / 18, 1, 0.85, 7); }
+  for (const m of (GUIDE[id] && GUIDE[id].marks) || []) miniMark(g, m, 1, t);
 }
 /* 반사: 바위 면에 부딪힌 방향 */
 function reflect(vx, vy, nx, ny) { const d = vx * nx + vy * ny; return [vx - 2 * d * nx, vy - 2 * d * ny]; }
@@ -3885,7 +4486,7 @@ const TUT = [
       miniLabel(g, 0.5, 1.04, '다른 손가락 톡 · 또는 오른쪽 클릭', seg(t, 1.8, 2.0) * (1 - seg(t, 3.6, 3.9)), 13);
       miniLabel(g, 0.72, 0.5, '취소', seg(t, 2.4, 2.6) * (1 - seg(t, 3.9, 4.4)), 18, '#e8cd8e');
     } },
-  { t: '증강 고르기', d: 4.6, txt: `국을 시작할 때, 그리고 내 돌을 ${K.P.lossPerPick}개 잃을 때마다 능력 카드 3장 가운데 하나를 고릅니다. 실버·골드·프리즘 순으로 세고 드뭅니다.`,
+  { t: '증강 고르기', d: 4.6, txt: `국을 시작할 때, 그리고 처음 놓인 기본 돌을 ${K.P.lossPerPick}개 잃을 때마다 능력 카드 3장 가운데 하나를 고릅니다. 실버·골드·프리즘 순으로 세고 드뭅니다.`,
     draw(g, t) {
       g.fillStyle = '#1b1613'; g.fillRect(0, 0, MN, MN);
       const cols = [['#7d838d', '#eef1f5'], ['#8a6a2c', '#f1dca6'], ['#bfe3ea', '#f2cfe0']], seals = ['鐵', '爆', '復'], names = ['실버', '골드', '프리즘'];
@@ -3963,12 +4564,15 @@ try { if (!localStorage.getItem('alk-tut')) $('btnTut').classList.add('new'); } 
 
 /* 지형 소개: 국을 열 때 지형이 바뀌면 잠깐 보여 줍니다 (건너뛰기 가능, 평야는 기믹이 없어 건너뜀) */
 const INTRO = {
-  diamond: { d: 6.4, lines: ['가운데 흑요석 바위에 맞은 돌은 힘을 잃지 않고 튕겨 나옵니다.', '세게 세 번 맞으면 금이 가다가 깨지고, 둘레 돌을 밀어냅니다.', '이 지형에서는 천원 증강이 나오지 않습니다.'], at: [0, 1.8, 4.6],
+  diamond: { d: 6.4, lines: ['가운데 흑요석 바위에 맞은 돌은 힘을 잃지 않고 튕겨 나옵니다.', `세게 ${K.P.rockHits}번 맞으면 금이 가다가 깨지고, 둘레 돌을 밀어냅니다.`, '이 지형에서는 천원 증강이 나오지 않습니다.'], at: [0, 1.8, 4.6],
     draw(g, t) {
       miniBase(g);
       const broke = t > 3.9;
-      const hits = (t > 0.8 ? 1 : 0) + (t > 2.3 ? 1 : 0) + (t > 3.8 ? 1 : 0);
-      miniRock(g, broke ? 3 : hits, broke ? 1 - seg(t, 3.9, 4.1) : 1);
+      const R = K.P.rockHits, ff = Math.floor(seg(t, 2.8, 3.7) * (R - 3));   /* 2번째 뒤로는 빠르게 세기 */
+      const hits = t > 3.8 ? R : (t > 0.8 ? 1 : 0) + (t > 2.3 ? 1 : 0) + ff;
+      miniRock(g, broke ? R : hits, broke ? 1 - seg(t, 3.9, 4.1) : 1);
+      if (!broke && hits > 0) miniLabel(g, 0.5, 0.2, `${hits} / ${R}`, 1, 14, '#ffcf8a');
+      miniLabel(g, 0.5, 0.86, '… 여러 번 맞으면', seg(t, 2.8, 2.95) * (1 - seg(t, 3.6, 3.8)), 13);
       miniShards(g, seg(t, 3.9, 5.0));
       if (broke) miniLabel(g, 0.5, 0.5, '깨짐!', seg(t, 4.0, 4.2) * (1 - seg(t, 5.6, 6.2)), 18, '#ffb3a3');
       const shots = [[[0.2, 0.96], [0.415, 0.585], [-0.707, 0.707], 0.2, 0.8], [[0.97, 0.78], [0.585, 0.585], [0.707, 0.707], 1.7, 2.3], [[0.82, 0.02], [0.585, 0.415], [0.707, -0.707], 3.2, 3.8]];
@@ -3997,22 +4601,78 @@ const INTRO = {
       miniStone(g, lerp(0.42, 0.79, k2), 0.62, 0);
       if (t > 3.1) miniLabel(g, 0.62, 0.75, '옆으로는 떨어짐', seg(t, 3.1, 3.3) * (1 - seg(t, 4.8, 5.3)), 13, '#ffb3a3');
     } },
-  boost: { d: 6.4, lines: [`가운데 바람길은 대국 시작 ${K.P.padStart}수 뒤에 열립니다.`, '지나는 돌은 훨씬 빨라져 멀리 있는 돌에도 닿습니다.', `한 번 쓰이면 닫히고, ${K.P.padCool}수 뒤 다시 열립니다.`], at: [0, 1.9, 3.3],
+  boost: { d: 6.0, lines: ['판 양쪽 가장자리 가까이에 바람문(가로 2칸 · 세로 1칸)이 둘 있습니다.', '흑·백 누구의 샷이든, 바람문을 지나는 돌은 빨라집니다.', `한 번 쓰인 문은 ${K.P.gateCool}수 동안 닫힙니다. 처음 자리에서 바로 상대 돌을 떨어뜨릴 만큼 세지는 않습니다.`], at: [0, 1.6, 3.4],
     draw(g, t) {
       miniBase(g);
-      const open = t > 1.6 && t < 3.0;
-      miniBand(g, open, open ? 0.5 + 0.5 * Math.sin(t * 9) : 0);
-      if (t < 1.6) { const n = Math.max(1, K.P.padStart - Math.floor(t / 0.55)); miniLabel(g, 0.5, 0.42, `닫힘 · ${n}수 뒤 열림`, 1, 13); }
-      if (t > 1.6 && t < 2.1) miniLabel(g, 0.5, 0.42, '열림!', 1 - seg(t, 1.9, 2.1), 15, '#bfeef2');
-      const slow = eo(seg(t, 2.0, 2.6)), fast = seg(t, 2.6, 2.8), wk = eo(seg(t, 2.8, 3.4));
-      const by = t < 2.6 ? lerp(0.9, 0.53, slow) : lerp(0.53, 0.2, fast);
-      const wy = lerp(0.14, -0.2, wk); miniStone(g, 0.5, wy, 1, fallA(0.5, wy));
-      if (t > 2.6 && t < 3.0) { g.save(); g.strokeStyle = `rgba(214,246,250,${1 - seg(t, 2.6, 3.0)})`; g.lineWidth = 3; for (const dx of [-0.03, 0, 0.03]) { g.beginPath(); g.moveTo(mx(0.5 + dx), mx(0.55)); g.lineTo(mx(0.5 + dx), mx(by + 0.05)); g.stroke(); } g.restore(); }
-      miniStone(g, 0.5, by, 0);
-      if (t > 3.0) miniLabel(g, 0.5, 0.58, `닫힘 · ${K.P.padCool}수 뒤 다시 열림`, seg(t, 3.0, 3.2), 13);
+      const L3 = 3 / 18, used = t > 2.1;
+      miniPads(g, 0.5 + 0.5 * Math.sin(t * 9), [used, false]);
+      /* 흑: 왼쪽 바람문을 지나 빨라져 백을 떨어뜨림 */
+      const s1 = eo(seg(t, 1.6, 2.1)), f1 = seg(t, 2.1, 2.35), k1 = eo(seg(t, 2.35, 2.9));
+      const by = t < 2.1 ? lerp(0.85, 0.5, s1) : lerp(0.5, 0.2, f1);
+      const wy = lerp(0.14, -0.2, k1); miniStone(g, L3, wy, 1, fallA(L3, wy));
+      miniStone(g, L3, by, 0);
+      if (t > 2.1 && t < 2.6) { g.save(); g.strokeStyle = `rgba(214,246,250,${1 - seg(t, 2.1, 2.6)})`; g.lineWidth = 3; for (const dx of [-0.02, 0, 0.02]) { g.beginPath(); g.moveTo(mx(L3 + dx), mx(0.55)); g.lineTo(mx(L3 + dx), mx(by + 0.05)); g.stroke(); } g.restore(); }
+      if (t > 2.1) miniLabel(g, 0.42, 0.62, '빨라짐!', seg(t, 2.1, 2.3) * (1 - seg(t, 3.0, 3.3)), 13, '#bfeef2');
+      if (t > 3.4) miniLabel(g, 0.36, 0.42, `쓴 문은 ${K.P.gateCool}수 동안 닫힘`, seg(t, 3.4, 3.6), 13, '#ffd6c8');
     } }
 };
-let introTimer = null;
+INTRO.pond = { d: 5.6, lines: ['판 양쪽에 연못이 둘 있습니다.', '돌의 가운데가 연못에 들어가면 흑백 가리지 않고 떨어집니다.', '상대 돌은 연못 쪽으로 몰고, 내 돌은 연못에서 떨어뜨려 두세요.'], at: [0, 1.4, 3.4],
+  draw(g, t) {
+    miniBase(g);
+    for (const px of [0.15, 0.85]) {
+      const X = mx(px), Y = mx(0.5), R = 0.11 * MW;
+      const gr = g.createRadialGradient(X - R * 0.3, Y - R * 0.3, 2, X, Y, R); gr.addColorStop(0, '#3f7f86'); gr.addColorStop(1, '#16343d');
+      g.fillStyle = gr; g.beginPath(); g.arc(X, Y, R, 0, TAU); g.fill(); g.strokeStyle = '#7a6a4a'; g.lineWidth = 3; g.stroke();
+      g.fillStyle = '#4f8a46'; g.beginPath(); g.arc(X - R * 0.4, Y + R * 0.3, R * 0.3, 0, TAU); g.fill();
+    }
+    /* 1) 흑이 백을 연못으로 */
+    const k1 = eo(seg(t, 0.4, 0.9)), k2 = eo(seg(t, 0.9, 1.4)), sink = seg(t, 1.4, 1.9);
+    miniStone(g, lerp(0.5, 0.27, k1), 0.5, 0);
+    miniStone(g, lerp(0.25, 0.15, k2), 0.5, 1, 1 - sink, 12 * (1 - 0.5 * sink));
+    miniRing(g, 0.15, 0.5, seg(t, 1.4, 2.2), '159,214,208');
+    if (t > 1.5) miniLabel(g, 0.2, 0.3, '풍덩!', seg(t, 1.5, 1.7) * (1 - seg(t, 2.8, 3.2)), 14, '#bfeef2');
+    /* 2) 백이 흑을 연못으로 — 흑도 똑같이 빠짐 */
+    const k3 = eo(seg(t, 2.6, 3.1)), k4 = eo(seg(t, 3.1, 3.6)), sink2 = seg(t, 3.6, 4.1);
+    miniStone(g, lerp(0.47, 0.71, k3), 0.55, 1);
+    miniStone(g, lerp(0.73, 0.85, k4), lerp(0.55, 0.5, k4), 0, 1 - sink2, 12 * (1 - 0.5 * sink2));
+    miniRing(g, 0.85, 0.5, seg(t, 3.6, 4.4), '159,214,208');
+    if (t > 3.7) miniLabel(g, 0.8, 0.3, '흑도 빠짐', seg(t, 3.7, 3.9), 14, '#bfeef2');
+  } };
+let introTimer = null, guideRaf = 0;
+/* 흑요석 제단 실제 모습: 게임 판 그림 그대로, 처음 · 금이 감 · 깨지기 직전 */
+function altarPics() {
+  const rock = MAPS.diamond.obs[0], R = K.P.rockHits;
+  return [[0, '처음 모습'], [Math.ceil(R / 2), `금이 감 (${Math.ceil(R / 2)}번)`], [R - 1, `깨지기 직전 (${R - 1}번)`]].map(([h, cap]) => {
+    const c = document.createElement('canvas'); c.width = c.height = 360;
+    const g = c.getContext('2d'), span = rock.h * 2 + 2 * K.GAP, k = 360 / span;
+    g.setTransform(k, 0, 0, k, -(CX - span / 2) * k, -(CY - span / 2) * k);
+    g.drawImage(boardImg, 0, 0, S, S);
+    const hits = []; hits[rock.oi] = h;
+    drawFeatures(g, [rock], hits);
+    const f = document.createElement('figure'); f.appendChild(c);
+    const fc = document.createElement('figcaption'); fc.textContent = cap; f.appendChild(fc);
+    return f;
+  });
+}
+function renderGuide() {
+  const id = (document.querySelector('input[name="map"]:checked') || {}).value || 'flat';
+  const cv = $('guideCv'); if (!cv) return;
+  const lines = (GUIDE[id] && GUIDE[id].lines) || (INTRO[id] && INTRO[id].lines) || [];
+  $('guideName').textContent = id === 'random' ? '무작위' : MAPS[id].name;
+  $('guideList').innerHTML = lines.map(l => `<li class="on">${l}</li>`).join('');
+  const g = cv.getContext('2d'), dpr = Math.min(2, window.devicePixelRatio || 1);
+  cv.width = MN * dpr; cv.height = MN * dpr;
+  cancelAnimationFrame(guideRaf);
+  const t0 = performance.now();
+  const frame = now => {
+    if ($('ovMenu').hidden) { guideRaf = requestAnimationFrame(frame); return; }
+    g.setTransform(dpr, 0, 0, dpr, 0, 0); drawGuide(g, id, reduceMotion ? 0 : (now - t0) / 1000);
+    if (!reduceMotion) guideRaf = requestAnimationFrame(frame);
+  };
+  guideRaf = requestAnimationFrame(frame);
+}
+document.querySelectorAll('input[name="map"]').forEach(r => r.addEventListener('change', renderGuide));
+renderGuide();
 function mapIntro() {
   const m = curMap();
   if (m === G.introMap) return;
@@ -4021,12 +4681,16 @@ function mapIntro() {
   if (!sc) return;
   const ov = $('ovIntro');
   $('introTitle').textContent = MAPS[m].name;
+  const pics = $('introPics'); pics.innerHTML = ''; pics.hidden = m !== 'diamond';
+  if (m === 'diamond') altarPics().forEach(f => pics.appendChild(f));
   $('introText').innerHTML = sc.lines.map(l => `<li>${l}</li>`).join('');
   const lis = [...$('introText').children];
   const play = () => {
     clearTimeout(introTimer);
     $('introBar').style.width = '0';
+    const mk = (GUIDE[m] && GUIDE[m].marks) || [], dr = sc.draw;
     miniRun($('introCv'), Object.assign({}, sc, {
+      draw: (g, t) => { dr.call(sc, g, t); const a = 1 - seg(t, (sc.at[1] || 1.5) - 0.3, sc.at[1] || 1.5); for (const x of mk) miniMark(g, x, a, t); },
       tick: t => { lis.forEach((li, i) => li.classList.toggle('on', t >= sc.at[i] && (i === lis.length - 1 || t < sc.at[i + 1] + 99))); $('introBar').style.width = `${Math.min(100, t / sc.d * 100)}%`; }
     }), () => { introTimer = setTimeout(closeIntro, 900); }, false);
   };
