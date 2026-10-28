@@ -2678,6 +2678,7 @@ const RULE_GROUPS = [
     '돌을 톡 눌러 고른 뒤 판 아무 데서나 끌어도 됩니다. 가장자리 돌을 칠 때 편합니다.',
     '무거운 돌은 같은 힘으로 덜 나가지만 부딪히면 상대를 더 멀리 밀고 자신은 덜 밀립니다. 가벼운 돌은 더 멀리 나가지만 맞으면 더 밀립니다.',
     '조준 취소: 컴퓨터는 마우스 오른쪽 단추, 휴대폰은 다른 손가락으로 화면을 한 번 더 누릅니다. 조준하는 동안 판 위에 붉은 안내가 뜹니다.',
+    '판 둘레의 밝은 선이 떨어지는 선입니다. 돌의 가운데가 이 선을 넘으면 떨어지고, 선 안쪽 붉은 띠는 돌 반지름만큼의 위험 구역입니다.',
     '백은 판이 180° 돌아가 흑과 똑같이 늘 아래에서 위로 조준합니다(온라인은 백 자리 화면, 같은 화면은 백 차례에).',
     '조작 실수를 막으려고, 누르자마자 놓은 샷은 쏘지 않고 차례가 막 넘어온 순간의 클릭도 잠깐 받지 않습니다.'
   ]],
@@ -3739,8 +3740,8 @@ function bgmTick() {
   const t = AC.currentTime;
   if (bgmCur && bgmEl[bgmCur]) {
     const o = bgmEl[bgmCur], k = bgmCur;
-    o.g.gain.cancelScheduledValues(t); o.g.gain.setValueAtTime(o.g.gain.value, t); o.g.gain.linearRampToValueAtTime(0, t + 1.2);
-    clearTimeout(o.tm); o.tm = setTimeout(() => { if (bgmCur !== k) o.el.pause(); }, 1300);
+    o.g.gain.cancelScheduledValues(t); o.g.gain.setValueAtTime(o.g.gain.value, t); o.g.gain.linearRampToValueAtTime(0, t + (want === 'wigi' ? 0.35 : 1.2));
+    clearTimeout(o.tm); o.tm = setTimeout(() => { if (bgmCur !== k) o.el.pause(); }, want === 'wigi' ? 450 : 1300);
   }
   bgmCur = want;
   let n = bgmEl[want];
@@ -3753,7 +3754,7 @@ function bgmTick() {
   clearTimeout(n.tm);
   if (want === 'wigi' && n.el.paused) n.el.currentTime = 0;   /* 위기는 처음부터 */
   const pr = n.el.play(); if (pr && pr.catch) pr.catch(() => {});
-  n.g.gain.cancelScheduledValues(t); n.g.gain.setValueAtTime(n.g.gain.value, t); n.g.gain.linearRampToValueAtTime(1, t + 1.2);
+  n.g.gain.cancelScheduledValues(t); n.g.gain.setValueAtTime(n.g.gain.value, t); n.g.gain.linearRampToValueAtTime(1, t + (want === 'wigi' ? 0.25 : 1.2));   /* 위기는 바로 들리게 */
   renderSnd();
 }
 function renderSnd() {
@@ -4003,7 +4004,7 @@ function drainEvents() {
       case 'seal':
         fxInk(e.x, e.y, 48, { n: 6, col: '181,64,46', life: 0.8, peak: 0.5 }); fxStamp(e.x, e.y - 84, '封', '봉인', { size: 62 });
         addLog(`봉인 · ${G.players[e.target].name}의 돌 하나가 묶였습니다`, p.team); break;
-      case 'gain': if (!e.via) statSnd(e.id); addLog(`${pLabel(p)} · ${e.via === 'bundle' ? '보따리에서 ' : ''}${AUG[e.id].name} 획득`, p.team, !!AUG[e.id].quest); panel = true; if (e.id === 'wall') { G.wallRise[p.team] = 0.001; G.wallGlow[p.team] = 1; sfx(220, 0.6, 0.4); } break;
+      case 'gain': setTimeout(bgmTick, 0); if (!e.via) statSnd(e.id); addLog(`${pLabel(p)} · ${e.via === 'bundle' ? '보따리에서 ' : ''}${AUG[e.id].name} 획득`, p.team, !!AUG[e.id].quest); panel = true; if (e.id === 'wall') { G.wallRise[p.team] = 0.001; G.wallGlow[p.team] = 1; sfx(220, 0.6, 0.4); } break;
       case 'spawn': fxEnso(e.x, e.y, 56, C.goldHi, { w: 9, life: 0.9 }); panel = true; break;
       case 'trap': addLog(e.center ? `함정 · 판이 줄어드는 때라 판 가운데 가까이 함정 ${e.n}개를 팠습니다` : `함정 · ${teamName(1 - e.team)} 진영 앞에 함정 ${e.n}개를 팠습니다`, e.team); break;
       case 'pit':
@@ -4638,6 +4639,21 @@ function drawAim(s, pw, ang, pull, shaky, now, p, o) {
   powerBadge(lx, ly, shaky ? '??' : Math.round(pw * 100) + '%', !shaky && pw >= 0.995);
 }
 
+/* ---------- 판 가장자리(떨어지는 선) ---------- */
+/* 돌의 가운데가 이 선을 넘으면 떨어짐: 바깥은 어둡게, 선은 밝게 또렷이 */
+function drawEdge(w) {
+  const lo = w.shrink, hi = S - w.shrink, L = hi - lo;
+  ctx.save(); ctx.lineJoin = 'miter';
+  ctx.strokeStyle = 'rgba(8,5,3,.9)'; ctx.lineWidth = 10; ctx.strokeRect(lo - 5, lo - 5, L + 10, L + 10);
+  ctx.strokeStyle = '#fff4d6'; ctx.lineWidth = 3.5; ctx.strokeRect(lo, lo, L, L);
+  /* 안쪽으로 돌 반지름만큼: 이 띠에 가운데가 걸치면 거의 끝 */
+  const band = K.BASE_R || GAP * 0.45, gr = (x0, y0, x1, y1) => { const g = ctx.createLinearGradient(x0, y0, x1, y1); g.addColorStop(0, 'rgba(181,64,46,.22)'); g.addColorStop(1, 'rgba(181,64,46,0)'); return g; };
+  ctx.fillStyle = gr(0, lo, 0, lo + band); ctx.fillRect(lo, lo, L, band);
+  ctx.fillStyle = gr(0, hi, 0, hi - band); ctx.fillRect(lo, hi - band, L, band);
+  ctx.fillStyle = gr(lo, 0, lo + band, 0); ctx.fillRect(lo, lo, band, L);
+  ctx.fillStyle = gr(hi, 0, hi - band, 0); ctx.fillRect(hi - band, lo, band, L);
+  ctx.restore();
+}
 /* ---------- 판 줄어듦 강조 ---------- */
 function drawShrink(w, now) {
   if (w.noShrink) return;
@@ -4865,6 +4881,7 @@ function render(now) {
       ctx.beginPath(); ctx.arc(CX, CY, K.P.tengenR + 8 + pulse, 0, TAU); ctx.stroke(); ctx.restore();
     }
     drawShrink(w, now);
+    drawEdge(w);
     drawEdgeWalls(ctx, w);
     drawLand(w, now); drawIce(w); drawVortex(w, now); drawHole(w, now);
     /* 천원 경고: 누군가 천원 둘레에 돌을 세우면 붉게 깜빡이는 고리와 '다음 차례 승리' 표시 */
@@ -5909,7 +5926,14 @@ $('sndPanel').querySelector('.snd-tracks').addEventListener('click', e => {
 });
 $('btnMute').addEventListener('click', () => { SND.mute = !SND.mute; applyVol(); saveSnd(); renderSnd(); });
 /* 브라우저는 첫 누름 뒤에야 소리를 냄: 첫 누름에 배경음을 깨움 */
-document.addEventListener('pointerdown', () => { ensureAudio(); bgmTick(); }, { capture: true });
+/* 켜자마자 배경음: 열리는 즉시 틀어 보고, 브라우저가 첫 누름 전 소리를 막으면 첫 누름·키 입력 때 바로 이어서 틂 */
+function bgmKick() {
+  ensureAudio(); bgmTick();
+  const n = bgmCur && bgmEl[bgmCur];
+  if (n && n.el.paused) { const pr = n.el.play(); if (pr && pr.catch) pr.catch(() => {}); }
+}
+for (const ev of ['pointerdown', 'keydown', 'touchstart']) document.addEventListener(ev, bgmKick, { capture: true, passive: true });
+try { bgmKick(); } catch (e) { /* 소리를 못 내는 환경 */ }
 renderSnd();
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
