@@ -1,4 +1,5 @@
 name: Keep Render awake
+
 on:
   schedule:
     - cron: "*/10 * * * *"
@@ -9,6 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          code=$(curl -s -o /dev/null -w "%{http_code}" https://jeunggang-alggagi.onrender.com)
+          code=$(curl -L -s -o /dev/null -w "%{http_code}" --max-time 120 https://jeunggang-alggagi.onrender.com/)
           echo "HTTP $code"
           [ "$code" = "200" ] || exit 1
