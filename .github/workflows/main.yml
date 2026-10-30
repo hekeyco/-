@@ -9,6 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          code=$(curl -s -o /dev/null -w "%{http_code}" https://jeunggang-alggagi.onrender.com/)
+          code=$(curl -s -o /dev/null -w "%{http_code}" https://jeunggang-alggagi.onrender.com)
           echo "HTTP $code"
           [ "$code" = "200" ] || exit 1
