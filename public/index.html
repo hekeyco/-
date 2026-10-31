@@ -269,10 +269,10 @@ button,input{font:inherit;color:inherit}
 .turn-strip>.ava{grid-row:1/3;grid-column:1}
 .turn-strip:not(:has(.ava)){grid-template-columns:auto minmax(0,1fr)}
 .turn-strip:not(:has(.ava))>.turn-name{grid-column:1}
-.turn-strip:not(:has(.ava))>.turn-count{display:inline-flex;align-items:center;justify-content:center;margin-left:auto;padding:4px 9px;border:1px solid rgba(201,164,92,.55);border-radius:999px;color:#f1d69e;font-size:12px;font-weight:800;white-space:nowrap;letter-spacing:.02em}
+.turn-strip:not(:has(.ava))>.turn-count{display:inline-flex;align-items:center;justify-content:center;margin-left:auto;margin-right:104px;padding:4px 7px;border:1px solid rgba(201,164,92,.55);border-radius:999px;color:#f1d69e;font-size:12px;font-weight:800;white-space:nowrap;letter-spacing:.02em}
 .turn-hint{grid-column:1/3}
 .turn-name{grid-row:1;grid-column:2;font-family:var(--font-display);font-weight:600;font-size:21px;line-height:30px;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-.turn-count{display:inline-flex;align-items:center;justify-content:center;margin-left:auto;padding:4px 9px;border:1px solid rgba(201,164,92,.55);border-radius:999px;color:#f1d69e;font-size:12px;font-weight:800;white-space:nowrap;letter-spacing:.02em}
+.turn-count{display:inline-flex;align-items:center;justify-content:center;margin-left:auto;margin-right:104px;padding:4px 7px;border:1px solid rgba(201,164,92,.55);border-radius:999px;color:#f1d69e;font-size:12px;font-weight:800;white-space:nowrap;letter-spacing:.02em}
 .turn-hint{grid-row:2;grid-column:2/4;align-self:start;color:var(--muted);font-size:13px;line-height:18px;max-height:36px;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2}
 .turn-hint.flash{color:var(--gold-hi)}
 .alert{font-size:12.5px;padding:3px 10px;border-radius:2px;background:var(--inju);color:#f6eee0;letter-spacing:.04em}
@@ -288,6 +288,7 @@ button,input{font:inherit;color:inherit}
 @keyframes aimHint{from{box-shadow:0 0 10px rgba(232,90,64,.3)}to{box-shadow:0 0 24px rgba(232,90,64,.75)}}
 @media (prefers-reduced-motion:reduce){.aim-hint{animation:none}}
 /* 1수 제한 시간: 차례 줄 오른쪽 위 */
+.turn-count{position:absolute;right:112px;top:4px;margin:0 !important}
 .turn-timer{position:absolute;top:0;right:0;z-index:4;display:flex;align-items:baseline;gap:3px;padding:3px 12px;border-radius:14px;border:1.5px solid var(--hair-strong);background:rgba(19,16,14,.85);color:var(--ivory);font-variant-numeric:tabular-nums}
 .turn-timer b{font-size:17px;font-weight:700;min-width:2ch;text-align:right}
 .turn-timer small{font-size:11.5px;color:var(--muted)}
@@ -851,6 +852,7 @@ html, body { max-width: 100%; overflow-x: clip; }
   <div class="scoreboard" id="scoreboard"></div>
   <span class="netchip" id="netChip" hidden><i></i><span></span></span>
   <div class="bar-actions">
+    <button class="btn-ghost" id="btnStoneLock" type="button" aria-pressed="false">돌 잠금 끄기</button>
     <div class="snd-wrap">
       <button class="btn-ghost" id="btnSound" type="button" aria-expanded="false" aria-controls="sndPanel">소리</button>
     </div>
@@ -1043,7 +1045,7 @@ const A = {
   revive: 3, buddy: 1, thief: 1, rewind: 2, kingR: 1.5, kingM: 1.5, kingV: 1.4, boltEvery: 3, boltV: 620,
   clone: 1, cloneK: 1.0, buddyD: 500, lastN: 3, lastR: 1.15, lastM: 1.2, lastV: 1.12, tideD: 0.75 * GAP,
   /* 새 증강 */
-  momV: 1.25, ctrV: 1.35, grip: 1.12, sand: 1.25, starM: 2.0, starD: 0.8 * GAP, edgeF: 1.65, edgeD: 1.6 * GAP, firstK: 1.8, firstN: 2,
+  momV: 1.25, ctrV: 1.35, grip: 1.12, sand: 1.25, starM: 1.8, starD: 0.8 * GAP, edgeF: 1.65, edgeD: 1.6 * GAP, firstK: 1.8, firstN: 2,
   gustD: 1.0 * GAP, hamM: 1.16, pressD: 2 * GAP, pressM: 0.37, shockR: 2 * GAP, shockD: 1.6 * GAP, chainK: 1.6,
   dragonN: 1, dragonD: 2.2 * GAP, dragonH: 2.0, ko: 3, pillarR: 1.01, pillarM: 1.01, pillarV: 1.01, pillarCap: 20, pillarFree: 3,
   /* v29 새 증강 */
@@ -1051,7 +1053,7 @@ const A = {
   loneV: 1.1, loneM: 1.1, loneR: 1.1, trainN: 3,
   curveA: 30 * Math.PI / 180, curveB: 60 * Math.PI / 180, thriceV: 1.30, thriceK: 1.0, brandK: 1.0, iceF: 0.4,
   glutR: 1.05, glutM: 1.05, glutV: 1.05, glutN: Infinity, bountyN: 8, bountyIn: 2 * GAP, bountyH: 0.6,
-  yiN: 3, shardHs: 0.3 * GAP, portalZ: 3 * GAP, tengenH: 1.3, revH0: 2 * GAP, revStep: 0.5 * GAP, revMax: 5 * GAP, ropeRest: 1.8, ropePushK: 1.5, ropeMaxV: 2200, revGrowN: 2, revShrinkN: 3, crackMax: 2, crackR: 2 * GAP, crackF: 1400, shardN: 3, shardR: 0.3 * GAP, shardBack: 0.85, frogEvery: 5, frogAir: 1.1, fishStay: 1, frogBox: 1.8 * GAP, frogPush: GAP, fishLeapMin: 2.8, fishLeapSpan: 2.6, fishCatch: 0.62 * GAP, fishPower: 1.10, sqrV: 1.3, sqrN: 2, heavenRow: 3 * GAP, vortexN: 3, vortexR: 3 * GAP, vortexPull: 0.5 * GAP, vortexH: 0.5, ikiN: 3, pajukN: 2, pajukTurns: 12, holeR: 8 * GAP, holePull: 1 * GAP, holeKill: 0.5 * GAP, lianV: 0.75, landW: 1 * GAP, landF: 4.5, passK: 0.75, passF: 5
+  yiN: 3, shardHs: 0.3 * GAP, portalZ: 3 * GAP, tengenH: 1.2, revH0: 2 * GAP, revStep: 0.5 * GAP, revMax: 5 * GAP, ropeRest: 1.8, ropePushK: 1.5, ropeMaxV: 2200, revGrowN: 2, revShrinkN: 3, crackMax: 2, crackR: 2 * GAP, crackF: 1400, shardN: 3, shardR: 0.3 * GAP, shardBack: 0.85, frogEvery: 5, frogAir: 1.1, fishStay: 1, frogBox: 1.8 * GAP, frogPush: GAP, fishLeapMin: 2.8, fishLeapSpan: 2.6, fishCatch: 0.62 * GAP, fishPower: 1.10, sqrV: 1.3, sqrN: 2, heavenRow: 3 * GAP, vortexN: 3, vortexR: 3 * GAP, vortexPull: 0.5 * GAP, vortexH: 0.5, ikiN: 3, pajukN: 2, pajukTurns: 12, holeR: 8 * GAP, holePull: 1 * GAP, holeKill: 0.5 * GAP, lianV: 0.75, landW: 1 * GAP, landF: 4.5, passK: 0.75, passF: 5
 };
 /* tier odds per pick: [silver, gold, prism]; always silver > gold > prism, a little richer on later picks */
 const TIER_ODDS = [[60, 30, 10], [50, 33, 17], [45, 35, 20]];
@@ -1176,8 +1178,8 @@ const AUG = {
     desc: () => '내 세 번째 샷마다 발사 힘이 30% 증가합니다. 타격 증가는 없습니다.' },
   brand:     { name: '낙인', seal: '烙', tier: 2, max: 1, short: () => '맞고 버틴 상대 돌의 방어력 −25%',
     desc: () => '내 돌에 맞고 살아남은 상대 돌에 낙인을 남깁니다. 낙인 대상은 내 돌에 다시 맞기 전까지 방어력이 25% 낮아집니다. 다시 맞으면 낙인이 사라집니다.' },
-  ice:       { name: '빙판길', seal: '氷', tier: 2, max: 1, short: () => '내가 지나간 길이 2턴 동안 얼어붙음',
-    desc: () => '내가 쏜 돌이 지나간 길이 2턴 동안 얼어붙습니다. 그 위에서 밀리는 상대 돌은 마찰이 60% 줄어 더 멀리 미끄러집니다.' },
+  ice:       { name: '빙판길', seal: '氷', tier: 2, max: 1, short: () => '내가 지나간 길이 4턴 동안 얼어붙음',
+    desc: () => '내가 쏜 돌이 지나간 길이 4수 동안 얼어붙습니다. 그 위에서 밀리는 상대 돌은 마찰이 60% 줄어 더 멀리 미끄러집니다.' },
   glut:      { name: '탐식', seal: '貪', tier: 2, max: 1, short: () => '상대 돌을 떨어뜨릴 때마다 크기·무게·힘 +5%',
     desc: () => '내 샷으로 상대 돌을 떨어뜨릴 때마다 쏜 돌의 크기·무게·힘이 각각 5% 증가합니다. 제한 없이 자랍니다.' },
   bounty:    { name: '현상금', seal: '賞', tier: 2, max: 1, quest: true, short: () => `표시된 상대 돌을 전체 8수 안에 떨어뜨리면 옥 1장`,
@@ -1283,7 +1285,7 @@ const AUG_SUMMARY = {
   curve: () => '약 30° 또는 60°로 좌우 휘어 쏘며, 조준 중 실제 예상 궤적을 보여 줍니다.',
   thrice: () => '내 세 번째 샷마다 발사 힘이 30% 증가합니다. 타격 증가는 없습니다.',
   brand: () => '내 돌에 맞고 살아남은 상대 돌은 다시 맞기 전까지 방어력이 25% 낮아집니다.',
-  ice: () => '내가 쏜 돌이 지나간 길은 2턴 동안 얼어 상대 돌이 더 멀리 미끄러집니다.',
+  ice: () => '내가 쏜 돌이 지나간 길은 4수 동안 얼어 상대 돌이 더 멀리 미끄러집니다.',
   glut: () => `내 샷으로 상대 돌을 떨어뜨릴 때마다 쏜 돌의 크기·무게·힘이 각각 ${pct(A.glutR - 1)}%씩 제한 없이 증가합니다.`,
   bounty: () => `표시된 상대 돌을 양쪽의 차례를 합쳐 전체 ${A.bountyN}수 안에 떨어뜨리면 옥 증강을 하나 더 고릅니다.`,
   iki: () => `내 돌 하나로 상대 기본 돌 ${A.ikiN}개를 떨어뜨리면 초월 증강을 하나 더 고릅니다.`,
@@ -1778,7 +1780,7 @@ function applyGain(w, p, id) {
   const foes = () => w.stones.filter(s => live(s) && s.team !== team);
   switch (id) {
     case 'iron': case 'last': case 'millet': case 'lone': restatAll(w); break;
-    case 'big': case 'dense': if (w.trapManual) w.bsel[p.id] = (w.bsel[p.id] || '') + (id === 'big' ? 'B' : 'D').repeat(A.sizeN); else sizeUp(w, p, id); break;
+    case 'big': case 'dense': { const eligible = w.stones.filter(s => live(s) && s.owner === p.id && !s.big && !s.small).length; if (w.trapManual && eligible > 2) w.bsel[p.id] = (w.bsel[p.id] || '') + (id === 'big' ? 'B' : 'D').repeat(Math.min(A.sizeN, eligible)); else sizeUp(w, p, id); break; }
     case 'reinforce': for (let k = 0; k < A.reinforce; k++) spawnAtCamp(w, p); break;
     case 'clone': for (let k = 0; k < A.clone; k++) { const c = spawnAtCamp(w, p, A.cloneK); if (c) c.clone = true; } break;
     case 'seal':
@@ -2229,7 +2231,7 @@ function step(w) {
     if (s.vx !== 0 || s.vy !== 0) {
       const sp = Math.sqrt(s.vx * s.vx + s.vy * s.vy);
       let ef = 1;
-      if (w.ice && s.team !== w.ice.team && !(sh && s.id === sh.stoneId) && iceAt(w.ice, s.x, s.y)) ef *= A.iceF;   /* 빙판길: 밀리는 상대 돌만 미끄러짐 */
+      if (w.ice && !(sh && s.id === sh.stoneId) && iceApplies(w.ice, s)) ef *= A.iceF;   /* 빙판길: 해당 경로를 밟은 상대 돌만 미끄러짐 */
       if (cnt(w.players[s.owner], 'edge') && nearEdge(w, s)) {
         const owner = w.players[s.owner];
         ef *= hasSyn(owner, 'fortress') ? 2.5 : A.edgeF;
@@ -2448,6 +2450,22 @@ const inLand = (w, s, lo, hi) => !w.vh && !!(w.land && w.land[s.team]) && s.x > 
 /* 빙판길: 24px 칸으로 나눈 얼음 */
 const ICE = 24, iceKey = (ix, iy) => (ix + 64) * 1024 + (iy + 64);
 const iceAt = (ice, x, y) => ice.cells.has(iceKey(Math.floor(x / ICE), Math.floor(y / ICE)));
+const iceApplies = (ice, stone) => !!ice && (Array.isArray(ice.paths) ? ice.paths : [ice]).some(q => q.team !== stone.team && q.cells && q.cells.has(iceKey(Math.floor(stone.x / ICE), Math.floor(stone.y / ICE))));
+/* 빙판길은 경로마다 남은 수를 따로 보관합니다. 기존 단일 경로 저장 형식도 읽을 수 있습니다. */
+function icePathsOf(ice) {
+  if (!ice) return [];
+  const src = Array.isArray(ice.paths) ? ice.paths : [ice];
+  return src.map(q => ({ pid: q.pid, team: q.team, turns: Math.max(0, q.turns == null ? 1 : q.turns), cells: new Set(q.cells || []) }));
+}
+function iceFromPaths(paths) {
+  const active = (paths || []).filter(q => q && q.turns > 0 && q.cells && q.cells.size);
+  if (!active.length) return null;
+  const cells = new Set();
+  for (const q of active) for (const k of q.cells) cells.add(k);
+  const latest = active[active.length - 1];
+  return { pid: latest.pid, team: latest.team, turns: Math.max(...active.map(q => q.turns)), cells, paths: active };
+}
+function copyIce(ice) { return iceFromPaths(icePathsOf(ice)); }
 function paintIce(cells, pts, r) {
   for (const [x, y] of pts) {
     for (let ix = Math.floor((x - r) / ICE); ix <= Math.floor((x + r) / ICE); ix++) for (let iy = Math.floor((y - r) / ICE); iy <= Math.floor((y + r) / ICE); iy++) {
@@ -2928,7 +2946,7 @@ function removeAug(w, pid, id, quiet = false) {
       case 'crack': for (const s of w.stones) if (s.crack === pid) s.crack = -1; w.brk[pid] = 0; break;
       case 'brand': for (const s of w.stones) if (s.brand === pid) s.brand = -1; break;
       case 'press': for (const s of w.stones) if (s.press === pid) s.press = -1; break;
-      case 'ice': if (w.ice && w.ice.pid === pid) w.ice = null; break;
+      case 'ice': if (w.ice) w.ice = iceFromPaths(icePathsOf(w.ice).filter(q => q.pid !== pid)); break;
       case 'orleans': { w.orl[pid] = 0; w.noAug[pid] = 0; w.bonus[pid] = Math.max(0, (w.bonus[pid] || 0) - 1); w.fq[pid] = String(w.fq[pid] || '').replace('4', ''); break; }
       case 'squirrel': w.sqr[pid] = 0; break;
       case 'decree': w.dcr[pid] = 0; break;
@@ -3154,7 +3172,7 @@ function packWorld(w) {
   return { map: w.map, mode: w.mode, vh: r1(w.vh || 0), rv: w.rvn || 0, rvg: w.revGrid ? w.revGrid.map(v => v ? 1 : 0) : null, rvt: w.revTile ? [(w.revTile.idxs || [w.revTile.idx]).slice(), w.revTile.left] : null, rvd: w.revGridDone ? 1 : 0, rvc: w.revDrops || 0, rvs: w.revSeed >>> 0, ps: w.portalSeed >>> 0, pa: w.portalAxis === 'cross' ? 2 : (w.portalAxis === 'vertical' ? 1 : 0), pt: w.portalAlongT, pl: (MAPS[w.map].portals ? portalsOf(w) : []).map(q => [q.x0, q.y0, q.x1, q.y1, q.cx, q.cy, q.vertical ? 1 : 0, q.pair, q.team, q.label]), ns: w.noShrink ? 1 : 0, xt: w.xtra ? 1 : 0, nid: w.nextId, sh: w.shots, sk: r1(w.shrink), og: MAPS[w.map].obs.reduce((m, o) => (w.obs.includes(o) ? m : m | (1 << o.oi)), 0), oh: (w.obsHits || []).slice(), db: w.dbl ? w.dbl.slice() : 0,
     wl: [w.walls.top ? 1 : 0, w.walls.bottom ? 1 : 0], ws: w.wallSave.slice(), cl: w.comboLeft, du: w.doubleUsed ? 1 : 0,
     h: w.holes.map(h => [r1(h.x), r1(h.y), r1(h.r), h.team, h.seen ? 1 : 0]), sd: w.obs.filter(q => q.kind === 'shard').map(q => [r1(q.cx), r1(q.cy)]), shd: (w.shards || []).map(m => [r1(m.x), r1(m.y), m.team]), fs: (w.fish || []).map(f => [r1(f.x), r1(f.y), f.px, f.py, f.left, f.hop || 1, f.ox == null ? f.x : f.ox, f.oy == null ? f.y : f.oy]), tm: w.trapManual ? 1 : 0, mk: w.mark.slice(), c, pd: w.pads.map(p => p.cd || 0),
-    bh: (w.bh || []).map(b => [b.team, b.pid]), ln: w.lian ? w.lian.slice() : 0, lu: w.lianUsed ? 1 : 0, ny: w.noYi == null ? -1 : w.noYi, vt: w.vortex.map(v => [r1(v.x), r1(v.y), v.team, v.pid]), ic: w.ice ? { p: w.ice.pid, t: w.ice.team, n: w.ice.turns || 1, c: [...w.ice.cells] } : 0, ld: [w.land[0] ? 1 : 0, w.land[1] ? 1 : 0],
+    bh: (w.bh || []).map(b => [b.team, b.pid]), ln: w.lian ? w.lian.slice() : 0, lu: w.lianUsed ? 1 : 0, ny: w.noYi == null ? -1 : w.noYi, vt: w.vortex.map(v => [r1(v.x), r1(v.y), v.team, v.pid]), ic: w.ice ? { p: w.ice.pid, t: w.ice.team, n: w.ice.turns || 1, c: [...w.ice.cells], ps: icePathsOf(w.ice).map(q => [q.pid, q.team, q.turns, [...q.cells]]) } : 0, ld: [w.land[0] ? 1 : 0, w.land[1] ? 1 : 0],
     s: w.stones.filter(s => live(s)).map(s => [s.id, s.owner, r1(s.x), r1(s.y), +s.rs.toFixed(3), +s.ms.toFixed(3), s.kr, s.km, s.kv, s.gen,
       (s.sealed ? 1 : 0) | (s.king ? 2 : 0) | (s.clone ? 4 : 0) | (s.wedge ? 8 : 0) | (s.big ? 16 : 0) | (s.small ? 32 : 0) | (s.cloneBack ? 64 : 0) | (s.pillar ? 128 : 0) | (s.locked ? 256 : 0) | ((s.fishBoost || 0) > 0 ? 1024 : 0), s.bw || 0, s.home == null ? -1 : s.home, s.press == null ? -1 : s.press, s.pg || 0, s.bounty == null ? -1 : s.bounty, s.brand == null ? -1 : s.brand, s.glut || 0, s.kq || 0, s.anchor || 0, Math.round(s.hx == null ? -1 : s.hx), Math.round(s.hy == null ? -1 : s.hy), s.crack == null ? -1 : s.crack, Math.max(0, Number((s.fishBoost || 0).toFixed ? s.fishBoost.toFixed(3) : s.fishBoost || 0)), s.brandCdPid == null ? -1 : s.brandCdPid, s.brandCdTurns || 0]) };
 }
@@ -3167,7 +3185,7 @@ function unpackWorld(o, players) {
   (o.pd || []).forEach((cd, i) => { if (w.pads[i] && typeof cd === 'number') w.pads[i].cd = cd; });
   w.holes = o.h.map(([x, y, r, team, seen]) => ({ x, y, r, team, seen: !!seen, pond: team === -1 })); w.mark = (o.mk || []).slice();
   w.vortex = (o.vt || []).map(([x, y, team, pid]) => ({ x, y, team, pid })); w.noYi = o.ny == null ? -1 : o.ny; w.bh = (o.bh || []).map(([team, pid]) => ({ team, pid })); w.lian = o.ln ? o.ln.slice() : null; w.lianUsed = !!o.lu;
-  w.ice = o.ic ? { pid: o.ic.p, team: o.ic.t, turns: o.ic.n || 1, cells: new Set(o.ic.c) } : null;
+  w.ice = o.ic ? (Array.isArray(o.ic.ps) ? iceFromPaths(o.ic.ps.map(([pid, team, turns, cells]) => ({ pid, team, turns, cells: new Set(cells || []) }))) : { pid: o.ic.p, team: o.ic.t, turns: o.ic.n || 1, cells: new Set(o.ic.c || []) }) : null;
   w.land = o.ld ? [!!o.ld[0], !!o.ld[1]] : [false, false];
   for (const k of COUNTERS) for (const id in (o.c[k] || {})) w[k][id] = o.c[k][id];
   for (const [id, owner, x, y, rs, ms, kr, km, kv, gen, f, bw = 0, home = -1, press = -1, pg = 0, bounty = -1, brand = -1, glut = 0, kq = 0, anchor = 0, hx = -1, hy = -1, crack = -1, fishBoostCount = null, brandCdPid = -1, brandCdTurns = 0] of o.s) {
@@ -3259,13 +3277,16 @@ function afterShot0(w) {
     }
     if (nb) emit(w, { type: 'brand', pid: sp.id, n: nb });
   }
-  /* 빙판길: 쏜 돌이 지나간 길이 얼어붙음 */
+  /* 빙판길: 기존 얼음 경로는 다른 돌을 쏴도 유지하고, 각 경로의 4수 지속시간을 따로 계산 */
+  let icePaths = icePathsOf(w.ice);
+  icePaths = icePaths.map(q => ({ ...q, turns: q.turns - 1 })).filter(q => q.turns > 0);
   if (sh.icePath && sh.icePath.length > 1) {
     const cells = new Set();
     paintIce(cells, sh.icePath, shS ? shS.r : BASE_R);
-    w.ice = { pid: sp.id, team: t, cells, turns: 2 };
+    icePaths.push({ pid: sp.id, team: t, cells, turns: 4 });
     emit(w, { type: 'ice', pid: sp.id });
-  } else if (w.ice) { w.ice.turns = (w.ice.turns == null ? 1 : w.ice.turns) - 1; if (w.ice.turns <= 0) w.ice = null; }
+  }
+  w.ice = iceFromPaths(icePaths);
   /* 현상금: 추가 샷을 제외하고 양쪽의 일반 차례가 끝날 때마다 감소 */
   if (!w.xtra) for (const bp of w.players) {
     const bid = bp.id;
@@ -3422,7 +3443,7 @@ function cloneWorld(w) {
     comboLeft: w.comboLeft, doubleUsed: w.doubleUsed, dbl: w.dbl, obsHits: (w.obsHits || []).slice(), fish: (w.fish || []).map(f => Object.assign({}, f)), shards: (w.shards || []).slice(), portalSeed: w.portalSeed >>> 0, portalAxis: w.portalAxis, portalAlongT: w.portalAlongT, portals: (w.portals || []).map(q => Object.assign({}, q)), vh: w.vh || 0, rvn: w.rvn || 0, revGrid: w.revGrid ? w.revGrid.slice() : null, revTile: w.revTile ? { idxs: (w.revTile.idxs || [w.revTile.idx]).slice(), left: w.revTile.left } : null, revGridDone: !!w.revGridDone, revDrops: w.revDrops || 0, revSeed: w.revSeed >>> 0, dt: PLAN_DT, shot: null, events: [], sim: true, shots: w.shots, shrink: w.shrink, noShrink: !!w.noShrink, snap: null };
   for (const k of COUNTERS) c[k] = Object.assign({}, w[k]);
   c.pads = w.pads.map(p => Object.assign({}, p));
-  c.vortex = w.vortex || []; c.ice = w.ice || null; c.land = w.land || [false, false]; c.noYi = w.noYi; c.bh = w.bh || []; c.lian = w.lian; c.lianUsed = w.lianUsed;
+  c.vortex = w.vortex || []; c.ice = copyIce(w.ice); c.land = w.land || [false, false]; c.noYi = w.noYi; c.bh = w.bh || []; c.lian = w.lian; c.lianUsed = w.lianUsed;
   return c;
 }
 function simulate(w, pid, id, ang, pw, o) {
@@ -4144,6 +4165,7 @@ function josa(word, pair) {
 }
 
 /* ---------- state ---------- */
+let stoneLockEnabled = false; // 선택 잠금은 기본 꺼짐
 const G = {
   mode: '1v1', cpu: false, cpuLevel: 'normal', target: 3, mapSet: 'flat', players: [], score: [0, 0], round: 0, world: null,
   state: 'menu', current: 0, lastLoser: null, teamPtr: [0, 0], aim: null, cpuAnim: null,
@@ -5101,7 +5123,7 @@ function renderStrip() {
     else if (st === 'remote') hint = NET.waitKind === 'pick' || NET.waitKind === 'pick2' ? '상대가 증강을 고르고 있습니다' : '상대가 조준하고 있습니다';
     else if (p.cpu) hint = G.thinking ? '수를 읽고 있습니다' : '조준하고 있습니다';
     else {
-      hint = G.sel != null ? '돌을 골랐습니다. 판 어디서든 끌어서 쏘세요' : '점선으로 표시된 내 돌을 눌러 뒤로 당겼다가 놓으세요';
+      hint = stoneLockEnabled && G.sel != null ? '돌을 고정 했습니다. 돌을 다시 눌러 해제하거나 판 어디서든 끌어서 쏘세요.' : '점선으로 표시된 내 돌을 눌러 뒤로 당겼다가 놓으세요';
       if (G.mode === '2v2') hint = `${p.dot === 'a' ? '금색' : '청색'} 점이 있는 돌이 내 돌입니다. ` + hint;
       if (enemyHas(p, 'shaky')) hint += ' · 손떨림에 걸려 있습니다';
     }
@@ -6468,6 +6490,7 @@ function drawStone(s, alone) {
   }
   ctx.lineWidth = 1.2; ctx.strokeStyle = s.team === 0 ? 'rgba(0,0,0,.7)' : 'rgba(120,108,88,.5)';
   ctx.beginPath(); ctx.arc(s.x, s.y, r, 0, TAU); ctx.stroke();
+  if (stoneLockEnabled && G.sel === s.id && !s.falling) { ctx.save(); ctx.strokeStyle = '#ed493f'; ctx.lineWidth = 4; ctx.shadowColor = '#ed493f'; ctx.shadowBlur = 9; ctx.beginPath(); ctx.arc(s.x, s.y, r + 7, 0, TAU); ctx.stroke(); ctx.restore(); }
   if (s.clone && !s.falling) {
     ctx.save(); ctx.globalAlpha = alpha * 0.55; ctx.strokeStyle = s.team === 0 ? 'rgba(232,205,142,.8)' : 'rgba(120,96,60,.7)';
     ctx.lineWidth = 2; ctx.setLineDash([4, 5]); ctx.beginPath(); ctx.arc(s.x, s.y, r * 0.62, 0, TAU); ctx.stroke(); ctx.restore();
@@ -7408,7 +7431,7 @@ const AIM_HOLD = 160, TURN_GUARD = 350;   /* 쏘려면 최소한 누르고 있�
 /* 조준 취소: 컴퓨터는 마우스 오른쪽 단추, 휴대폰은 다른 손가락으로 화면을 한 번 더 누르기 */
 function showAimHint(kind) {
   const el = $('aimHint');
-  el.innerHTML = kind === 'mouse' ? '<span class="mouse"></span><span><b>오른쪽 클릭</b>하면 조준 취소</span>' : '<span><b>다른 돌 위 터치는 무시</b> · 빈 곳을 누르면 조준 취소</span>';
+  el.innerHTML = kind === 'mouse' ? '<span class="mouse"></span><span><b>오른쪽 클릭</b>하면 조준 취소</span>' : '<span>빈 곳을 누르면 조준 취소</span>';
   el.hidden = false;
 }
 function hideAimHint() { $('aimHint').hidden = true; }
@@ -7458,20 +7481,39 @@ cv.addEventListener('pointerdown', e => {
     return;
   }
   const pickOK = s => (G.opt.yi ? K.canYi(G.world, p, s) : myStoneOK(s, p));
-  let best = null, bd = Infinity;
+  let locked = stoneLockEnabled && G.sel != null ? K.byId(G.world, G.sel) : null;
+  if (!stoneLockEnabled) G.sel = null;
+  if (G.sel != null && (!locked || !live(locked))) { G.sel = null; locked = null; }
+  let touched = null, td = Infinity;
   for (const s of G.world.stones) {
-    if (!pickOK(s)) continue;
+    if (!live(s)) continue;
     const d = hyp(s.x - pt.x, s.y - pt.y);
-    if (d < s.r + slop && d < bd) { bd = d; best = s; }
+    if (d < s.r + slop && d < td) { td = d; touched = s; }
   }
-  if (best) {
-    /* pull straight back from the stone */
-    G.aim = { id: best.id, px: pt.x, py: pt.y, pointer: e.pointerId, free: false, t0: performance.now() };
-    G.sel = best.id;
-  } else if (G.sel != null && pickOK(K.byId(G.world, G.sel))) {
-    /* a stone is already picked: drag from anywhere, like a slingshot band starting under the finger */
-    G.aim = { id: G.sel, ox: pt.x, oy: pt.y, px: pt.x, py: pt.y, pointer: e.pointerId, free: true, t0: performance.now() };
-  } else { G.hintFlash = 1.4; renderStrip(); return; }
+  if (locked) {
+    if (touched && touched.id !== locked.id) { e.preventDefault(); return; } /* 선택 고정 중에는 다른 돌 터치를 무시 */
+    if (touched && touched.id === locked.id) {
+      if (!pickOK(locked)) { G.sel = null; G.predKey = ''; renderStrip(); e.preventDefault(); return; }
+      /* 같은 돌을 다시 누르면 짧은 탭으로 선택을 해제할 수 있습니다. */
+      G.aim = { id: locked.id, px: pt.x, py: pt.y, downX: pt.x, downY: pt.y, toggleOnTap: true, pointer: e.pointerId, free: false, t0: performance.now() };
+    } else {
+      if (!pickOK(locked)) { e.preventDefault(); return; }
+      /* 선택된 돌은 유지하고 판의 빈 곳에서 끌어 조준할 수 있습니다. */
+      G.aim = { id: locked.id, ox: pt.x, oy: pt.y, px: pt.x, py: pt.y, pointer: e.pointerId, free: true, t0: performance.now() };
+    }
+  } else {
+    let best = null, bd = Infinity;
+    for (const s of G.world.stones) {
+      if (!pickOK(s)) continue;
+      const d = hyp(s.x - pt.x, s.y - pt.y);
+      if (d < s.r + slop && d < bd) { bd = d; best = s; }
+    }
+    if (best) {
+      /* pull straight back from the stone */
+      G.aim = { id: best.id, px: pt.x, py: pt.y, downX: pt.x, downY: pt.y, pointer: e.pointerId, free: false, t0: performance.now() };
+      G.sel = best.id;
+    } else { G.hintFlash = 1.4; renderStrip(); return; }
+  }
   stoneTap(0.12, 2600);
   showAimHint(e.pointerType);
   bowLast = 0;
@@ -7489,7 +7531,7 @@ $('skillBar').addEventListener('click', e => {
   if (b.dataset.cv != null) G.opt.cv = +b.dataset.cv;
   else if (b.dataset.sk === 'vx') G.opt.vx = !G.opt.vx;
   else if (b.dataset.sk === 'buffAuto') { K.autoBuff(G.world, p.id); drainEvents(); netSync('aim', p.id); renderAll(); }
-  else if (b.dataset.sk === 'yi') { G.opt.yi = !G.opt.yi; G.sel = null; if (G.opt.yi) { G.opt.cv = 0; G.opt.vx = false; } }
+  else if (b.dataset.sk === 'yi') { G.opt.yi = !G.opt.yi; if (G.opt.yi) { G.opt.cv = 0; G.opt.vx = false; } }
   renderStrip();
 });
 cv.addEventListener('pointermove', e => {
@@ -7502,9 +7544,12 @@ cv.addEventListener('pointermove', e => {
 });
 function releaseAim(e, cancel) {
   if (!G.aim || e.pointerId !== G.aim.pointer) return;
-  const a = aimInfo(), held = performance.now() - (G.aim.t0 || 0);
+  const activeAim = G.aim, a = aimInfo(), held = performance.now() - (activeAim.t0 || 0);
+  const tapSlop = Math.max(2, 8 / G.scale);
+  const tappedSelectedAgain = !!activeAim.toggleOnTap && hyp((activeAim.px || 0) - activeAim.downX, (activeAim.py || 0) - activeAim.downY) <= tapSlop;
   G.aim = null; hideAimHint();
   cv.classList.remove('dragging');
+  if (!cancel && tappedSelectedAgain && stoneLockEnabled) { G.sel = null; G.predKey = ''; renderStrip(); return; }
   /* 누르자마자 놓은 샷은 쏘지 않음 (조작 실수 방지) */
   if (!cancel && a && a.pw >= 0.05 && held < AIM_HOLD) {
     G.hintNote = '조금 더 천천히 당겼다가 놓아 주세요'; G.hintFlash = 1.2;
@@ -8307,6 +8352,7 @@ function toggleSnd(btn) {
   pn.hidden = false; btn.setAttribute('aria-expanded', 'true'); renderSnd();
   pn.style.right = Math.round(Math.max(16, Math.min(innerWidth - r.right, innerWidth - 16 - pn.offsetWidth))) + 'px';   /* 좁은 화면에서도 화면 안에 */
 }
+$('btnStoneLock').addEventListener('click', () => { stoneLockEnabled = !stoneLockEnabled; $('btnStoneLock').textContent = `돌 잠금 ${stoneLockEnabled ? '켬' : '끄기'}`; $('btnStoneLock').setAttribute('aria-pressed', String(stoneLockEnabled)); if (!stoneLockEnabled) { G.sel = null; G.predKey = ''; renderStrip(); } });
 $('btnSound').addEventListener('click', e => { e.stopPropagation(); toggleSnd($('btnSound')); });
 $('btnSound2').addEventListener('click', e => { e.stopPropagation(); toggleSnd($('btnSound2')); });
 addEventListener('resize', closeSnd);
