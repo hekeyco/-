@@ -934,7 +934,7 @@ html, body { max-width: 100%; overflow-x: clip; }
         <input type="radio" name="shrink" id="shrOn" value="on" checked><label for="shrOn">있음</label>
         <input type="radio" name="shrink" id="shrOff" value="off"><label for="shrOff">없음</label>
       </div>
-      <p class="who-note" style="margin-top:6px">25수부터 일반 맵은 11회에 걸쳐 판 가장자리가 안으로 좁혀집니다. 축소가 끝난 뒤 ‘맵 줄어듦 끝’으로 표시되며, 반전 맵은 별도 규칙을 따릅니다.</p>
+      <p class="who-note" style="margin-top:6px">25수부터 일반 맵은 한 수마다 0.5칸씩, 총 10수 동안 판 가장자리가 안으로 좁혀집니다. 축소가 끝난 뒤 ‘맵 줄어듦 끝’으로 표시되며, 반전 맵은 별도 규칙을 따릅니다.</p>
     </fieldset>
     <div class="menu-actions">
       <button class="btn-primary" id="btnStart" type="button">대국 시작</button>
@@ -958,7 +958,7 @@ const L = i => INSET + i * GAP;
 /* physics + rules (tunable) */
 const P = {
   maxSpeed: 1720, decel: 700, drag: 1.1, rest: 0.92, bumpRest: 0.92, bumpKick: 160,
-  padMult: 1.3, padAdd: 500, padMaxV: 2200, padCool: 5, gateCool: 2, padStart: 0, padOn: 0, padOff: 0, rockHits: 7, rockMinV: 150, shrinkStart: 25, shrinkTurns: 11, shrinkStep: GAP * 0.5, tengenR: 65, timeout: 16, lossPerPick: 3, lastKB: 0.35, pityAfter: 3
+  padMult: 1.3, padAdd: 500, padMaxV: 2200, padCool: 5, gateCool: 2, padStart: 0, padOn: 0, padOff: 0, rockHits: 7, rockMinV: 150, shrinkStart: 25, shrinkTurns: 10, shrinkStep: GAP * 0.5, tengenR: 65, timeout: 16, lossPerPick: 3, lastKB: 0.35, pityAfter: 3
 };
 /* augment numbers (tunable) */
 const A = {
@@ -970,7 +970,7 @@ const A = {
   revive: 3, buddy: 1, thief: 1, rewind: 2, kingR: 1.5, kingM: 1.5, kingV: 1.4, boltEvery: 3, boltV: 620,
   clone: 1, cloneK: 1.0, buddyD: 500, lastN: 3, lastR: 1.15, lastM: 1.2, lastV: 1.12, tideD: 0.75 * GAP,
   /* 새 증강 */
-  momV: 1.25, ctrV: 1.35, grip: 1.12, sand: 1.25, starM: 2.4, starD: 0.8 * GAP, edgeF: 1.65, edgeD: 1.6 * GAP, firstK: 1.8, firstN: 2,
+  momV: 1.25, ctrV: 1.35, grip: 1.12, sand: 1.25, starM: 2.0, starD: 0.8 * GAP, edgeF: 1.65, edgeD: 1.6 * GAP, firstK: 1.8, firstN: 2,
   gustD: 1.0 * GAP, hamM: 1.16, pressD: 2 * GAP, pressM: 0.37, shockR: 2 * GAP, shockD: 1.6 * GAP, chainK: 1.6,
   dragonN: 1, dragonD: 2.2 * GAP, dragonM: 2.0, ko: 3, pillarR: 1.01, pillarM: 1.01, pillarV: 1.01, pillarCap: 20, pillarFree: 3,
   /* v29 새 증강 */
@@ -1003,6 +1003,8 @@ MAPS.rev = { id: 'rev', name: '반전', short: '중앙 구멍과 밧줄이 변�
 MAPS.lab = { id: 'lab', name: '훈련장', short: '시간 제한 없이 양쪽 증강을 자유롭게 바꿔 시험하는 연습 지형입니다.', obs: [], lab: true, shrinkMax: CX - 1.5 * GAP };
 const MAP_IDS = ['flat', 'diamond', 'siege', 'boost', 'pond', 'dim', 'rev'];   /* 훈련장(lab)은 무작위·대전 지형에 넣지 않음 */
 for (const m of MAP_IDS) MAPS[m].obs.forEach((o, i) => { o.oi = i; });
+/* 일반 맵은 매 수 0.5칸씩, 설정된 수만큼 줄어듭니다. */
+function normalShrinkLimit(map) { return Math.min(map.shrinkMax, P.shrinkStep * P.shrinkTurns); }
 
 /* rows counted from the team's own back edge side: black uses rows as-is (bottom), white mirrors */
 const FORMATION = {
@@ -1077,7 +1079,7 @@ const AUG = {
     desc: () => `내가 쏜 돌이 멈추면 그 자리에 박혀, 다음 내 차례가 올 때까지 무게 ${pm(A.wedgeM)}가 됩니다.` },
   wall:      { name: '철벽', seal: '壁', tier: 2, max: 1, team: true, short: () => '우리 돌만 막는 뒤쪽 벽',
     desc: () => `우리 진영 뒤 가장자리에 우리 돌만 막아 주는 고무벽이 생겨, 뒤로 밀린 우리 돌이 튕겨 돌아옵니다. 판이 줄어들면 벽도 따라 들어오고, 그때 벽 밖에 남은 우리 돌을 ${A.wallSave}번 안으로 되돌려 줍니다.` },
-  split:     { name: '분열', seal: '裂', tier: 1, max: 1, short: () => `은 · 조각 크기·무게 −20%`,
+  split:     { name: '분열', seal: '裂', tier: 1, max: 1, short: () => `조각 크기·무게 −20%`,
     desc: () => `강한 타격을 받은 내 돌이 둘로 갈라집니다. 조각은 크기와 무게가 각각 20% 작고, 기본 돌 조각은 다음 증강 조건에서 반 개씩 셉니다.` },
   pierce:    { name: '굳건', seal: '堅', tier: 2, max: 1, short: () => '첫 타격에 힘을 모두 실음 · 쏜 돌은 멈춤',
     desc: () => `쏜 돌이 처음 맞힌 상대 돌에 힘을 모두 실어 보내고, 쏜 돌은 그 자리에 멈춥니다.${A.pierce > 1 ? ` 그 타격은 ${pct(A.pierce - 1)}% 더 셉니다.` : ''}` },
@@ -1105,8 +1107,8 @@ const AUG = {
     desc: () => '내가 쏜 돌이 지나간 길이 2턴 동안 얼어붙습니다. 그 위에서 밀리는 상대 돌은 마찰이 60% 줄어 더 멀리 미끄러집니다.' },
   glut:      { name: '탐식', seal: '貪', tier: 2, max: 1, short: () => '상대 돌을 떨어뜨릴 때마다 크기·무게·힘 +5%',
     desc: () => '내 샷으로 상대 돌을 떨어뜨릴 때마다 쏜 돌의 크기·무게·힘이 각각 5% 증가합니다. 제한 없이 자랍니다.' },
-  bounty:    { name: '현상금', seal: '賞', tier: 2, max: 1, quest: true, short: () => `표시된 상대 돌을 8수 안에 떨어뜨리면 옥 1장`,
-    desc: () => `상대 돌 하나에 현상금을 겁니다. 내 8수 안에 그 돌을 떨어뜨리면 옥 증강 1장을 추가로 고릅니다.` },
+  bounty:    { name: '현상금', seal: '賞', tier: 2, max: 1, quest: true, short: () => `표시된 상대 돌을 전체 8수 안에 떨어뜨리면 옥 1장`,
+    desc: () => `상대 돌 하나에 현상금을 겁니다. 양쪽의 차례를 합쳐 전체 8수 안에 그 돌을 떨어뜨리면 옥 증강 1장을 추가로 고릅니다.` },
   iki:       { name: '일기당천', seal: '騎', tier: 2, max: 1, quest: true, short: () => `돌 하나로 상대 기본 돌 ${A.ikiN}개 떨어뜨리면 초월 1장`,
     desc: () => `내 돌 하나로 상대 기본 돌 ${A.ikiN}개를 누적해 떨어뜨리면 초월 증강 2장 중 하나를 고릅니다(분열 조각은 반 개). 진행 상황은 돌 위의 별로 보이며, 그 돌이 떨어지면 초기화됩니다. 상대 기본 돌이 5개 이상이고 초월을 아직 얻지 않았을 때 등장하며, 지형 효과로 떨어진 돌도 포함합니다.` },
   /* ---- prism ---- */
@@ -1136,8 +1138,8 @@ const AUG = {
     desc: () => `내 대마 돌 주변 ${f1(A.dragonD / GAP)}칸 안에 아군이나 상대 돌이 모이면, 그 범위 안의 내 돌만 무게 ${pm(A.dragonM)}가 됩니다. 상대 돌은 효과를 발동시키는 조건에 포함되지만 버프를 받지 않습니다. 무거워진 내 돌은 충돌 때 더 밀고 덜 밀립니다.` },
   ko:        { name: '패', seal: '劫', tier: 3, max: 1, short: () => `내 돌을 잃으면 다음 차례 한 번 더 (${A.ko}회)`,
     desc: () => `상대 샷에 내 돌이 떨어지면, 다음 내 차례에 한 번 더 칩니다. 이번 국에 ${A.ko}번까지 됩니다.` },
-  orleans:   { name: '오를레앙의 최윤재', seal: '旗', tier: 3, max: 1, short: () => '얻는 즉시 모든 증강 제거 · 초월 1장 선택',
-    desc: () => '획득 즉시 나머지 모든 증강을 제거하고 초월 증강 1장을 고릅니다.' },
+  orleans:   { name: '오를레앙의 최윤재', seal: '旗', tier: 3, max: 1, short: () => '기존 증강 제거 · 초월 1장 · 이후 추가 획득 불가 · 상대 옥 1장',
+    desc: () => '획득 즉시 초월을 제외한 내 기존 증강을 모두 제거하고 초월 증강 1장을 고릅니다. 이후 나는 이번 국에 증강을 더 얻지 못합니다. 대신 상대는 옥 증강 1장을 추가로 고릅니다.' },
   crack:     { name: '균열', seal: '裂', tier: 2, max: 1, short: () => `친 상대 돌에 금 · 금 간 돌을 또 치면 깨짐 (${A.crackMax}개)`,
     desc: () => `내 샷으로 상대 돌을 치면 금이 가고, 금 간 돌을 다시 치면 깨져 주변 상대 돌을 밀어냅니다. 깨질 때 파편 ${A.shardN}개가 남아 ${f1(A.crackR / GAP)}칸 안의 상대 돌을 밀어냅니다. 이번 국에 최대 ${A.crackMax}개까지 깰 수 있으며, 파편은 상대가 밟으면 사라집니다.` },
   pillar:    { name: '주춧돌', seal: '礎', tier: 2, max: 1, short: () => '돌 하나를 중앙에 고정 · 매 수 능력치 +1% (최대 +20%)',
@@ -1210,7 +1212,7 @@ const AUG_SUMMARY = {
   brand: () => '내 돌에 맞고 살아남은 상대 돌은 다시 맞기 전까지 방어력이 25% 낮아집니다.',
   ice: () => '내가 쏜 돌이 지나간 길은 2턴 동안 얼어 상대 돌이 더 멀리 미끄러집니다.',
   glut: () => `내 샷으로 상대 돌을 떨어뜨릴 때마다 쏜 돌의 크기·무게·힘이 각각 ${pct(A.glutR - 1)}%씩 제한 없이 증가합니다.`,
-  bounty: () => `표시된 상대 돌을 내 ${A.bountyN}수 안에 떨어뜨리면 옥 증강을 하나 더 고릅니다.`,
+  bounty: () => `표시된 상대 돌을 양쪽의 차례를 합쳐 전체 ${A.bountyN}수 안에 떨어뜨리면 옥 증강을 하나 더 고릅니다.`,
   iki: () => `내 돌 하나로 상대 기본 돌 ${A.ikiN}개를 떨어뜨리면 초월 증강을 하나 더 고릅니다.`,
   revive: () => '내 돌이 떨어지면 우리 진영으로 되돌아오며, 획득 당시 돌이 3개 미만이면 2회 발동합니다.',
   buddy: () => `내 돌이 떨어지면 상대 돌 하나를 함께 데려오고 내 차례를 한 번 더 진행합니다(국당 ${A.buddy}회).`,
@@ -1225,7 +1227,7 @@ const AUG_SUMMARY = {
   shaky: () => '상대가 조준하는 동안 조준 방향을 더 빠르게 흔들어 최대 15° 빗나가게 합니다.',
   dragon: () => `내 대마 주변 ${f1(A.dragonD / GAP)}칸에 아군·상대 돌이 모이면 범위 안의 내 돌만 무게가 ${pm(A.dragonM)} 증가합니다.`,
   ko: () => `상대 샷에 내 돌이 떨어지면 다음 내 차례를 한 번 더 진행합니다(국당 ${A.ko}회).`,
-  orleans: () => '획득 즉시 나머지 모든 증강을 없애고 초월 증강 하나를 고릅니다.',
+  orleans: () => '획득 즉시 초월을 제외한 내 기존 증강을 모두 없애고 초월 증강 하나를 고릅니다. 이후 나는 이번 국에 증강을 더 얻지 못하며, 상대는 옥 증강 하나를 추가로 고릅니다.',
   crack: () => `내 샷으로 상대 돌에 금을 내고, 다시 맞히면 깨뜨려 주변을 밀어냅니다(국당 최대 ${A.crackMax}개).`,
   pillar: () => '내 돌 하나를 판 중앙에 고정해 매 수 크기·무게·힘을 1%씩 높입니다(최대 20%).',
   tide: () => `내 샷이 끝날 때마다 모든 상대 돌을 가장 가까운 가장자리 쪽으로 ${Math.round(A.tideD / GAP * 10) / 10}칸 밀어냅니다.`,
@@ -1255,7 +1257,7 @@ const augCopy = id => {
   return x ? { keyword: x.keyword, summary: x.keyword, keywords: [], detail: x.detail }
     : { keyword: AUG[id].short(), summary: AUG[id].short(), keywords: [], detail: AUG[id].desc() };
 };
-const AUG_DISABLED = new Set(['pass', 'grip', 'hammer', 'rewind', 'clone', 'ko', 'yi', 'first']);
+const AUG_DISABLED = new Set(['pass', 'grip', 'hammer', 'rewind', 'clone', 'ko', 'yi', 'first', 'curve']);
 const AUG_IDS = Object.keys(AUG).filter(id => !AUG_DISABLED.has(id));
 /* 증강 조합은 비활성화: 개별 증강 효과만 적용합니다. */
 const SYN = [];
@@ -1382,12 +1384,12 @@ function segObs(x0, y0, x1, y1, o, pad) {
 
 /* ===== world ===== */
 const COUNTERS = ['reviveLeft', 'buddyLeft', 'rewindLeft', 'comboRound', 'boltCount', 'lost', 'picks', 'splitLeft', 'mom', 'ctr', 'fsd', 'koLeft', 'koArm', 'bdx', 'plk',
-  'grt', 'thr', 'trn', 'bonus', 'fq', 'bty', 'pajukKills', 'pajukShots', 'noAug', 'yiLeft', 'yiX', 'sqr', 'vtxLeft', 'tq', 'dcr', 'hvU', 'fl', 'syn', 'orl', 'tpl', 'rr', 'brk', 'bsel', 'loneSeen'];
+  'grt', 'thr', 'trn', 'bonus', 'fq', 'bty', 'pajukKills', 'pajukShots', 'noAug', 'jadeBonus', 'yiLeft', 'yiX', 'sqr', 'vtxLeft', 'tq', 'dcr', 'hvU', 'fl', 'syn', 'orl', 'tpl', 'rr', 'brk', 'bsel', 'loneSeen'];
 function blankWorld(players, mode, mapId) {
   const map = MAPS[mapId];
   const w = { lab: !!map.lab, vh: map.revHole ? A.revH0 : 0, players, mode, map: mapId, obs: map.obs, stones: [], walls: { top: false, bottom: false }, nextId: 1,
     reviveLeft: {}, buddyLeft: {}, rewindLeft: {}, comboRound: {}, boltCount: {}, lost: {}, picks: {}, splitLeft: {}, mom: {}, ctr: {}, fsd: {}, koLeft: {}, koArm: {}, bdx: {}, plk: {},
-    grt: {}, thr: {}, trn: {}, bonus: {}, fq: {}, bty: {}, pajukKills: {}, pajukShots: {}, noAug: {}, yiLeft: {}, yiX: {}, sqr: {}, vtxLeft: {}, tq: {}, dcr: {}, hvU: {}, fl: {}, syn: {}, orl: {}, tpl: {}, rr: {}, brk: {}, bsel: {}, loneSeen: {}, shards: [], vortex: [], ice: null, land: [false, false], noYi: -1, bh: [], lian: null, lianUsed: false,
+    grt: {}, thr: {}, trn: {}, bonus: {}, fq: {}, bty: {}, pajukKills: {}, pajukShots: {}, noAug: {}, jadeBonus: {}, yiLeft: {}, yiX: {}, sqr: {}, vtxLeft: {}, tq: {}, dcr: {}, hvU: {}, fl: {}, syn: {}, orl: {}, tpl: {}, rr: {}, brk: {}, bsel: {}, loneSeen: {}, shards: [], vortex: [], ice: null, land: [false, false], noYi: -1, bh: [], lian: null, lianUsed: false,
     wallSave: [0, 0], holes: (map.ponds || []).map(p => ({ x: p.x, y: p.y, r: p.r, team: -1, seen: true, pond: true })), mark: [], pads: (map.pads || []).map(p => Object.assign({}, p, { cd: 0 })), obsHits: map.obs.map(() => 0), dbl: null,
     comboLeft: A.combo, doubleUsed: false, shot: null, events: [], sim: false, shots: 0, shrink: 0, snap: null, revGrid: null, revTile: null, revGridDone: false, revDrops: 0, revSeed: map.revHole ? (Math.floor(rnd() * 4294967296) >>> 0) : 0,
     portalSeed: map.portals ? (Math.floor(rnd() * 4294967296) >>> 0) : 0, portalAxis: null, portalAlongT: null, portals: null };
@@ -1734,7 +1736,27 @@ function applyGain(w, p, id) {
     case 'combo': w.comboRound[p.id] += A.comboRound; break;
     case 'split': w.splitLeft[p.id] += A.splitN; break;
     case 'trap': if (w.trapManual) w.tpl[p.id] = (w.tpl[p.id] || 0) + A.traps; else placeTraps(w, team); break;   /* 사람은 자기 차례에 직접 놓음 */
-    case 'orleans': { for (const old of p.augs.slice()) if (old !== 'orleans') removeAug(w, p.id, old, true); w.orl[p.id] = 0; grantBonus(w, p.id, 4, 'orleans'); emit(w, { type: 'orleans', pid: p.id }); break; }
+    case 'orleans': {
+      for (const old of p.augs.slice()) if (old !== 'orleans') removeAug(w, p.id, old, true);
+      const alreadyHasTranscend = p.augs.some(old => AUG[old] && AUG[old].tier === 4);
+      w.noAug[p.id] = 1;
+      w.orl[p.id] = alreadyHasTranscend ? 0 : 1;
+      /* 기존의 초월 1장 선택은 유지하되, 이미 초월을 보유했다면 중복 보상은 주지 않음 */
+      if (!alreadyHasTranscend) {
+        w.bonus[p.id] = (w.bonus[p.id] || 0) + 1;
+        w.fq[p.id] = '4' + String(w.fq[p.id] || '');
+        emit(w, { type: 'quest', pid: p.id, tier: 4, kind: 'orleans' });
+      }
+      const foes = w.players.filter(q => q.team !== team && !(w.noAug && w.noAug[q.id]) && !cnt(q, 'lone') && !cnt(q, 'heaven'));
+      const foe = foes.length ? pickR(foes) : null;
+      if (foe) {
+        w.bonus[foe.id] = (w.bonus[foe.id] || 0) + 1;
+        w.jadeBonus[foe.id] = (w.jadeBonus[foe.id] || 0) + 1;
+        emit(w, { type: 'quest', pid: foe.id, tier: 3, kind: 'orleansPenalty' });
+      }
+      emit(w, { type: 'orleans', pid: p.id, target: foe ? foe.id : -1, reward: !alreadyHasTranscend });
+      break;
+    }
     case 'king': if (w.trapManual) w.bsel[p.id] = (w.bsel[p.id] || '') + 'K'; else makeKing(w, p); break;
     case 'first': w.fsd[p.id] = 0; break;
     case 'ko': w.koLeft[p.id] += A.ko; break;
@@ -1798,11 +1820,13 @@ const STEAL_KEYS = { revive: 'reviveLeft', buddy: 'buddyLeft', rewind: 'rewindLe
 const STEAL_FULL = () => ({ revive: 2 * A.revive, buddy: 2 * A.buddy, rewind: 2 * A.rewind, combo: 2 * A.comboRound, split: 2 * A.splitN, ko: 2 * A.ko, yi: 2 * A.yiN, vortex: 2 * A.vortexN,
   squirrel: 0, thrice: 0, grit: 0, bolt: 0, first: -A.firstN });
 function decreeOptions(w, pid) {
+  if (w.noAug && w.noAug[pid]) return [];   /* 증강 획득 제한 상태에서는 빼앗아서도 얻을 수 없음 */
   const p = w.players[pid], out = [];
   for (const q of w.players) if (q.team !== p.team) for (const id of q.augs) if (!NO_STEAL.has(id) && AUG[id].tier <= 3 && !out.includes(id) && !p.augs.includes(id)) out.push(id);
   return out;
 }
 function stealAug(w, pid, id) {
+  if (w.noAug && w.noAug[pid]) return false;   /* 증강 획득 제한 상태에서는 어명으로도 획득 불가 */
   const p = w.players[pid], q = w.players.find(x => x.team !== p.team && x.augs.includes(id));
   if (!q || NO_STEAL.has(id) || AUG[id].tier > 3) return false;
   q.augs.splice(q.augs.indexOf(id), 1); p.augs.push(id);
@@ -1919,9 +1943,11 @@ function morePicks(w, p) {
 }
 function gainAug(w, pid, id) {
   const p = w.players[pid];
-  if (w.noAug && w.noAug[pid]) return false;
+  const orleansReward = !!(w.orl && w.orl[pid] > 0 && AUG[id] && AUG[id].tier === 4);
+  if (w.noAug && w.noAug[pid] && !orleansReward) return false;
   p.augs.push(id);
   if (AUG[id].tier === 4) w.tq[pid] = 1;
+  if (orleansReward) w.orl[pid] = 0;   /* 초월 보상 선택이 끝나면 추가 획득 금지 상태만 남김 */
   w.picks[pid]++;
   applyGain(w, p, id);
   emit(w, { type: 'gain', pid, id });
@@ -1947,7 +1973,7 @@ function picksOwed(w, pid) {
 function pendingPick(w) {
   if (w.lab) return null;   /* 훈련장: 증강은 직접 넣고 뺌 */
   for (const p of w.players) {
-    if (w.noAug && w.noAug[p.id]) continue;
+    if (w.noAug && w.noAug[p.id] && !(w.orl && w.orl[p.id] > 0)) continue;
     if (!w.stones.some(s => live(s) && s.owner === p.id)) continue;
     if (cnt(p, 'lone') || cnt(p, 'heaven')) continue;   /* 외길·역천: 이번 국에는 증강을 더 받지 않음 */
     if (picksOwed(w, p.id) > 0) return p.id;
@@ -1955,8 +1981,9 @@ function pendingPick(w) {
   return null;
 }
 function canTake(w, p, id) {
-  if (w.noAug && w.noAug[p.id]) return false;
   const a = AUG[id];
+  const orleansReward = !!(w.orl && w.orl[p.id] > 0 && a && a.tier === 4);
+  if (w.noAug && w.noAug[p.id] && !orleansReward) return false;
   if (cnt(p, id) > 0) return false;   /* 한 번 고른 증강은 그 국 안에서 다시 나오지 않습니다 */
   if (a.team && w.players.some(q => q.team === p.team && cnt(q, id) > 0)) return false;
   if (id === 'seal' && teamCount(w, 1 - p.team) <= 2) return false;
@@ -2009,8 +2036,8 @@ function rollOffer(w, pid, n = 3) {
   const fq = String(w.fq[pid] || '');
   let forced = fq.length ? +fq[0] : 0;
   if (forced) w.fq[pid] = fq.slice(1);
-  const orl = !forced && (w.orl[pid] || 0) > 0;   /* 오를레앙의 최윤재: 다음 고르기는 옥 확정 */
-  if (orl) w.orl[pid] = 0;
+  const jadeGift = !forced && (w.jadeBonus[pid] || 0) > 0 && (w.picks[pid] || 0) > 0;
+  if (jadeGift) w.jadeBonus[pid]--;
   if (forced === 4) {
     const p4 = AUG_IDS.filter(id => AUG[id].tier === 4 && canTake(w, p, id)), ids = [];
     while (ids.length < 2 && p4.length) ids.push(p4.splice(Math.floor(rnd() * p4.length), 1)[0]);
@@ -2022,13 +2049,13 @@ function rollOffer(w, pid, n = 3) {
   const ws = tiers.map(t => odds[t - 1]);
   let r = rnd() * ws.reduce((a, b) => a + b, 0), tier = tiers[tiers.length - 1];
   for (let i = 0; i < tiers.length; i++) { r -= ws[i]; if (r <= 0) { tier = tiers[i]; break; } }
-  const ft = orl ? 3 : forced === 4 ? 3 : forced;
+  const ft = jadeGift ? 3 : forced === 4 ? 3 : forced;
   if (ft && tiers.includes(ft)) tier = ft;
   const left = pool.filter(id => AUG[id].tier === tier), ids = [];
   while (ids.length < n && left.length) ids.push(left.splice(Math.floor(rnd() * left.length), 1)[0]);
-  p.dry = tier === 3 ? 0 : forced ? (p.dry || 0) : (p.dry || 0) + 1;
+  p.dry = tier === 3 ? 0 : (forced || jadeGift) ? (p.dry || 0) : (p.dry || 0) + 1;
   if (ids.includes('lone')) w.loneSeen[pid] = 1;  /* 제안 카드에 한 번 나타난 순간부터 영구 제외 */
-  return { tier, ids, seen: ids.slice(), pity, odds, bonus: !!forced };
+  return { tier, ids, seen: ids.slice(), pity, odds, bonus: !!forced || jadeGift };
 }
 /* 새로고침: 카드 자리(1·2·3)마다 국당 한 번, 그 카드만 새로 뽑음. 5% 확률로 한 등급 위 (옥에서 초월로는 1%). 초월 카드는 새로고침 없음 */
 const RR_UP = 0.05, RR_UP4 = 0.01;
@@ -2556,8 +2583,8 @@ function lightningForecastShrink(w, futureTurns = 1) {
         rvn++;
         if (rvn > A.revGrowN) shrink = Math.min(map.shrinkMax, shrink + P.shrinkStep);
       }
-    } else if (!w.noShrink && !w.xtra && completed >= P.shrinkStart && shrink < map.shrinkMax) {
-      shrink = Math.min(map.shrinkMax, shrink + map.shrinkMax / P.shrinkTurns);
+    } else if (!w.noShrink && !w.xtra && completed >= P.shrinkStart && shrink < normalShrinkLimit(map)) {
+      shrink = Math.min(normalShrinkLimit(map), shrink + P.shrinkStep);
     }
   }
   return shrink;
@@ -2822,6 +2849,7 @@ function ropeStep(w, s) {
 }
 /* 훈련장: 가진 증강 하나를 뺌 (고를 때 생긴 효과도 되돌림) */
 function removeAug(w, pid, id, quiet = false) {
+  if (AUG[id] && AUG[id].tier === 4) return false;   /* 초월 증강은 어떤 제거 효과로도 사라지지 않음 */
   const p = w.players[pid], i = p.augs.lastIndexOf(id);
   if (i < 0) return false;
   p.augs.splice(i, 1);
@@ -2844,7 +2872,7 @@ function removeAug(w, pid, id, quiet = false) {
       case 'brand': for (const s of w.stones) if (s.brand === pid) s.brand = -1; break;
       case 'press': for (const s of w.stones) if (s.press === pid) s.press = -1; break;
       case 'ice': if (w.ice && w.ice.pid === pid) w.ice = null; break;
-      case 'orleans': w.orl[pid] = 0; break;
+      case 'orleans': { w.orl[pid] = 0; w.noAug[pid] = 0; w.bonus[pid] = Math.max(0, (w.bonus[pid] || 0) - 1); w.fq[pid] = String(w.fq[pid] || '').replace('4', ''); break; }
       case 'squirrel': w.sqr[pid] = 0; break;
       case 'decree': w.dcr[pid] = 0; break;
       case 'heaven': w.hvU[pid] = 0; break;
@@ -2936,7 +2964,7 @@ function updatePhase(w) {
     w.shots++;
     for (const p of w.stones) if (p.pillar && p.locked && live(p) && p.pg < A.pillarCap) { const before = 1 + (p.pg || 0) / 100; p.pg++; const ratio = (1 + p.pg / 100) / before; p.kr *= ratio; p.km *= ratio; p.kv *= ratio; restat(w, p); }
     for (const pd of w.pads) if (pd.cd > 0 && --pd.cd === 0) emit(w, { type: 'padback', x: pd.x, y: pd.y });
-    const smax = MAPS[w.map].shrinkMax;
+    const smax = normalShrinkLimit(MAPS[w.map]);
     /* 반전: 판이 줄어드는 대신 가운데 구멍이 커짐 (한 차례에 한 번) */
     /* 반전: 가운데 구멍이 2번 커지고, 그다음 밧줄(가장자리)이 3번 좁혀진 뒤 멈춤 */
     const revBefore = w.rvn || 0, revTotal = A.revGrowN + A.revShrinkN;
@@ -2964,7 +2992,7 @@ function updatePhase(w) {
       if (dropped && sh.shrinking && sh.fell.some(n => n > 0)) return;
     }
     if (!w.noShrink && w.map !== 'rev' && !w.xtra && w.shots >= P.shrinkStart && w.shrink < smax) {   /* 쌍발·연타·연환처럼 한 차례에 더 치는 샷은 판을 다시 줄이지 않음 (한 차례 = 한 번) */
-      w.shrink = Math.min(smax, w.shrink + smax / P.shrinkTurns);
+      w.shrink = Math.min(smax, w.shrink + P.shrinkStep);
       sh.shrinking = true;
       emit(w, { type: 'shrink', amount: w.shrink });
       const cr = MAPS[w.map].crumbleAt;
@@ -3031,7 +3059,7 @@ function startShot(w, pid, stoneId, vx, vy, opt) {
   s.vx = vx; s.vy = vy;
   let bolt = false;
   if (cnt(p, 'bolt')) { w.boltCount[pid]++; bolt = w.boltCount[pid] % A.boltEvery === 0; }
-  w.shot = { shooter: pid, stoneId, phase: 'moving', collided: false, fell: [0, 0], shrunk: [0, 0], bombDone: false, counted: false,
+  w.shot = { shooter: pid, stoneId, phase: 'moving', collided: false, fell: [0, 0], shrunk: [0, 0], startCount: [teamCount(w, 0), teamCount(w, 1)], bombDone: false, counted: false,
     shrinking: false, t: 0, baseSpeed: baseImpactSpeed, bomb: hasA(w, pid, 'bomb'), marks: hasA(w, pid, 'marks'), sx: s.x, sy: s.y, marked: false,
     pierce: hasA(w, pid, 'pierce'), pierced: false, bolt, boltDone: false, firstHit: false, chained: false, fk: shotFric(w, pid), grip: w.players.map(q => cnt(q, 'grip') > 0), firstK: hasA(w, pid, 'first') && (w.fsd[pid] || 0) < A.firstN, firstSyn: hasSyn(p, 'vanguard'), gust: hasA(w, pid, 'gust'), gustDone: false,
     hammer: hasA(w, pid, 'hammer'), shock: hasA(w, pid, 'shock'), chain: hasA(w, pid, 'chain'),
@@ -3125,7 +3153,17 @@ function afterShot0(w) {
   w.dbl = null; w.lian = null;
   if (w.players.some(p => cnt(p, 'last'))) restatAll(w);
   const a0 = teamAlive(w, 0), a1 = teamAlive(w, 1);
-  if (!a0 && !a1) return { winner: 1 - t, reason: 'both' };
+  if (!a0 && !a1) {
+    /* 양쪽 모두 마지막 돌 1개씩 남은 상태에서 함께 탈락하면
+       부활·길동무의 남은 사용 횟수가 더 많은 쪽이 승리합니다. */
+    if (sh.startCount && sh.startCount[0] === 1 && sh.startCount[1] === 1) {
+      const reserveCount = team => w.players.filter(p => p.team === team).reduce((n, p) =>
+        n + Math.max(0, Number(w.reviveLeft[p.id] || 0)) + Math.max(0, Number(w.buddyLeft[p.id] || 0)), 0);
+      const r0 = reserveCount(0), r1 = reserveCount(1);
+      if (r0 !== r1) return { winner: r0 > r1 ? 0 : 1, reason: 'reserve' };
+    }
+    return { winner: 1 - t, reason: 'both' };
+  }
   if (!a0) return { winner: 1, reason: 'wipe' };
   if (!a1) return { winner: 0, reason: 'wipe' };
   /* 주춧돌: 다른 아군 돌이 모두 사라지면 중앙 고정 해제 */
@@ -3176,13 +3214,15 @@ function afterShot0(w) {
     w.ice = { pid: sp.id, team: t, cells, turns: 2 };
     emit(w, { type: 'ice', pid: sp.id });
   } else if (w.ice) { w.ice.turns = (w.ice.turns == null ? 1 : w.ice.turns) - 1; if (w.ice.turns <= 0) w.ice = null; }
-  /* 현상금: 내 샷이 한 번 끝날 때마다 하나씩 줄고, 다 쓰면 사라짐 */
-  if ((w.bty[sp.id] || 0) > 0) {
-    w.bty[sp.id]--;
-    if (!w.bty[sp.id]) {
-      const b = w.stones.find(o => o.bounty === sp.id && live(o));
-      for (const o of w.stones) if (o.bounty === sp.id) o.bounty = -1;
-      emit(w, { type: 'bountyFail', pid: sp.id, x: b ? b.x : CX, y: b ? b.y : CY, timeout: true });
+  /* 현상금: 추가 샷을 제외하고 양쪽의 일반 차례가 끝날 때마다 감소 */
+  if (!w.xtra) for (const bp of w.players) {
+    const bid = bp.id;
+    if ((w.bty[bid] || 0) <= 0) continue;
+    w.bty[bid]--;
+    if (!w.bty[bid]) {
+      const b = w.stones.find(o => o.bounty === bid && live(o));
+      for (const o of w.stones) if (o.bounty === bid) o.bounty = -1;
+      emit(w, { type: 'bountyFail', pid: bid, x: b ? b.x : CX, y: b ? b.y : CY, timeout: true });
     }
   }
   if (kn > 0) for (const q of w.players) if (q.team !== t) {
@@ -3632,7 +3672,7 @@ const AUG_JA = {
  brand:['烙印','耐えた相手石の防御力 −25%','自分の石に当たっても残った相手の石に烙印を付ける。再び自分の石に当たるまで防御力が25%低下する。'],
  ice:['氷道','通過した道が2ターン凍る','自分の石が通った道が2ターン凍る。その上で滑る相手の石は摩擦が60%低下し、遠くまで滑る。'],
  glut:['暴食','相手を落とすたびサイズ/重さ/威力 +5%','自分のショットで相手の石を落とすたび、撃った石のサイズ・重さ・威力が各5%上昇する。上限なし。'],
- bounty:['賞金','印の相手石を8手以内に落とすと玉1枚','相手の石1個に賞金を設定する。自分の8手以内に落とすと、玉ランクの強化をもう1枚選べる。'],
+ bounty:['賞金','印の相手石を両者合わせて8手以内に落とすと玉1枚','相手の石1個に賞金を設定する。両者の手番を合わせて8手以内に落とすと、玉ランクの強化をもう1枚選べる。'],
  iki:['一騎当千','1個の石で相手の基本石3個を落とすと超越1枚','同じ自分の石で相手の基本石を累計3個落とすと、超越の強化2枚から1枚選べる。石を失うと進行はリセット。'],
  revive:['復活','自分の石が3個未満なら2回、それ以外は3回復帰','自分の石が落ちると自陣へ戻る。獲得時に石が3個未満なら2回、それ以外は3回まで発動する。'],
  buddy:['道連れ','落ちる時に相手石1個を連れて追加手番（1回）','自分の石が落ちると、盤上の相手の石を1個選んで一緒に落とし、もう一度手番を行う。対局中1回まで。'],
@@ -3644,7 +3684,7 @@ const AUG_JA = {
  dense:['岩石','石2個のサイズ −20%・威力 +24%','中央に近い自分の石2個を選び、サイズを20%小さくして威力を24%上げる。'],
  shaky:['手ぶれ','相手の照準を最大15°、より速く揺らす','相手が照準中、狙いをより速く揺らし、最大15°ずらす。'],
  dragon:['大魔','周囲に石が集まると自分の石の重さ +100%','自分の大魔の周囲2.2マスに味方または相手の石が集まると、範囲内にある自分の石だけ重さが100%増加する。'],
- orleans:['オルレアンのチェ・ユンジェ','獲得時に全強化を除去・超越1枚選択','獲得すると他の強化をすべて取り除き、超越の強化を1枚選ぶ。'],
+ orleans:['オルレアンのチェ・ユンジェ','既存強化を除去・超越1枚・以後獲得不可・相手に玉1枚','獲得時に超越以外の自分の強化をすべて取り除き、超越を1枚選ぶ。その後、自分はこの対局で強化を獲得できず、相手には玉ランク強化を1枚与える。'],
  crack:['亀裂','相手石にヒビ・再度当てると破壊（2個）','自分のショットで相手の石にヒビを入れ、再び当てると破壊して周囲の相手石を押す。対局中2個まで。'],
  pillar:['礎石','石1個を中央固定・毎手能力値 +1%（最大+20%）','自分の石1個を盤の中央に固定する。押されず、毎手サイズ・重さ・威力が各1%上昇（最大20%）。味方の石が全てなくなると解除。'],
  tide:['潮','自分のショットごとに相手石を0.8マス押す','自分のショット終了時、相手の石すべてを最寄りの盤端へ0.8マス押す。'],
@@ -3792,7 +3832,7 @@ Object.assign(JA_EXACT, {
 });
 Object.assign(JA_EXACT, {
  '2선승':'2先取','3선승':'3先取','무작위':'ランダム','훈련장':'練習場','지형':'地形','승리 조건':'勝利条件','판 줄어듦':'盤面縮小',
- '25수부터 일반 맵은 11회에 걸쳐 판 가장자리가 안으로 좁혀집니다. 축소가 끝난 뒤 ‘맵 줄어듦 끝’으로 표시되며, 반전 맵은 별도 규칙을 따릅니다.':'通常の地形では25手目から盤の縁が11回に分けて内側へ縮みます。完了後は「盤面縮小完了」と表示され、反転マップには別のルールが適用されます。',
+ '25수부터 일반 맵은 한 수마다 0.5칸씩, 총 10수 동안 판 가장자리가 안으로 좁혀집니다. 축소가 끝난 뒤 ‘맵 줄어듦 끝’으로 표시되며, 반전 맵은 별도 규칙을 따릅니다.':'通常の地形では25手目から1手ごとに0.5マスずつ、合計10手かけて盤の縁が内側へ縮みます。完了後は「盤面縮小完了」と表示され、反転マップには別のルールが適用されます。',
  "자세한 규칙은 대국 화면 오른쪽 아래 '규칙'에 있습니다.":'詳しいルールは対局画面右下の「ルール」にあります。',
  '설정을 고르고 대국을 시작하세요':'設定を選んで対局を始めてください','사람 (한 화면에서 번갈아)':'人間（同じ画面で交代）',
  '실험실':'実験室','누르면 넣고, 다시 누르면 뺍니다':'押すと追加、もう一度押すと削除します','판 다시 놓기':'盤面をリセット',
@@ -3845,19 +3885,19 @@ function translateTree(root) {
 function refreshAugSurfaces() {
   document.querySelectorAll('#ovDraft .aug-card[data-id]').forEach(card => {
     const id = card.dataset.id, copy = augCopyDisplay(id), name = card.querySelector('.aug-name'), desc = card.querySelector('.aug-desc'), tier = card.querySelector('.tier');
-    if (name) { const textNode = [...name.childNodes].find(n => n.nodeType === Node.TEXT_NODE); if (textNode) textNode.nodeValue = `${displayAugName(id)}:`; }
+    if (name) { const textNode = [...name.childNodes].find(n => n.nodeType === Node.TEXT_NODE); if (textNode) textNode.nodeValue = `${displayAugName(id)}`; }
     if (desc) desc.textContent = copy.detail;
     if (tier) tier.textContent = displayTier(AUG[id].tier);
     const quest = card.querySelector('.quest-tag'); if (quest) quest.textContent = UI_LANG === 'ja' ? '任務' : '퀘스트';
   });
   document.querySelectorAll('.aug-line[data-aug]').forEach(el => {
     const id = el.dataset.aug, b = el.querySelector('b'), summary = el.querySelector('.aug-summary');
-    if (b) { const t = [...b.childNodes].find(n => n.nodeType === Node.TEXT_NODE); if (t) t.nodeValue = `${displayAugName(id)}:`; }
+    if (b) { const t = [...b.childNodes].find(n => n.nodeType === Node.TEXT_NODE); if (t) t.nodeValue = `${displayAugName(id)}`; }
     if (summary) summary.textContent = augCopyDisplay(id).keyword;
   });
   document.querySelectorAll('li[data-book-aug]').forEach(el => {
     const id = el.dataset.bookAug, b = el.querySelector('b'), quick = el.querySelector('.book-quick');
-    if (b) { const t = [...b.childNodes].find(n => n.nodeType === Node.TEXT_NODE); if (t) t.nodeValue = `${displayAugName(id)}:`; }
+    if (b) { const t = [...b.childNodes].find(n => n.nodeType === Node.TEXT_NODE); if (t) t.nodeValue = `${displayAugName(id)}`; }
     if (quick) quick.textContent = augCopyDisplay(id).keyword;
   });
 }
@@ -3912,18 +3952,18 @@ const GLOSSARY_JA = [
 ];
 const QUICK_RULES_JA = [
  ['操作',['石を押したまま後ろへ引いて放すと、反対方向へ飛びます。',`1手の制限時間は${TURN_SEC}秒です。時間切れになると自動で手番が移ります。`]],
- ['勝利',['相手の石をすべて盤外へ落とすと勝利です。','両者の最後の石が同時に落ちた場合、撃った側が負けます。']],
- ['強化',[`対局開始時に1枚、基本石を${K.P.lossPerPick}個失うごとに1枚選びます。`,'盗賊に奪われた基本石は、元の持ち主の強化カウンターに加算されます。外道は一度出現すると再登場しません。','強化の組み合わせ効果はありません。超越は1対局につき各プレイヤー1枚までです。']],
+ ['勝利',['相手の石をすべて盤外へ落とすと勝利です。','両者の最後の石が同時に落ちた場合、復活・道連れの残り回数が多い側が勝利し、同数なら撃った側が負けます。']],
+ ['強化',[`対局開始時に1枚、基本石を${K.P.lossPerPick}個失うごとに1枚選びます。`,'盗賊に奪われた基本石は、元の持ち主の強化カウンターに加算されます。外道は一度出現すると再登場しません。','強化の組み合わせ効果はありません。超越は1対局につき各プレイヤー1枚までで、一度選ぶとどの効果でも除去されません。']],
  ['地形',['各地形には専用の障害物とルールがあります。次元門は同じ印同士がつながり、反転マップでは中央の穴とロープに独自のルールがあります。','池の金魚は池の周辺に現れ、1手後に戻ります。']],
- ['盤面縮小',[`通常の地形は${K.P.shrinkStart}手目から11回に分けて縮小します。完了後は「盤面縮小完了」と表示され、反転マップには別のルールが適用されます。`]]
+ ['盤面縮小',[`通常の地形は${K.P.shrinkStart}手目から1手ごとに0.5マスずつ、合計${K.P.shrinkTurns}手で縮小します。完了後は「盤面縮小完了」と表示され、反転マップには別のルールが適用されます。`]]
 ];
 const RULE_GROUPS_JA = [
  ['用語',GLOSSARY_JA.map(([k,v])=>`<b>${k}</b> — ${v}`)],
  ['操作',['自分の石を押したまま後ろへ引いて放すと、反対方向へ発射します。盤上のどこからでも石を選んで引くことができます。','引く量が40%以下の場合、停止位置が表示されます。マウスの右ボタン（スマートフォンでは別の指でタップ）で照準をキャンセルできます。',`1手の制限時間は${TURN_SEC}秒です。時間切れになると自動で手番が移ります。白側は盤面が180°回転し、常に下から上へ狙います。`]],
- ['勝利',['石の中心が盤の端にある明るい線を越えると落下します。相手の石をすべて落とすと勝利です。','両者の最後の石が同時に落ちた場合、撃った側が負けます。最後の1個の石は押し出されにくくなります。']],
- ['強化',[`対局開始時に1枚、基本石を${K.P.lossPerPick}個失うごとに追加で1枚選びます。選択時間は${PICK_SEC}秒で、時間切れになると自動選択されます。`,'失った基本石のみを数えます。盗賊に奪われた基本石は元の持ち主の損失として扱い、分裂した破片はそれぞれ半個として数えます。','銀・金・玉の順に出現率が低くなり、超越はクエスト報酬でのみ獲得できます。超越は1対局につき各プレイヤー1枚までです。','一度出現した外道は、その対局中は再び選択肢に現れません。一度選んだ強化も同じ対局では再登場しません。','クエストを達成すると追加の強化を獲得します。強化の組み合わせ効果はなく、それぞれ単独で発動します。','カードの各枠は対局中に1回だけ引き直せます。操作系の強化は自分の手番に専用ボタンで使用します。']],
+ ['勝利',['石の中心が盤の端にある明るい線を越えると落下します。相手の石をすべて落とすと勝利です。','両者の最後の石が同時に落ちた場合、復活・道連れの残り回数が多い側が勝利し、同数なら撃った側が負けます。最後の1個の石は押し出されにくくなります。']],
+ ['強化',[`対局開始時に1枚、基本石を${K.P.lossPerPick}個失うごとに追加で1枚選びます。選択時間は${PICK_SEC}秒で、時間切れになると自動選択されます。`,'失った基本石のみを数えます。盗賊に奪われた基本石は元の持ち主の損失として扱い、分裂した破片はそれぞれ半個として数えます。','銀・金・玉の順に出現率が低くなり、超越はクエスト報酬でのみ獲得できます。超越は1対局につき各プレイヤー1枚までで、一度獲得するとどの効果でも除去されません。','一度出現した外道は、その対局中は再び選択肢に現れません。一度選んだ強化も同じ対局では再登場しません。','クエストを達成すると追加の強化を獲得します。強化の組み合わせ効果はなく、それぞれ単独で発動します。','カードの各枠は対局中に1回だけ引き直せます。操作系の強化は自分の手番に専用ボタンで使用します。']],
  ['地形',['各地形には専用の障害物とルールがあります。詳しい仕組みは地形紹介と対局中のルール一覧で確認できます。',`池：${K.A.frogEvery}手ごとに金魚が現れ、2手後に戻ります。捕まえると次のショット威力が10%上がります。`,'次元：同じ文字の門同士がつながります。通過すると進行方向を保ったまま速度が1.2倍になります。','反転：中央の穴とロープが独自に変化します。通常マップとは異なる縮小ルールを使用します。']],
- ['盤面縮小',[`通常マップは${K.P.shrinkStart}手目から11回に分けて縮小します。最後まで縮小すると「盤面縮小完了」と表示されます。反転マップには別のルールが適用されます。`,'追加ショットは盤面の縮小回数に含まれません。']],
+ ['盤面縮小',[`通常マップは${K.P.shrinkStart}手目から1手ごとに0.5マスずつ、合計${K.P.shrinkTurns}手で縮小します。最後まで縮小すると「盤面縮小完了」と表示されます。反転マップには別のルールが適用されます。`,'追加ショットは盤面の縮小回数に含まれません。']],
  ['その他',['オンライン対戦ではホストが黒、参加者が白です。練習場では強化や時間制限なしで、両陣営の強化を自由に変更できます。','CPUの難易度、地形、サウンド設定はタイトル画面で変更できます。']]
 ];
 const RULE_GROUPS = [
@@ -3935,12 +3975,12 @@ const RULE_GROUPS = [
   ]],
   ['승리', [
     '돌의 가운데가 판 가장자리의 밝은 선을 넘으면 떨어집니다. 상대 돌을 모두 떨어뜨리면 승리합니다.',
-    '양쪽 마지막 돌이 함께 떨어지면 쏜 쪽이 패배합니다. 마지막 한 돌은 35% 덜 밀립니다.'
+    '양쪽 마지막 돌이 함께 떨어지면 부활·길동무 잔여 횟수가 많은 쪽이 승리하고, 같으면 쏜 쪽이 패배합니다. 마지막 한 돌은 35% 덜 밀립니다.'
   ]],
   ['증강', [
     `국 시작에 1장, 내 기본 돌을 ${K.P.lossPerPick}개 잃을 때마다 1장을 추가로 고릅니다. 선택 시간은 ${PICK_SEC}초이며, 지나면 자동 선택됩니다.`,
     '기본 돌을 잃은 수만 셉니다. 도둑에게 빼앗긴 기본 돌은 원래 주인의 손실로 계산되고, 분열 조각은 반 개씩 셉니다.',
-    '은·금·옥 순으로 드물며, 초월은 퀘스트 보상으로만 얻습니다. 초월은 한 국에 한 사람당 1장입니다.',
+    '은·금·옥 순으로 드물며, 초월은 퀘스트 보상으로만 얻습니다. 초월은 한 국에 한 사람당 1장까지이며, 한 번 얻으면 어떤 효과로도 제거되지 않습니다.',
     '한 번 등장한 외길은 그 국에서 다시 선택지에 나오지 않습니다. 한 번 고른 증강도 같은 국에 다시 나오지 않습니다.',
     '퀘스트는 조건을 채우면 추가 증강을 줍니다. 증강 조합 효과는 없으며, 각 증강은 단독으로 작동합니다.',
     '카드 자리마다 국당 한 번 새로고침할 수 있습니다. 조작 증강은 내 차례에 전용 단추로 사용합니다.'
@@ -3952,7 +3992,7 @@ const RULE_GROUPS = [
     '반전: 중앙 구멍과 밧줄이 별도로 변합니다. 일반 맵의 축소와 다른 규칙을 사용합니다.'
   ]],
   ['판 줄어듦', [
-    `일반 맵은 ${K.P.shrinkStart}수부터 11회에 걸쳐 축소됩니다. 끝까지 줄면 '맵 줄어듦 끝'으로 표시됩니다. 반전 맵은 별도 적용됩니다.`,
+    `일반 맵은 ${K.P.shrinkStart}수부터 한 수마다 0.5칸씩, 총 ${K.P.shrinkTurns}수 동안 축소됩니다. 끝까지 줄면 '맵 줄어듦 끝'으로 표시됩니다. 반전 맵은 별도 적용됩니다.`,
     '판이 줄어들 때 추가 샷은 축소 횟수에 포함되지 않습니다.'
   ]],
   ['기타', [
@@ -4176,7 +4216,7 @@ function dualStep() {
 function runPicks() {
   const w = G.world;
   let pid = null;
-  if (G.after === 'start') { pid = G.pickQueue.length ? G.pickQueue.shift() : null; }
+  if (G.after === 'start') { pid = G.pickQueue.length ? G.pickQueue.shift() : K.pendingPick(w); }
   else pid = K.pendingPick(w);
   if (pid === null) {
     $('ovDraft').hidden = true;
@@ -4361,7 +4401,7 @@ function endShot() {
     }
   }
   if (out.winner != null) {
-    const reason = out.reason === 'both' ? '마지막 돌이 함께 떨어져서 친 쪽이 졌습니다' : `${teamName(1 - out.winner)} 돌이 모두 떨어졌습니다`;
+    const reason = out.reason === 'both' ? '마지막 돌이 함께 떨어져서 친 쪽이 졌습니다' : out.reason === 'reserve' ? '부활·길동무 잔여 횟수가 더 많아 승리했습니다' : `${teamName(1 - out.winner)} 돌이 모두 떨어졌습니다`;
     return endRound(out.winner, reason);
   }
   if (out.again) {
@@ -4630,7 +4670,7 @@ const STATS = () => { const A = K.A, P = K.P; return {
   split: [['세게 맞은 내 돌', '둘로 갈라짐', `${A.splitN}회`, 'up'], ['조각', '크기', `−${pc(1 - A.splitR)}%`, 'down'], ['조각', '무게', `−${pc(1 - A.splitM)}%`, 'down']],
   pierce: [['첫 타격', '힘', '모두 실음', 'up'], ['쏜 돌', '멈춤', '그 자리', 'down']],
   thorns: [['나와 부딪힌 상대 돌', '타격', `${pc(A.thorns)}% 되돌림`, 'foe']],
-  orleans: [['기존 증강', '오를레앙 외 전부 제거', '즉시', 'down'], ['보상', '초월', '1장 선택', 'up']],
+  orleans: [['기존 증강', '초월 제외 전부 제거', '즉시', 'down'], ['보상', '초월', '1장 선택', 'up'], ['나', '추가 증강 획득', '이후 불가', 'down'], ['상대', '옥 증강', '1장 선택', 'foe']],
   crack: [['친 상대 돌', '금', '1번째', 'foe'], ['금 간 돌', '깨짐', `${A.crackMax}개`, 'foe'], ['파편', '상대 돌 튕김', `${A.shardN}개`, 'foe']],
   double: [['매 차례', '샷', '2번', 'up'], ['내 돌', '힘', `−${pc(1 - A.doubleV)}%`, 'down']],
   gust: [['가까운 상대 돌', '밀어냄', `${cell(A.gustD)}칸`, 'foe']],
@@ -4663,7 +4703,7 @@ const STATS = () => { const A = K.A, P = K.P; return {
   brand: [['낙인 대상', '방어력', '−25% (내 돌에 다시 맞을 때까지)', 'foe']],
   ice: [['쏜 돌이 지난 길의 상대 돌', '마찰', `−${pc(1 - A.iceF)}%`, 'foe']],
   glut: [['떨어뜨린 쏜 돌', '크기', `+${pc(A.glutR - 1)}%`, 'up'], ['떨어뜨린 쏜 돌', '무게', `${pm(A.glutM)}`, 'up'], ['떨어뜨린 쏜 돌', '힘', `+${pc(A.glutV - 1)}%`, 'up']],
-  bounty: [['조건', '현상금 돌', `${A.bountyN}샷 안에`, 'up'], ['현상금 돌', '방어력', `${pm(A.bountyH)}`, 'foe'], ['보상', '옥', '1장 더', 'up']],
+  bounty: [['조건', '현상금 돌', `전체 ${A.bountyN}수 안에`, 'up'], ['현상금 돌', '방어력', `${pm(A.bountyH)}`, 'foe'], ['보상', '옥', '1장 더', 'up']],
   yi: [['다음 내 차례', '상대 돌 쏘기', `${A.yiN}차례`, 'foe'], ['처음 쓸 때만', '한 번 더', '샷 +1', 'up']],
   squirrel: [['상대 돌을 떨어뜨리면', '모든 돌 힘', `+${pc(A.sqrV - 1)}%`, 'up'], ['지속', '내 샷', `${A.sqrN}번`, 'up']],
   vortex: [['멈춘 자리', '소용돌이', `${cell(A.vortexR)}칸 · ${A.vortexN}회`, 'foe'], ['한 수마다', '상대 돌 끌어옴', `${cell(A.vortexPull)}칸`, 'foe'], ['소용돌이 안 상대 돌', '방어력', `${pm(A.vortexH)}`, 'foe']],
@@ -4685,7 +4725,7 @@ function cardHTML(id, i, p) {
   return `<button class="aug-card" type="button" data-tier="${a.tier}" data-id="${id}">
     <span class="tier">${displayTier(a.tier)}</span>
     <span class="seal seal-lg stamp-in" style="animation-delay:${i * 110}ms">${a.seal}</span>
-    <span class="aug-name">${displayAugName(id)}${a.quest ? `<span class="quest-tag">${UI_LANG === 'ja' ? '任務' : '퀘스트'}</span>` : ''}:</span>
+    <span class="aug-name">${displayAugName(id)}${a.quest ? `<span class="quest-tag">${UI_LANG === 'ja' ? '任務' : '퀘스트'}</span>` : ''}</span>
     ${statHTML(id)}
     <span class="aug-desc">${statTextUI(text.detail)}</span>
     ${own ? `<span class="aug-own">${UI_LANG === 'ja' ? '所持' : '보유'} ×${own} → ×${own + 1}</span>` : ''}
@@ -4914,16 +4954,16 @@ function renderScore() {
 }
 function renderMapCard() {
   const w = G.world, m = MAPS[curMap()];
-  const shots = w ? w.shots : 0, left = K.P.shrinkStart - shots;
+  const shots = w ? w.shots : 0, left = K.P.shrinkStart - shots, shrinkCap = Math.min(m.shrinkMax, K.P.shrinkStep * K.P.shrinkTurns);
   const shrinkTxt = w && m.revHole ? ((w.revGridDone ? `<b>${shots}수</b><small>구역 소멸 완료 · 3회</small>` : w.revTile ? `<b>${shots}수</b><small>${(w.revDrops || 0) + 1}/3회 · 붙은 두 구역 소멸까지 ${w.revTile.left}수</small>` : w.revGrid ? `<b>${shots}수</b><small>다음 두 구역 선택 중</small>` : (w.rvn || 0) >= K.A.revGrowN + K.A.revShrinkN ? `<b>${shots}수</b><small>구역 소멸 준비</small>` : w.shots >= K.P.shrinkStart ? `<b>${shots}수</b><small>${(w.rvn || 0) < K.A.revGrowN ? '구멍이 커지는 중' : '밧줄이 좁혀지는 중'} · ${w.rvn || 0}/${K.A.revGrowN + K.A.revShrinkN}</small>` : `<b>${shots}수</b><small>구멍 커지기까지 ${Math.max(0, left)}수</small>`))
-    : w && w.shrink > 0 ? (w.shrink >= m.shrinkMax ? '<b>맵 줄어듦 끝</b><small>11회 축소 완료</small>' : `<b>판이 줄어드는 중</b><small>${Math.min(K.P.shrinkTurns, Math.round(w.shrink / m.shrinkMax * K.P.shrinkTurns))}/${K.P.shrinkTurns}회 축소</small>`)
+    : w && w.shrink > 0 ? (w.shrink >= shrinkCap ? `<b>맵 줄어듦 끝</b><small>${K.P.shrinkTurns}수 축소 완료</small>` : `<b>판이 줄어드는 중</b><small>${Math.min(K.P.shrinkTurns, Math.round(w.shrink / shrinkCap * K.P.shrinkTurns))}/${K.P.shrinkTurns}수 축소</small>`)
     : w && w.noShrink ? `<b>${shots}수</b><small>판 줄어듦 없음</small>` : `<b>${shots}수</b><small>수축까지 ${Math.max(0, left)}수</small>`;
   const frogTxt = w && m.frog ? (w.fish && w.fish.length ? '<small class="frog-left">금붕어 도약 중</small>' : '<small class="frog-left">금붕어는 5수마다 출현</small>') : '';
   const mapTitle = UI_LANG === 'ja' ? (MAP_NAME_JA[m.id] || m.name) : m.name;
   const mapDescription = UI_LANG === 'ja' ? ((GUIDE_JA[m.id] && GUIDE_JA[m.id].lines[0]) || m.short) : m.short;
   const shrinkLabel = UI_LANG === 'ja'
     ? (w && m.revHole ? (w.revGridDone ? `<b>${shots}手</b><small>区画消滅完了・3回</small>` : w.revTile ? `<b>${shots}手</b><small>${(w.revDrops || 0) + 1}/3回・区画消滅まで${w.revTile.left}手</small>` : w.revGrid ? `<b>${shots}手</b><small>次の2区画を選択中</small>` : `<b>${shots}手</b><small>中央の穴・ロープの変化 ${w.rvn || 0}/${K.A.revGrowN + K.A.revShrinkN}</small>`)
-      : w && w.shrink > 0 ? (w.shrink >= m.shrinkMax ? '<b>盤面縮小完了</b><small>11回の縮小完了</small>' : `<b>盤面縮小中</b><small>${Math.min(K.P.shrinkTurns, Math.round(w.shrink / m.shrinkMax * K.P.shrinkTurns))}/${K.P.shrinkTurns}回</small>`)
+      : w && w.shrink > 0 ? (w.shrink >= shrinkCap ? `<b>盤面縮小完了</b><small>${K.P.shrinkTurns}手で縮小完了</small>` : `<b>盤面縮小中</b><small>${Math.min(K.P.shrinkTurns, Math.round(w.shrink / shrinkCap * K.P.shrinkTurns))}/${K.P.shrinkTurns}手</small>`)
       : w && w.noShrink ? `<b>${shots}手</b><small>盤面縮小なし</small>` : `<b>${shots}手</b><small>縮小開始まであと${Math.max(0, left)}手</small>`)
     : shrinkTxt;
   const fishLabel = UI_LANG === 'ja' && w && m.frog ? (w.fish && w.fish.length ? '<small class="frog-left">金魚が跳ねています</small>' : '<small class="frog-left">金魚は5手ごとに出現</small>') : frogTxt;
@@ -5002,7 +5042,7 @@ function renderSkills() {
   if (cnt(p, 'iki')) { const best = Math.max(0, ...w.stones.filter(s => live(s) && s.owner === p.id).map(s => s.kq || 0)); parts.push(`<span class="sk-pill quest">${sl(AUG.iki.seal)}${w.tq[p.id] ? '<b>일기당천 끝</b>' : `일기당천 최고 <b>${Math.round(best * 10) / 10}/${A.ikiN}</b>`}</span>`); }
   if (cnt(p, 'pajuk')) parts.push(`<span class="sk-pill quest">${sl(AUG.pajuk.seal)}${w.tq[p.id] ? '<b>파죽지세 끝</b>' : `파죽지세 <b>${Math.min(2, w.pajukKills[p.id] || 0)}/2</b> · ${Math.max(0, A.pajukTurns - (w.pajukShots[p.id] || 0))}수 남음`}</span>`);
   if (cnt(p, 'train')) parts.push(`<span class="sk-pill quest">${sl('修')}${(w.trn[p.id] || 0) >= 99 ? '<b>수련 완료</b>' : `수련 <b>${Math.round(Math.min(A.trainN, w.trn[p.id] || 0) * 10) / 10}/${A.trainN}</b>`}</span>`);
-  if (cnt(p, 'bounty')) parts.push(`<span class="sk-pill quest">${sl('賞')}${(w.bty[p.id] || 0) > 0 ? `현상금 <b>${w.bty[p.id]}샷</b> 남음` : '현상금 끝'}</span>`);
+  if (cnt(p, 'bounty')) parts.push(`<span class="sk-pill quest">${sl('賞')}${(w.bty[p.id] || 0) > 0 ? `현상금 <b>전체 ${w.bty[p.id]}수</b> 남음` : '현상금 끝'}</span>`);
   if (cnt(p, 'thrice')) parts.push(`<span class="sk-pill">${sl('三')}${K.thriceOn(w, p.id) ? '<b>이번 샷 힘 +30%</b>' : `힘 +30%까지 <b>${2 - ((w.thr[p.id] || 0) % 3)}샷</b>`}</span>`);
   if (cnt(p, 'grit')) parts.push(`<span class="sk-pill">${sl('傲')}오기 <b>힘 +${Math.round(A.gritStep * (w.grt[p.id] || 0) * 100)}%</b></span>`);
   if (cnt(p, 'squirrel')) parts.push(`<span class="sk-pill">${sl('鼠')}${(w.sqr[p.id] || 0) > 0 ? `다람쥐 <b>힘 +${Math.round((A.sqrV - 1) * 100)}% · ${w.sqr[p.id]}샷</b>` : '다람쥐 <b>떨어뜨리면 힘 오름</b>'}</span>`);
@@ -5128,7 +5168,7 @@ function renderLab() {
   const html = `<div class="lab-head"><span class="seal seal-xs">實</span><b>실험실</b><small>누르면 넣고, 다시 누르면 뺍니다</small></div>
     <div class="lab-who">${G.players.map(q => `<button type="button" data-labwho="${q.id}" class="${q.id === p.id ? 'on' : ''}">${teamName(q.team)} · ${esc(q.name)}</button>`).join('')}</div>
     ${tiers}
-    <div class="lab-act"><button type="button" data-labact="reset">판 다시 놓기</button><button type="button" data-labact="clear">${teamName(p.team)} 증강 모두 빼기</button></div>`;
+    <div class="lab-act"><button type="button" data-labact="reset">판 다시 놓기</button><button type="button" data-labact="clear">${teamName(p.team)} 초월 제외 증강 모두 빼기</button></div>`;
   if (el.dataset.h !== html) { el.dataset.h = html; el.innerHTML = html; }
 }
 $('labCard').addEventListener('click', e => {
@@ -5160,7 +5200,7 @@ function renderPlayers() {
     const active = G.started && !coinBusy() && (G.state === 'aim' || G.state === 'moving' || G.state === 'remote' || G.state === 'replay') && p.id === G.current;
     const items = uniq(p.augs).map(id => {
       const c = cnt(p, id), a = AUG[id], text = augCopyDisplay(id);
-      return `<li class="tier-${a.tier}"><span class="seal seal-xs">${a.seal}</span><div class="aug-line" data-aug="${id}" tabindex="0"><b><i class="tier-dot">${displayTier(a.tier)}</i>${displayAugName(id)}${c > 1 ? ` ×${c}` : ''}${a.quest ? `<span class="quest-tag">${UI_LANG === 'ja' ? '任務' : '퀘스트'}</span>` : ''}:</b> <span class="aug-summary">${statTextUI(text.keyword)}</span></div></li>`;
+      return `<li class="tier-${a.tier}"><span class="seal seal-xs">${a.seal}</span><div class="aug-line" data-aug="${id}" tabindex="0"><b><i class="tier-dot">${displayTier(a.tier)}</i>${displayAugName(id)}${c > 1 ? ` ×${c}` : ''}${a.quest ? `<span class="quest-tag">${UI_LANG === 'ja' ? '任務' : '퀘스트'}</span>` : ''}</b> <span class="aug-summary">${statTextUI(text.keyword)}</span></div></li>`;
     }).join('');
     return `<div class="pcard card${active ? ' active' : ''}">
       <div class="pcard-head">${avatar(p)}<span class="pcard-who"><span class="pcard-name">${esc(pSelf(p))}</span><small>${teamName(p.team)} · ${charTitle(charOf(p))}</small></span>${p.cpu ? `<span class="chip">CPU ${LVL_NAME[G.cpuLevel] || ''}</span>` : ''}${active ? '<span class="chip turn">차례</span>' : ''}<span class="pcount">돌 ${n}</span></div>
@@ -5175,10 +5215,10 @@ function pmeta(w, p) {
   const wedged = w.stones.filter(s => live(s) && s.owner === p.id && s.wedge);
   if (wedged.length) out.push(`쐐기 적용 <b>돌 ${wedged.map(s => `#${s.id}`).join(', ')} · 다음 내 샷 전까지 유지</b>`);
   const left = Math.max(0, (w.picks[p.id] - (w.bonus[p.id] || 0)) * K.P.lossPerPick - w.lost[p.id]);
-  if (cnt(p, 'lone') || cnt(p, 'heaven')) out.push(`<span><b>${cnt(p, 'lone') ? '외길' : '역천'}</b> · 증강을 더 받지 않음</span>`);
+  if (w.noAug && w.noAug[p.id]) out.push(`<span><b>${cnt(p, 'orleans') ? '오를레앙' : cnt(p, 'lone') ? '외길' : cnt(p, 'heaven') ? '역천' : '증강 획득 제한'}</b> · ${cnt(p, 'orleans') && w.orl[p.id] ? '초월 1장 선택 후 증강 획득 불가' : '증강을 더 받지 않음'}</span>`);
   else if (w.picks[p.id] > 0) out.push(K.baseLeft(w, p.team, p.id) < left ? '다음 증강 <b>없음</b>' : `다음 증강까지 <b>기본 돌 ${Math.round(left * 10) / 10}개</b>`);
   if (cnt(p, 'train')) out.push((w.trn[p.id] || 0) >= 99 ? '<b>수련 완료</b>' : `수련 <b>${Math.round(Math.min(K.A.trainN, w.trn[p.id] || 0) * 10) / 10}/${K.A.trainN}</b>`);
-  if (cnt(p, 'bounty') && (w.bty[p.id] || 0) > 0) out.push(`현상금 <b>${w.bty[p.id]}샷</b> 남음`);
+  if (cnt(p, 'bounty') && (w.bty[p.id] || 0) > 0) out.push(`현상금 <b>전체 ${w.bty[p.id]}수</b> 남음`);
   if (cnt(p, 'thrice')) out.push(K.thriceOn(w, p.id) ? '<b>삼세번 힘 +30% 적용 차례</b>' : `삼세번 힘 +30%까지 <b>${2 - ((w.thr[p.id] || 0) % 3)}샷</b>`);
   if (cnt(p, 'grit') && w.grt[p.id]) out.push(`오기 <b>힘 +${Math.round(K.A.gritStep * w.grt[p.id] * 100)}%</b>`);
   if (cnt(p, 'squirrel') && (w.sqr[p.id] || 0) > 0) out.push(`행복한 다람쥐 <b>힘 +${Math.round((K.A.sqrV - 1) * 100)}% · ${w.sqr[p.id]}샷</b>`);
@@ -5611,7 +5651,7 @@ function drainEvents() {
       case 'rope': if (e.v > 80) { boing(Math.min(1.6, 0.6 + e.v / 1800), e.push); fxRing(e.x, e.y, '#ffffff', 8, e.push ? 80 : 60, 0.35); } break;
       case 'revFall': fxRing(e.x, e.y, '#ff6a4a', 40, 6, 0.5); sfx(110, 0.4, 0.35); break;
       case 'labOff': addLog(`훈련장 · ${pLabel(p)}의 ${AUG[e.id].name} 뺌`, p.team); panel = true; break;
-      case 'orleans': addLog(`오를레앙의 최윤재 · ${pLabel(p)}의 나머지 증강을 제거했습니다. 초월 1장을 고르세요.`, p.team, true); panel = true; break;
+      case 'orleans': addLog(`오를레앙의 최윤재 · ${pLabel(p)}의 초월 외 증강을 제거하고 추가 획득을 막았습니다. ${e.target >= 0 ? `${pLabel(G.players[e.target])}에게 옥 증강 1장을 부여했습니다. ` : ''}${e.reward ? '초월 1장을 고르세요.' : '보유한 초월 증강은 유지됩니다.'}`, p.team, true); panel = true; break;
       case 'decreeAll': addLog(`어명 · ${pLabel(p)}이(가) ${pLabel(G.players[e.target])}의 증강을 모두 제거하고 추가 획득을 봉쇄했습니다.`, p.team, true); panel = true; break;
       case 'pajukStep': addLog(`파죽지세 · 상대 기본 돌 ${e.n}/2개 격파`, p.team, true); panel = true; break;
       case 'pajukFail': addLog('파죽지세 · 12수 조건 실패, 은 증강 1장을 무작위로 얻었습니다.', p.team, true); panel = true; break;
@@ -5716,7 +5756,7 @@ function drainEvents() {
       case 'trainStep': addLog(`수련 · ${pLabel(p)} ${Math.round(e.n * 10) / 10}/${K.A.trainN}${e.self ? ` (${WHY_TXT[e.self] || WHY_TXT.self})` : ''}`, p.team, true); panel = true; break;
       case 'bountySet':
         fxEnso(e.x, e.y, 60, '#e8b02a', { w: 10 }); fxStamp(e.x, e.y - 90, '賞', '현상금', { size: 66 });
-        addLog(`현상금 · ${josa(pLabel(p), '이/가')} 상대 돌 하나에 현상금을 걸었습니다 (내 샷 ${K.A.bountyN}번 안에)`, p.team, true); panel = true; break;
+        addLog(`현상금 · ${josa(pLabel(p), '이/가')} 상대 돌 하나에 현상금을 걸었습니다 (전체 ${K.A.bountyN}수 안에)`, p.team, true); panel = true; break;
       case 'bountyFail': addLog(`현상금 · ${pLabel(p)}의 현상금이 사라졌습니다`, p.team, true); panel = true; break;
       case 'brand': if (e.n) addLog(`낙인 · 상대 돌 ${e.n}개가 내 돌에 다시 맞을 때까지 방어력 25% 감소`, p.team); break;
       case 'brandHit': fxSparks(e.x, e.y, 14, '#ff7a3c', 360); fxStamp(e.x, e.y - 84, '烙', '낙인 해제', { size: 60 }); sfx(700, 0.45, 0.12); break;
@@ -6497,7 +6537,7 @@ function drawShrink(w, now) {
     return;
   }
   if (w.noShrink || !G.started) { setShrinkHint('', false); return; }
-  const P = K.P, lo = w.shrink, hi = S - w.shrink, smax = MAPS[w.map].shrinkMax, left = P.shrinkStart - w.shots;
+  const P = K.P, lo = w.shrink, hi = S - w.shrink, smax = Math.min(MAPS[w.map].shrinkMax, P.shrinkStep * P.shrinkTurns), left = P.shrinkStart - w.shots;
   const pulse = reduceMotion ? 0.6 : 0.5 + 0.5 * Math.sin(now / 220);
   if (w.shrink > 0) {
     ctx.fillStyle = C.void;
@@ -6509,7 +6549,7 @@ function drawShrink(w, now) {
   const extra = !done && !!w.xtra && w.shots >= P.shrinkStart - 1 && w.shrink < smax;   /* 같은 차례의 추가 샷: 판이 줄지 않음 */
   if (next) {
     /* 다음 수에 사라질 띠: 붉은 빗금 */
-    const n = Math.min(smax, w.shrink + smax / P.shrinkTurns), a = lo, b = n;
+    const n = Math.min(smax, w.shrink + P.shrinkStep), a = lo, b = n;
     ctx.save();
     ctx.beginPath(); ctx.rect(a, a, S - 2 * a, S - 2 * a); ctx.rect(b, b, S - 2 * b, S - 2 * b);
     ctx.fillStyle = `rgba(200,50,30,${0.16 + 0.16 * pulse})`; ctx.fill('evenodd'); ctx.clip('evenodd');
@@ -7255,10 +7295,10 @@ const sumHTML = () => (UI_LANG === 'ja' ? RULE_SUM_JA : RULE_SUM).map(([k, t]) =
 $('howto').innerHTML = sumHTML() + (UI_LANG === 'ja' ? '<li class="howto-more">詳しいルールは対局画面右下の「ルール」にあります。</li>' : '<li class="howto-more">자세한 규칙은 대국 화면 오른쪽 아래 \'규칙\'에 있습니다.</li>');
 const QUICK_RULES = [
   ['조작', ['돌을 누르고 뒤로 당겼다 놓으면 반대 방향으로 발사됩니다.', `한 수 제한 시간은 ${TURN_SEC}초입니다. 시간이 끝나면 차례가 넘어갑니다.`]],
-  ['승리', ['상대 돌을 모두 판 밖으로 떨어뜨리면 승리합니다.', '양쪽 마지막 돌이 함께 떨어지면 쏜 쪽이 패배합니다.']],
-  ['증강', [`국 시작에 1장, 내 기본 돌 ${K.P.lossPerPick}개를 잃을 때마다 1장을 고릅니다.`, '도둑에게 빼앗긴 기본 돌은 원래 주인의 증강 카운터에 반영됩니다. 외길은 한 번 등장하면 다시 나오지 않습니다.', '증강 조합은 없으며, 초월은 한 국에 한 사람당 1장입니다.']],
+  ['승리', ['상대 돌을 모두 판 밖으로 떨어뜨리면 승리합니다.', '양쪽 마지막 돌이 함께 떨어지면 부활·길동무 잔여 횟수가 많은 쪽이 승리하고, 같으면 쏜 쪽이 패배합니다.']],
+  ['증강', [`국 시작에 1장, 내 기본 돌 ${K.P.lossPerPick}개를 잃을 때마다 1장을 고릅니다.`, '도둑에게 빼앗긴 기본 돌은 원래 주인의 증강 카운터에 반영됩니다. 외길은 한 번 등장하면 다시 나오지 않습니다.', '증강 조합은 없으며, 초월은 한 국에 한 사람당 1장까지이고 어떤 효과로도 제거되지 않습니다.']],
   ['지형', ['각 지형은 전용 장애물과 규칙을 사용합니다. 차원문은 같은 표식끼리 연결되고, 반전 맵은 중앙 구멍·밧줄 규칙을 따릅니다.', '연못 금붕어는 연못 주변에 나타나 1수 뒤 돌아갑니다.']],
-  ['판 줄어듦', [`일반 맵은 ${K.P.shrinkStart}수부터 11회에 걸쳐 축소됩니다. 완료 후 '맵 줄어듦 끝'으로 표시되며, 반전 맵은 별도 적용됩니다.`]]
+  ['판 줄어듦', [`일반 맵은 ${K.P.shrinkStart}수부터 한 수마다 0.5칸씩, 총 ${K.P.shrinkTurns}수 동안 축소됩니다. 완료 후 '맵 줄어듦 끝'으로 표시되며, 반전 맵은 별도 적용됩니다.`]]
 ];
 $('rulesList').innerHTML = `<div class="rule-card"><p class="rule-h">${UI_LANG === 'ja' ? 'かんたんルール' : '빠른 규칙'}</p>${(UI_LANG === 'ja' ? QUICK_RULES_JA : QUICK_RULES).map(([h, list]) => `<section class="quick-rule"><b>${h}</b><ul>${list.map(r => `<li>${r}</li>`).join('')}</ul></section>`).join('')}</div>`;
 /* 증강 설명표: 등급별로 모든 증강의 효과를 한눈에 */
@@ -7269,7 +7309,7 @@ const bookQuick = id => {
   return `<span class="book-body"><span class="book-quick">${statTextUI(text.keyword)}</span></span>`;
 };
 const bookHTML = () => [1, 2, 3, 4].map(t => `<div><h3 data-tier="${t}">${TIER[t]}</h3><ul>${K.AUG_IDS.filter(id => AUG[id].tier === t)
-  .map(id => `<li data-book-aug="${id}"><span class="seal seal-xs">${AUG[id].seal}</span><b>${displayAugName(id)}${AUG[id].quest ? `<span class="quest-tag">${UI_LANG === 'ja' ? '任務' : '퀘스트'}</span>` : ''}:</b>${bookQuick(id)}</li>`).join('')}</ul></div>`).join('');
+  .map(id => `<li data-book-aug="${id}"><span class="seal seal-xs">${AUG[id].seal}</span><b>${displayAugName(id)}${AUG[id].quest ? `<span class="quest-tag">${UI_LANG === 'ja' ? '任務' : '퀘스트'}</span>` : ''}</b>${bookQuick(id)}</li>`).join('')}</ul></div>`).join('');
 const synBookHTML = () => '';
 $('augBook').innerHTML = `<div class="book">${bookHTML()}${synBookHTML()}</div>`;
 /* 설명표는 원래 키워드만 간략히 표시하고, 올리면 키워드와 자세한 설명을 함께 보여 줍니다. */
