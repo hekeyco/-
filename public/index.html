@@ -3564,7 +3564,7 @@ return { N, GAP, INSET, S, BASE_R, DT, FALL_T, TAU, CX, CY, L, P, A, MAPS, MAP_I
   setRandom, cnt, hasA, live, maxV, vmaxOf, statsFor, augAllowed, newWorld, gainAug, pendingPick, picksOwed, rollOffer, tierOdds, pityOn, canTake, fishPlan, collectFish,
   unsealIfStuck, step, updatePhase, startShot, fire, fireExact, packWorld, unpackWorld, runShot, afterShot, onTengen, byId, teamAlive, hasStones, knocked, cpuPlan,
   predictPath, travel, reachRay, threats, teamCount, obsLocal, markRemove, cpuMark, CPU_LEVEL, canShoot, padWait, restatAll, lightningZone, lightningForecastShrink,
-  SYN, hasSyn, synOf, augCopy, portalsOf, nearStar, nearEdge, inDragon, canYi, iceAt, thriceOn, baseLeft, morePicks, ICE, decreeOptions, removeAug, rerollOffer, canReroll, passTurn, buffOK, buffStone, autoBuff, buffNext, BUFF_NAME, trapOK, placeTrapAt, autoTraps, stealAug, resolveDecree, heaven, heavenOK, fallenBase, holeRock };
+  SYN, hasSyn, synOf, augCopy, AUG_SUMMARY, portalsOf, nearStar, nearEdge, inDragon, canYi, iceAt, thriceOn, baseLeft, morePicks, ICE, decreeOptions, removeAug, rerollOffer, canReroll, passTurn, buffOK, buffStone, autoBuff, buffNext, BUFF_NAME, trapOK, placeTrapAt, autoTraps, stealAug, resolveDecree, heaven, heavenOK, fallenBase, holeRock };
 })();
 if (typeof module !== 'undefined') module.exports = CORE;
 
@@ -3576,6 +3576,7 @@ const K = CORE;
 const { S, GAP, CX, CY, TAU, FALL_T, AUG, MAPS } = K;
 /* 증강 설명 데이터는 CORE 안에서 만들고, UI에서는 공개 API를 통해 씁니다. */
 const augCopy = K.augCopy;
+const AUG_SUMMARY = K.AUG_SUMMARY;
 const M = 70, VIEW = S + 2 * M;
 const C = {
   kaya1: '#e2b673', kaya2: '#c99652', grid: 'rgba(48,28,10,.78)',
@@ -3658,7 +3659,16 @@ const AUG_JA = {
  lian:['連環','毎手2回ショット（石・威力の制限なし）','自分の手番に2回撃てる。2発目も任意の石を同じ威力で撃てる。']
 };
 const displayAugName = id => UI_LANG === 'ja' && AUG_JA[id] ? AUG_JA[id][0] : AUG[id].name;
-const augCopyDisplay = id => UI_LANG === 'ja' && AUG_JA[id] ? { keyword: AUG_JA[id][1], summary: AUG_JA[id][1], detail: AUG_JA[id][2], keywords: [] } : augCopy(id);
+// 증강 선택 카드의 짧은 설명을 정본으로 사용합니다. 보유 증강 툴팁도 같은 문구를 쓰며, 긴 별도 설명은 표시하지 않습니다.
+const augCopyDisplay = id => {
+  if (UI_LANG === 'ja' && AUG_JA[id]) {
+    const summary = AUG_JA[id][1];
+    return { keyword: summary, summary, detail: summary, keywords: [] };
+  }
+  const base = augCopy(id);
+  const summary = typeof AUG_SUMMARY[id] === 'function' ? String(AUG_SUMMARY[id]()) : base.keyword;
+  return { ...base, summary, detail: summary };
+};
 const TIER_JA = { 1: '銀', 2: '金', 3: '玉', 4: '超越' };
 const displayTier = tier => UI_LANG === 'ja' ? TIER_JA[tier] : TIER[tier];
 
@@ -3780,6 +3790,20 @@ Object.assign(JA_EXACT, {
   '상대 돌은 연못 쪽으로 몰고, 내 돌은 연못에서 떨어뜨려 두세요.':'相手の石は池へ押し込み、自分の石は池から遠ざけましょう。',
   '금붕어는 연못 주변에 나타나 1수 뒤 돌아가며, 잡으면 다음 발사 힘 +10%를 얻습니다.':'金魚は池の近くに現れ、1手後に戻ります。捕まえると次のショット威力が10%上がります。'
 });
+Object.assign(JA_EXACT, {
+ '2선승':'2先取','3선승':'3先取','무작위':'ランダム','훈련장':'練習場','지형':'地形','승리 조건':'勝利条件','판 줄어듦':'盤面縮小',
+ '25수부터 일반 맵은 11회에 걸쳐 판 가장자리가 안으로 좁혀집니다. 축소가 끝난 뒤 ‘맵 줄어듦 끝’으로 표시되며, 반전 맵은 별도 규칙을 따릅니다.':'通常の地形では25手目から盤の縁が11回に分けて内側へ縮みます。完了後は「盤面縮小完了」と表示され、反転マップには別のルールが適用されます。',
+ "자세한 규칙은 대국 화면 오른쪽 아래 '규칙'에 있습니다.":'詳しいルールは対局画面右下の「ルール」にあります。',
+ '설정을 고르고 대국을 시작하세요':'設定を選んで対局を始めてください','사람 (한 화면에서 번갈아)':'人間（同じ画面で交代）',
+ '실험실':'実験室','누르면 넣고, 다시 누르면 뺍니다':'押すと追加、もう一度押すと削除します','판 다시 놓기':'盤面をリセット',
+ '아직 증강이 없습니다':'強化はまだありません','아직 기록이 없습니다':'記録はまだありません','새로 불러오기':'再読み込み',
+ '다음 국은':'次の対局は','증강은 모두 사라지고 새로 고릅니다':'強化はすべてリセットされ、新たに選びます',
+ '방장이 다음 국을 시작하기를 기다리고 있습니다.':'ルームホストが次の対局を始めるまでお待ちください。','방장이 새 대국을 열면 바로 이어집니다.':'ルームホストが新しい対局を開始すると続行します。',
+ '온라인 대국을 끝까지 마치면 닉네임별로 승·패가 쌓입니다. 이름에 마우스를 올리면(휴대폰은 누르면) 최근 전적이 보입니다.':'オンライン対局を最後までプレイすると、ニックネームごとに勝敗が記録されます。名前にカーソルを合わせる（スマートフォンではタップする）と最近の戦績が表示されます。',
+ '닉네임 기준의 간단한 기록이라, 같은 닉네임은 같은 사람으로 셉니다.':'ニックネームを基準にした簡易記録です。同じニックネームは同一人物として扱います。',
+ '당겨서 쏘기':'引いて撃つ','조준 취소':'照準をキャンセル','증강 고르기':'強化を選ぶ','이기는 법':'勝利条件','다 배웠어요':'学習完了',
+ '조작 배우기 ·':'操作ガイド・','다음':'次へ','이전':'前へ','닫기 ✕':'閉じる ✕','온라인 전적':'オンライン戦績'
+});
 const JA_PARTS = [
  ['상대가 쏜 돌','相手が撃った石'],['상대 기본 돌','相手の基本石'],['내 기본 돌','自分の基本石'],['우리 진영','自陣'],['우리 돌만','自分の石だけ'],['내 돌','自分の石'],['우리 돌','自分の石'],['상대 돌','相手の石'],['상대 증강','相手の強化'],['내 샷','自分のショット'],['다음 샷','次のショット'],['다음 내 차례','次の自分の手番'],['이번 국','この対局'],['다음 국','次の対局'],['판 가운데','盤の中央'],['가장자리','盤端'],['증강 획득','強化獲得'],['증강을','強化を'],['증강이','強化が'],['증강은','強化は'],['증강','強化'],['방어력','防御力'],['무게','重さ'],['크기','サイズ'],['마찰','摩擦'],['타격','衝撃'],['힘','威力'],['궤적','軌道'],['봉인','封印'],['초월','超越'],['무작위','ランダム'],['퀘스트','任務'],['조건','条件'],['성공','成功'],['실패','失敗'],['보상','報酬'],['선택','選択'],['획득','獲得'],['삭제','削除'],['제거','除去'],['고정','固定'],['중앙','中央'],['반경','半径'],['끌어당김','引き寄せ'],['발동','発動'],['범위','範囲'],['적용','適用'],['효과','効果'],['기본','基本'],['상대','相手'],['우리','自分側'],['진영','陣営'],['차례','手番'],['샷','ショット'],['돌이','石が'],['돌을','石を'],['돌은','石は'],['돌로','石で'],['돌에','石に'],['돌의','石の'],['평야','平野'],['흑요석 제단','黒曜石の祭壇'],['철옹성','鉄壁城'],['용오름','竜巻'],['연못','池'],['차원','次元'],['반전','反転'],['훈련장','練習場'],['흑','黒'],['백','白'],['달성','達成'],['내가','自分が'],['내 ','自分の'],['나의','自分の'],['우리 ','自分側の'],['상대의','相手の'],['상대가','相手が'],['상대는','相手は'],['모든','すべての'],['각각','それぞれ'],['증가','上昇'],['감소','低下'],['강화','強化'],['제한','制限'],['횟수','回数'],['잃어서','失ったため'],['얻습니다','獲得します'],['받습니다','獲得します'],['적용','適用'],['제외','対象外'],['다시','再び'],['계속','継続'],['돌 ','石 '],['수 ','手 ']
 ].sort((a,b)=>b[0].length-a[0].length);
@@ -3862,6 +3886,12 @@ const RULE_SUM = [
   ['차례', `한 번씩 번갈아 쏩니다. 한 수 제한 시간은 ${TURN_SEC}초입니다.`],
   ['증강', `국 시작에 1장, 내 기본 돌을 ${K.P.lossPerPick}개 잃을 때마다 1장을 고릅니다.`]
 ];
+const RULE_SUM_JA = [
+ ['目標','相手の石をすべて盤外へ落とすと勝利です。'],
+ ['ショット','自分の石を後ろへ引いて放すと、反対方向へ発射します。引くほど強くなります。'],
+ ['手番',`交互に1回ずつ撃ちます。1手の制限時間は${TURN_SEC}秒です。`],
+ ['強化',`対局開始時に1枚、基本石を${K.P.lossPerPick}個失うごとに1枚選びます。`]
+];
 const GLOSSARY = [
   ['힘', '내가 쏜 돌의 힘입니다. 셀수록 멀리, 세게 나갑니다.'],
   ['무게', '돌의 무게입니다. 무거우면 같은 힘에 덜 나가지만 충돌 때 상대를 더 밀고 덜 밀립니다.'],
@@ -3870,6 +3900,31 @@ const GLOSSARY = [
   ['크기', '돌의 지름입니다. 클수록 충돌 범위가 넓습니다.'],
   ['마찰', '바닥에 걸리는 정도입니다. 높을수록 빨리 멈춥니다.'],
   ['칸', '바둑판 한 칸만큼의 거리입니다.']
+];
+const GLOSSARY_JA = [
+ ['威力','自分が撃つ石の力です。高いほど遠く、強く飛びます。'],
+ ['重さ','石の重さです。同じ威力なら重い石ほど飛びにくく、衝突では押されにくくなります。'],
+ ['防御力','相手のショットを受けたときに耐える力です。高いほど押されにくくなります。'],
+ ['衝撃','衝突時に相手の石を弾き飛ばす強さです。'],
+ ['サイズ','石の直径です。大きいほど衝突範囲が広くなります。'],
+ ['摩擦','盤面との抵抗です。高いほど早く止まります。'],
+ ['マス','碁盤の目1つ分の距離です。']
+];
+const QUICK_RULES_JA = [
+ ['操作',['石を押したまま後ろへ引いて放すと、反対方向へ飛びます。',`1手の制限時間は${TURN_SEC}秒です。時間切れになると自動で手番が移ります。`]],
+ ['勝利',['相手の石をすべて盤外へ落とすと勝利です。','両者の最後の石が同時に落ちた場合、撃った側が負けます。']],
+ ['強化',[`対局開始時に1枚、基本石を${K.P.lossPerPick}個失うごとに1枚選びます。`,'盗賊に奪われた基本石は、元の持ち主の強化カウンターに加算されます。外道は一度出現すると再登場しません。','強化の組み合わせ効果はありません。超越は1対局につき各プレイヤー1枚までです。']],
+ ['地形',['各地形には専用の障害物とルールがあります。次元門は同じ印同士がつながり、反転マップでは中央の穴とロープに独自のルールがあります。','池の金魚は池の周辺に現れ、1手後に戻ります。']],
+ ['盤面縮小',[`通常の地形は${K.P.shrinkStart}手目から11回に分けて縮小します。完了後は「盤面縮小完了」と表示され、反転マップには別のルールが適用されます。`]]
+];
+const RULE_GROUPS_JA = [
+ ['用語',GLOSSARY_JA.map(([k,v])=>`<b>${k}</b> — ${v}`)],
+ ['操作',['自分の石を押したまま後ろへ引いて放すと、反対方向へ発射します。盤上のどこからでも石を選んで引くことができます。','引く量が40%以下の場合、停止位置が表示されます。マウスの右ボタン（スマートフォンでは別の指でタップ）で照準をキャンセルできます。',`1手の制限時間は${TURN_SEC}秒です。時間切れになると自動で手番が移ります。白側は盤面が180°回転し、常に下から上へ狙います。`]],
+ ['勝利',['石の中心が盤の端にある明るい線を越えると落下します。相手の石をすべて落とすと勝利です。','両者の最後の石が同時に落ちた場合、撃った側が負けます。最後の1個の石は押し出されにくくなります。']],
+ ['強化',[`対局開始時に1枚、基本石を${K.P.lossPerPick}個失うごとに追加で1枚選びます。選択時間は${PICK_SEC}秒で、時間切れになると自動選択されます。`,'失った基本石のみを数えます。盗賊に奪われた基本石は元の持ち主の損失として扱い、分裂した破片はそれぞれ半個として数えます。','銀・金・玉の順に出現率が低くなり、超越はクエスト報酬でのみ獲得できます。超越は1対局につき各プレイヤー1枚までです。','一度出現した外道は、その対局中は再び選択肢に現れません。一度選んだ強化も同じ対局では再登場しません。','クエストを達成すると追加の強化を獲得します。強化の組み合わせ効果はなく、それぞれ単独で発動します。','カードの各枠は対局中に1回だけ引き直せます。操作系の強化は自分の手番に専用ボタンで使用します。']],
+ ['地形',['各地形には専用の障害物とルールがあります。詳しい仕組みは地形紹介と対局中のルール一覧で確認できます。',`池：${K.A.frogEvery}手ごとに金魚が現れ、2手後に戻ります。捕まえると次のショット威力が10%上がります。`,'次元：同じ文字の門同士がつながります。通過すると進行方向を保ったまま速度が1.2倍になります。','反転：中央の穴とロープが独自に変化します。通常マップとは異なる縮小ルールを使用します。']],
+ ['盤面縮小',[`通常マップは${K.P.shrinkStart}手目から11回に分けて縮小します。最後まで縮小すると「盤面縮小完了」と表示されます。反転マップには別のルールが適用されます。`,'追加ショットは盤面の縮小回数に含まれません。']],
+ ['その他',['オンライン対戦ではホストが黒、参加者が白です。練習場では強化や時間制限なしで、両陣営の強化を自由に変更できます。','CPUの難易度、地形、サウンド設定はタイトル画面で変更できます。']]
 ];
 const RULE_GROUPS = [
   ['용어', GLOSSARY.map(([k, v]) => `<b>${k}</b> — ${v}`)],
@@ -3931,6 +3986,17 @@ const CHARS = [
     quote: '이 돌, 이제 내 거다!' }
 ];
 const CHAR = Object.fromEntries(CHARS.map(c => [c.id, c]));
+const CHAR_JA = {
+ cheongun:{name:'青雲',title:'流浪の剣客',traits:['寡黙','誇り高い','義理堅い'],story:'剣術の試合で友を傷つけた日、刀を置いて碁石を手にした。負け方を学ぶために旅を続けるが、いざ一局負けると三日間口をきかない。',bond:'白雲老師の弟子になろうと毎日訪ねるが、いつもおはじき一局で追い返される。',quote:'一度狙った場所は外さない。'},
+ hongmae:{name:'紅梅',title:'梅花館の主人',traits:['余裕','計算高い','思いやり'],story:'梅の花が咲く季節だけ店を開く梅花館の主人。笑顔のまま相手の手を最後まで読み切るが、賭け金の代わりに客の身の上話を聞くため、店はいつも赤字だ。',bond:'幼い頃に白雲老師から初めて石を教わった。青雲を今でも「刀を持ったちび」と呼んでからかう。',quote:'その手は、もう読めています。'},
+ baekun:{name:'白雲',title:'六十年の老棋士',traits:['飄々','頑固','慈愛'],story:'六十年にわたり盤を守ってきた老棋士。目が悪くなってからは石のぶつかる音だけで盤を読むと言い、いつも目を閉じて対局する。',bond:'孫娘の率賀にはとても甘いが、負けることだけは孫娘にも譲らない。',quote:'ほっほ、勝負は長い目で見るものじゃ。'},
+ solha:{name:'率賀',title:'寺子屋の末っ子',traits:['粘り強い','負けず嫌い','おしゃべり'],story:'師匠に隠れておはじきを覚えた寺子屋の末っ子。負けた日は髪飾りを結び直し、その日の手を反省ノートにびっしり書き込む努力家だ。',bond:'白雲老師の孫娘。市場の石ころとは会うたびに言い争う、犬猿の仲であり親友でもある。',quote:'もう一局！あと一局だけ！'},
+ dol:{name:'石ころ',title:'市場のいたずらっ子',traits:['いたずら好き','度胸','機転'],story:'市場の路地のおはじきでは負けたことがないという子ども。虎の帽子は亡き祖母が編んでくれたもので、寝るときも脱がない。',bond:'勝ち取った石を飴と交換しているところを率賀に見つかって以来、顔を合わせるたびに勝負している。',quote:'この石は、もうオレのものだ！'}
+};
+const charText = (c, key) => UI_LANG === 'ja' ? (CHAR_JA[c.id]?.[key] || c[key]) : c[key];
+const charName = c => charText(c,'name');
+const charTitle = c => charText(c,'title');
+
 const PIXKEYS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&()*+,-./:;=?@[]^_{|}~';
 const sprRows = {};
 /* 줄마다 [색 번호][길이-1] 쌍으로 줄여 담은 초상을 풀어냅니다 */
@@ -3969,7 +4035,7 @@ function loadProf(key, def) {
 }
 function saveProf(key, pr) { try { localStorage.setItem(key, JSON.stringify({ n: pr.n, c: pr.c })); } catch (e) {} }
 const PROF = { me: loadProf('alk-profile', 'cheongun'), p2: loadProf('alk-profile2', 'hongmae') };
-const profName = pr => pr.n || CHAR[pr.c].name;
+const profName = pr => pr.n || charName(CHAR[pr.c]);
 const charOf = p => CHAR[(p && p.char) || 'cheongun'] || CHARS[0];
 function avatar(p, opt = {}) {
   const ch = charOf(p), crop = opt.bust ? 'bust' : 'face', url = pixURL(ch.id, crop);
@@ -4022,12 +4088,12 @@ function makePlayers(mode, cpu) {
 }
 const curP = () => G.players[G.current];
 const enemyHas = (p, id) => G.players.some(q => q.team !== p.team && cnt(q, id) > 0);
-const teamName = t => (t === 0 ? '흑' : '백');
-const teamLabel = t => (G.mode === '2v2' ? teamName(t) + ' 편' : ((G.players.find(p => p.team === t) || {}).name || teamName(t)));
+const teamName = t => UI_LANG === 'ja' ? (t === 0 ? '黒' : '白') : (t === 0 ? '흑' : '백');
+const teamLabel = t => (G.mode === '2v2' ? teamName(t) + (UI_LANG === 'ja' ? 'チーム' : ' 편') : ((G.players.find(p => p.team === t) || {}).name || teamName(t)));
 const stoneCls = t => (t === 0 ? 'b' : 'w');
 const dotCls = p => (p && p.dot ? ' d' + p.dot : '');
 const LVL_NAME = { easy: '쉬움', normal: '중간', hard: '어려움' };
-const pLabel = p => p.name + (p.cpu ? ` (CPU ${LVL_NAME[G.cpuLevel] || ''})` : '');
+const pLabel = p => p.name + (p.cpu ? ` (CPU ${UI_LANG === 'ja' ? ({easy:'かんたん',normal:'ふつう',hard:'むずかしい'}[G.cpuLevel] || '') : (LVL_NAME[G.cpuLevel] || '')})` : '');
 const pSelf = p => pLabel(p) + (G.online && NET.seat === p.id ? ' (나)' : '');
 const uniq = a => [...new Set(a)];
 const mapFor = round => (G.mapSet === 'random' ? (G.mapSeq && G.mapSeq.length ? G.mapSeq[(round - 1) % G.mapSeq.length] : MAP_ORDER[0]) : G.mapSet);
@@ -4038,7 +4104,7 @@ function rollMapSeq(n = 9) {
   return seq;
 }
 const curMap = () => (G.world ? G.world.map : 'flat');
-const targetTxt = () => (G.target === 1 ? '단판' : `${G.target}선승`);
+const targetTxt = () => UI_LANG === 'ja' ? (G.target === 1 ? '1局勝負' : `${G.target}先取`) : (G.target === 1 ? '단판' : `${G.target}선승`);
 
 /* ---------- flow ---------- */
 function newMatch() {
@@ -4502,7 +4568,7 @@ function renderNetPanel() {
   }
   const seatTxt = NET.seat === 0 ? '흑 (방장)' : NET.seat === 1 ? '백' : '관전';
   el.innerHTML = `<div class="row net-code-row"><span class="code">${NET.code.toUpperCase()}</span><button class="btn-ghost net-copy" id="netCopy" type="button">방 코드 복사</button><span class="meta">${seatTxt}</span></div>
-    ${opp ? `<div class="who-chip">${avatar({ team: NET.seat === 0 ? 1 : 0, char: netProfOf(opp).c, dot: '' })}<span class="who-txt"><span class="tag">상대 기객</span><b>${esc(profName(netProfOf(opp)))}</b><small>${CHAR[netProfOf(opp).c].title}</small></span></div>` : ''}
+    ${opp ? `<div class="who-chip">${avatar({ team: NET.seat === 0 ? 1 : 0, char: netProfOf(opp).c, dot: '' })}<span class="who-txt"><span class="tag">상대 기객</span><b>${esc(profName(netProfOf(opp)))}</b><small>${charTitle(CHAR[netProfOf(opp).c])}</small></span></div>` : ''}
     <p class="${opp ? 'net-msg' : ''}">${opp ? '상대가 들어왔습니다.' : (NET.seat === 0 ? '상대에게 이 방 이름을 알려 주세요. 상대가 들어오면 시작할 수 있습니다.' : '방장을 기다리고 있습니다.')}</p>
     ${NET.seat === 0 ? '<p>지형과 승리 조건은 방장이 고른 대로 진행됩니다.</p>' : '<p>방장이 대국을 시작하면 바로 시작됩니다.</p>'}
     <div class="row"><button class="btn-ghost" id="netLeave" type="button">방 나가기</button></div>`;
@@ -4804,7 +4870,7 @@ function showResult(winTeam, reason) {
 function renderResMaps(done) {
   const el = $('resMaps'); if (!el) return;
   const can = !(G.online && NET.seat !== 0);
-  el.innerHTML = MAP_ORDER.concat(['random']).map(id => `<button type="button" class="res-map${G.mapSet === id ? ' on' : ''}" data-m="${id}"${can ? '' : ' disabled'}>${id === 'random' ? '무작위' : MAPS[id].name}</button>`).join('');
+  el.innerHTML = MAP_ORDER.concat(['random']).map(id => `<button type="button" class="res-map${G.mapSet === id ? ' on' : ''}" data-m="${id}"${can ? '' : ' disabled'}>${id === 'random' ? (UI_LANG === 'ja' ? 'ランダム' : '무작위') : (UI_LANG === 'ja' ? (MAP_NAME_JA[id] || MAPS[id].name) : MAPS[id].name)}</button>`).join('');
   if (!can) return;
   el.querySelectorAll('.res-map').forEach(b => b.addEventListener('click', () => {
     const id = b.dataset.m;
@@ -4822,6 +4888,7 @@ function renderResMaps(done) {
 function openMenu() {
   $('btnResume').hidden = !(G.started && G.state !== 'matchEnd');
   $('ovMenu').hidden = false;
+  renderGuide();
   $('btnStart').focus({ preventScroll: true });
 }
 
@@ -4852,9 +4919,17 @@ function renderMapCard() {
     : w && w.shrink > 0 ? (w.shrink >= m.shrinkMax ? '<b>맵 줄어듦 끝</b><small>11회 축소 완료</small>' : `<b>판이 줄어드는 중</b><small>${Math.min(K.P.shrinkTurns, Math.round(w.shrink / m.shrinkMax * K.P.shrinkTurns))}/${K.P.shrinkTurns}회 축소</small>`)
     : w && w.noShrink ? `<b>${shots}수</b><small>판 줄어듦 없음</small>` : `<b>${shots}수</b><small>수축까지 ${Math.max(0, left)}수</small>`;
   const frogTxt = w && m.frog ? (w.fish && w.fish.length ? '<small class="frog-left">금붕어 도약 중</small>' : '<small class="frog-left">금붕어는 5수마다 출현</small>') : '';
+  const mapTitle = UI_LANG === 'ja' ? (MAP_NAME_JA[m.id] || m.name) : m.name;
+  const mapDescription = UI_LANG === 'ja' ? ((GUIDE_JA[m.id] && GUIDE_JA[m.id].lines[0]) || m.short) : m.short;
+  const shrinkLabel = UI_LANG === 'ja'
+    ? (w && m.revHole ? (w.revGridDone ? `<b>${shots}手</b><small>区画消滅完了・3回</small>` : w.revTile ? `<b>${shots}手</b><small>${(w.revDrops || 0) + 1}/3回・区画消滅まで${w.revTile.left}手</small>` : w.revGrid ? `<b>${shots}手</b><small>次の2区画を選択中</small>` : `<b>${shots}手</b><small>中央の穴・ロープの変化 ${w.rvn || 0}/${K.A.revGrowN + K.A.revShrinkN}</small>`)
+      : w && w.shrink > 0 ? (w.shrink >= m.shrinkMax ? '<b>盤面縮小完了</b><small>11回の縮小完了</small>' : `<b>盤面縮小中</b><small>${Math.min(K.P.shrinkTurns, Math.round(w.shrink / m.shrinkMax * K.P.shrinkTurns))}/${K.P.shrinkTurns}回</small>`)
+      : w && w.noShrink ? `<b>${shots}手</b><small>盤面縮小なし</small>` : `<b>${shots}手</b><small>縮小開始まであと${Math.max(0, left)}手</small>`)
+    : shrinkTxt;
+  const fishLabel = UI_LANG === 'ja' && w && m.frog ? (w.fish && w.fish.length ? '<small class="frog-left">金魚が跳ねています</small>' : '<small class="frog-left">金魚は5手ごとに出現</small>') : frogTxt;
   $('mapCard').innerHTML = `<canvas width="88" height="88" data-map="${m.id}" style="width:44px;height:44px;border-radius:3px"></canvas>
-    <div><b>${UI_LANG === 'ja' ? ({flat:'平野',diamond:'黒曜石の祭壇',siege:'鉄壁城',boost:'竜巻',pond:'池',dim:'次元',rev:'反転',lab:'練習場'}[m.id] || m.name) : m.name}</b><small>${UI_LANG === 'ja' ? ({flat:'障害物のない基本地形です。',diamond:`中央の岩は石を弾き、${K.P.rockHits}回当たると砕けて破片を残します。`,siege:'上下は城壁で塞がれ、左右は開いています。',boost:'風門を通ると加速し、使った門は2手の間閉じます。',pond:'池に落ちた石は脱落します。金魚は池の近くに現れ、1手後に戻ります。捕まえると次のショットの力が10%上がります。',dim:'同じ印の門同士がつながり、通過すると速度が上がります。',rev:'中央の穴とロープが変化し、区画が順番に消えます。',lab:'強化を自由に試せる練習用地形です。'}[m.id] || m.short) : m.short}</small></div>
-    <div class="shrinkbar${w && w.shrink > 0 ? ' on' : ''}">${shrinkTxt}${frogTxt}</div>`;
+    <div><b>${mapTitle}</b><small>${mapDescription}</small></div>
+    <div class="shrinkbar${w && w.shrink > 0 ? ' on' : ''}">${shrinkLabel}${fishLabel}</div>`;
   drawMapThumb($('mapCard').querySelector('canvas'), m.id);
 }
 function renderStrip() {
@@ -5088,7 +5163,7 @@ function renderPlayers() {
       return `<li class="tier-${a.tier}"><span class="seal seal-xs">${a.seal}</span><div class="aug-line" data-aug="${id}" tabindex="0"><b><i class="tier-dot">${displayTier(a.tier)}</i>${displayAugName(id)}${c > 1 ? ` ×${c}` : ''}${a.quest ? `<span class="quest-tag">${UI_LANG === 'ja' ? '任務' : '퀘스트'}</span>` : ''}:</b> <span class="aug-summary">${statTextUI(text.keyword)}</span></div></li>`;
     }).join('');
     return `<div class="pcard card${active ? ' active' : ''}">
-      <div class="pcard-head">${avatar(p)}<span class="pcard-who"><span class="pcard-name">${esc(pSelf(p))}</span><small>${teamName(p.team)} · ${charOf(p).title}</small></span>${p.cpu ? `<span class="chip">CPU ${LVL_NAME[G.cpuLevel] || ''}</span>` : ''}${active ? '<span class="chip turn">차례</span>' : ''}<span class="pcount">돌 ${n}</span></div>
+      <div class="pcard-head">${avatar(p)}<span class="pcard-who"><span class="pcard-name">${esc(pSelf(p))}</span><small>${teamName(p.team)} · ${charTitle(charOf(p))}</small></span>${p.cpu ? `<span class="chip">CPU ${LVL_NAME[G.cpuLevel] || ''}</span>` : ''}${active ? '<span class="chip turn">차례</span>' : ''}<span class="pcount">돌 ${n}</span></div>
       ${items ? `<ul class="aug-list">${items}</ul>` : '<p class="empty">아직 증강이 없습니다</p>'}
       ${K.synOf(p).length ? `<div class="syn-list">${K.synOf(p).map(y => `<span class="syn-chip" data-syn="${y.id}" tabindex="0">조합 <b>${y.name}</b></span>`).join('')}</div>` : ''}
       ${G.started && w ? `<div class="pmeta">${pmeta(w, p)}</div>` : ''}
@@ -7176,8 +7251,8 @@ function drawMysteryThumb(c) {
 }
 drawMysteryThumb($('mapPick').querySelector('canvas[data-random]'));
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawMysteryThumb($('mapPick').querySelector('canvas[data-random]')));
-const sumHTML = () => RULE_SUM.map(([k, t]) => `<li><b>${k}</b>${t}</li>`).join('');
-$('howto').innerHTML = sumHTML() + '<li class="howto-more">자세한 규칙은 대국 화면 오른쪽 아래 \'규칙\'에 있습니다.</li>';
+const sumHTML = () => (UI_LANG === 'ja' ? RULE_SUM_JA : RULE_SUM).map(([k, t]) => `<li><b>${k}</b>${t}</li>`).join('');
+$('howto').innerHTML = sumHTML() + (UI_LANG === 'ja' ? '<li class="howto-more">詳しいルールは対局画面右下の「ルール」にあります。</li>' : '<li class="howto-more">자세한 규칙은 대국 화면 오른쪽 아래 \'규칙\'에 있습니다.</li>');
 const QUICK_RULES = [
   ['조작', ['돌을 누르고 뒤로 당겼다 놓으면 반대 방향으로 발사됩니다.', `한 수 제한 시간은 ${TURN_SEC}초입니다. 시간이 끝나면 차례가 넘어갑니다.`]],
   ['승리', ['상대 돌을 모두 판 밖으로 떨어뜨리면 승리합니다.', '양쪽 마지막 돌이 함께 떨어지면 쏜 쪽이 패배합니다.']],
@@ -7185,7 +7260,7 @@ const QUICK_RULES = [
   ['지형', ['각 지형은 전용 장애물과 규칙을 사용합니다. 차원문은 같은 표식끼리 연결되고, 반전 맵은 중앙 구멍·밧줄 규칙을 따릅니다.', '연못 금붕어는 연못 주변에 나타나 1수 뒤 돌아갑니다.']],
   ['판 줄어듦', [`일반 맵은 ${K.P.shrinkStart}수부터 11회에 걸쳐 축소됩니다. 완료 후 '맵 줄어듦 끝'으로 표시되며, 반전 맵은 별도 적용됩니다.`]]
 ];
-$('rulesList').innerHTML = `<div class="rule-card"><p class="rule-h">빠른 규칙</p>${QUICK_RULES.map(([h, list]) => `<section class="quick-rule"><b>${h}</b><ul>${list.map(r => `<li>${r}</li>`).join('')}</ul></section>`).join('')}</div>`;
+$('rulesList').innerHTML = `<div class="rule-card"><p class="rule-h">${UI_LANG === 'ja' ? 'かんたんルール' : '빠른 규칙'}</p>${(UI_LANG === 'ja' ? QUICK_RULES_JA : QUICK_RULES).map(([h, list]) => `<section class="quick-rule"><b>${h}</b><ul>${list.map(r => `<li>${r}</li>`).join('')}</ul></section>`).join('')}</div>`;
 /* 증강 설명표: 등급별로 모든 증강의 효과를 한눈에 */
 /* 설명표: 이 증강이 들어가는 조합 */
 const bookSyn = id => '';
@@ -7205,7 +7280,7 @@ $('btnBook').addEventListener('click', () => {
   ov.innerHTML = `<div class="ov-card bookcard" role="dialog" aria-modal="true" aria-labelledby="bookTitle">
     <p class="eyebrow">增 · 증강 설명표</p><h2 id="bookTitle">모든 증강 한눈에 보기</h2>
     <p class="why">한 국에서 처음 놓인 기본 돌을 ${K.P.lossPerPick}개 잃을 때마다 하나씩 더 고릅니다. 한 번 고른 증강은 그 국 안에서 다시 나오지 않습니다.</p>
-    <dl class="gloss">${GLOSSARY.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
+    <dl class="gloss">${(UI_LANG === 'ja' ? GLOSSARY_JA : GLOSSARY).map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
     <div class="book">${bookHTML()}</div>
     <div class="actions"><button class="btn-primary" id="bookClose" type="button">닫기</button></div></div>
     <button class="book-x" id="bookX" type="button" aria-label="증강 설명표 닫기">닫기 ✕</button>`;
@@ -7426,6 +7501,18 @@ function miniMark(g, m, a = 1, t = 0) {
   g.restore();
   miniLabel(g, m.tx != null ? m.tx : m.x, m.ty != null ? m.ty : m.y, m.text, a, 13, '#ffe6a8');
 }
+const MAP_NAME_JA = { flat:'平野', diamond:'黒曜石の祭壇', siege:'鉄壁城', boost:'竜巻', pond:'池', dim:'次元', rev:'反転', random:'ランダム', lab:'練習場' };
+const GUIDE_JA = {
+ flat:{lines:['特殊な障害物や地形効果のない基本盤です。','相手の石を盤の端から押し出しましょう。強化の組み合わせ効果は発動しません。'],marks:[{x:.5,y:.5,text:'障害物のない盤'}]},
+ diamond:{lines:[`中央の黒曜石は石を跳ね返します。${K.P.rockHits}回当たると砕け、破片が残ります。`,'天元の強化はこの地形には出現しません。'],marks:[{x:.5,y:.5,r:.17,text:'黒曜石',tx:.5,ty:.1}]},
+ siege:{lines:['自陣の後方にある上下の城壁は石を跳ね返します。','左右と四隅は開いています。横から押し出しましょう。'],marks:[{x:.5,y:-.06,text:'上下の城壁',tx:.5,ty:.2},{x:.02,y:.5,text:'左右は開放',tx:.24,ty:.5}]},
+ boost:{lines:['中央左右の風門を通過すると石が加速します。','一度使った風門は2手の間閉じます。'],marks:[{x:3/18,y:.5,r:.07,text:'風門',tx:.3,ty:.3},{x:15/18,y:.5,r:.07,text:'風門',tx:.7,ty:.7}]},
+ pond:{lines:['左右の池に落ちた石は脱落します。金魚は池の周辺に現れ、1手後に戻ります。','捕まえると次のショットの威力が10%上がります。'],marks:[{x:2.75/18,y:.5,r:.09,text:'池',tx:.3,ty:.3},{x:15.25/18,y:.5,r:.09,text:'池',tx:.7,ty:.7}]},
+ dim:{lines:['上下の横向きの甲門と、左右の縦向きの乙門がそれぞれ対になります。','同じ印の門同士がつながり、通過すると速度が1.2倍になります。盤が縮むと門も縁に沿って内側へ移動します。'],marks:[{x:.5,y:.035,r:.08,text:'甲',tx:.5,ty:.16},{x:.5,y:.965,r:.08,text:'甲',tx:.5,ty:.84},{x:.035,y:.5,r:.08,text:'乙',tx:.16,ty:.5},{x:.965,y:.5,r:.08,text:'乙',tx:.84,ty:.5}]},
+ rev:{lines:['中央の穴が広がり、外周のロープが縮みます。その後、盤が区画ごとに消えていきます。','隣接する2区画が4手前に予告され、同時に消滅します。'],marks:[{x:.5,y:.5,r:.08,text:'中央の穴',tx:.5,ty:.32},{x:-.04,y:.5,text:'外周ロープ',tx:.2,ty:.68}]},
+ lab:{lines:['強化選択や時間制限のない練習用の盤です（1局勝負・盤面縮小ありに固定）。','右側の実験室から黒・白どちらにも、すべての強化を自由に追加・削除できます。'],marks:[{x:.5,y:.5,text:'実験室',tx:.5,ty:.5}]},
+ random:{lines:['各対局で7種類の地形から1つがランダムに選ばれます。','同じ地形が連続して選ばれることはありません。'],marks:[]}
+};
 const GUIDE = {
   flat: { lines: ['특수 장애물·지형 효과가 없는 기본 판입니다.', '가장자리 밖으로 상대 돌을 밀어내세요. 증강 조합 효과는 적용되지 않습니다.'], marks: [{ x: 0.5, y: 0.5, text: '거칠 것 없는 맨판' }] },
   diamond: { lines: [`중앙 흑요석 바위는 돌을 튕겨 냅니다. ${K.P.rockHits}회 맞으면 깨지고 파편이 남습니다.`, '천원 증강은 이 지형에서 등장하지 않습니다.'], marks: [{ x: 0.5, y: 0.5, r: 0.17, text: '흑요석 바위', tx: 0.5, ty: 0.1 }] },
@@ -7453,7 +7540,8 @@ function drawGuide(g, id, t = 0) {
   if (id === 'rev') miniRev(g, t, 0);
   if (id === 'lab') { g.save(); g.fillStyle = 'rgba(40,140,150,.18)'; g.fillRect(mx(-1.1 / 18), mx(-1.1 / 18), mx(19.1 / 18) - mx(-1.1 / 18), mx(19.1 / 18) - mx(-1.1 / 18)); g.restore(); }
   for (const [r, c] of K.FORMATION['1v1'].base[0]) { miniStone(g, c / 18, r / 18, 0, 0.85, 7); miniStone(g, c / 18, (18 - r) / 18, 1, 0.85, 7); }
-  for (const m of (GUIDE[id] && GUIDE[id].marks) || []) miniMark(g, m, 1, t);
+  const marksSource = UI_LANG === 'ja' ? GUIDE_JA : GUIDE;
+  for (const m of (marksSource[id] && marksSource[id].marks) || []) miniMark(g, m, 1, t);
 }
 /* 반사: 바위 면에 부딪힌 방향 */
 function reflect(vx, vy, nx, ny) { const d = vx * nx + vy * ny; return [vx - 2 * d * nx, vy - 2 * d * ny]; }
@@ -7542,6 +7630,13 @@ const TUT = [
       miniSeal(g, 0.5, 0.42, '勝', seg(t, 3.4, 3.7), 70);
     } }
 ];
+const TUT_JA = [
+ {t:'引いて撃つ',txt:'自分の石を押したまま後ろへ引いて放します。引いた方向と反対へ、引いた強さに応じて飛びます。'},
+ {t:'石を選んで引く',txt:'石をタップして選び、盤上のどこからでも後ろへ引いて撃てます。'},
+ {t:'照準をキャンセル',txt:'引いている途中でやめたくなったら、PCではマウス右ボタン、スマートフォンでは別の指で画面をもう一度タップします。'},
+ {t:'強化を選ぶ',txt:`対局開始時と、最初に配置された基本石を${K.P.lossPerPick}個失うごとに、3枚の強化カードから1枚を選びます。銀・金・玉の順に希少です。`},
+ {t:'勝利条件',txt:'相手の石をすべて盤外へ落とすと勝利です。石の中心が盤の外へ出ると落下します。最後に残った石は押されにくくなります。'}
+];
 let tutIdx = 0, miniStop = null;
 function miniRun(cv, scene, onEnd, loop = true) {
   if (miniStop) miniStop();
@@ -7566,12 +7661,12 @@ function miniRun(cv, scene, onEnd, loop = true) {
 }
 function showTut(i) {
   tutIdx = Math.max(0, Math.min(TUT.length - 1, i));
-  const sc = TUT[tutIdx];
-  $('tutStep').textContent = `조작 배우기 · ${tutIdx + 1} / ${TUT.length}`;
-  $('tutTitle').textContent = sc.t; $('tutText').textContent = sc.txt;
+  const sc = TUT[tutIdx], shown = UI_LANG === 'ja' ? TUT_JA[tutIdx] : sc;
+  $('tutStep').textContent = UI_LANG === 'ja' ? `操作ガイド・${tutIdx + 1} / ${TUT.length}` : `조작 배우기 · ${tutIdx + 1} / ${TUT.length}`;
+  $('tutTitle').textContent = shown.t; $('tutText').textContent = shown.txt;
   $('tutDots').innerHTML = TUT.map((_, k) => `<i class="${k === tutIdx ? 'on' : ''}"></i>`).join('');
   $('tutPrev').disabled = tutIdx === 0;
-  $('tutNext').textContent = tutIdx === TUT.length - 1 ? '다 배웠어요' : '다음';
+  $('tutNext').textContent = UI_LANG === 'ja' ? (tutIdx === TUT.length - 1 ? '学習完了' : '次へ') : (tutIdx === TUT.length - 1 ? '다 배웠어요' : '다음');
   miniRun($('tutCv'), sc);
 }
 function openTut() {
@@ -7591,7 +7686,14 @@ function applyLanguage(lang) {
   document.querySelectorAll('#langPanel [data-lang]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === UI_LANG)));
   try { localStorage.setItem('alk-language', UI_LANG); } catch (e) {}
   if (G && G.world) renderAll();
+  if (typeof renderWho === 'function') renderWho();
+  if (typeof syncLvlUI === 'function') syncLvlUI();
+  if (typeof renderProfDetail === 'function' && !$('ovProfile').hidden) renderProfDetail();
   if (typeof renderMapCard === 'function') renderMapCard();
+  if (typeof renderGuide === 'function') renderGuide();
+  if (typeof showTut === 'function' && !$('ovTut').hidden) showTut(tutIdx);
+  if ($('howto')) $('howto').innerHTML = sumHTML() + (UI_LANG === 'ja' ? '<li class=\"howto-more\">詳しいルールは対局画面右下の「ルール」にあります。</li>' : '<li class=\"howto-more\">자세한 규칙은 대국 화면 오른쪽 아래 \'규칙\'에 있습니다.</li>');
+  if ($('rulesList')) $('rulesList').innerHTML = `<div class=\"rule-card\"><p class=\"rule-h\">${UI_LANG === 'ja' ? 'かんたんルール' : '빠른 규칙'}</p>${(UI_LANG === 'ja' ? QUICK_RULES_JA : QUICK_RULES).map(([h, list]) => `<section class=\"quick-rule\"><b>${h}</b><ul>${list.map(r => `<li>${r}</li>`).join('')}</ul></section>`).join('')}</div>`;
   translateTree(document.body);
   refreshAugSurfaces();
   startLanguageObserver();
@@ -7609,8 +7711,8 @@ $('btnRules').addEventListener('click', () => {
   const ov = $('ovRules');
   ov.innerHTML = `<div class="ov-card rules-card" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
     <p class="eyebrow">則 · 규칙</p><h2 id="rulesTitle">증강 알까기 규칙</h2>
-    <dl class="gloss">${GLOSSARY.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
-    ${RULE_GROUPS.filter(([h]) => h !== '용어').map(([h, list]) => `<div class="rule-card"><p class="rule-h">${h}</p><ul>${list.map(r => `<li>${r}</li>`).join('')}</ul></div>`).join('')}
+    <dl class="gloss">${(UI_LANG === 'ja' ? GLOSSARY_JA : GLOSSARY).map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
+    ${(UI_LANG === 'ja' ? RULE_GROUPS_JA : RULE_GROUPS).filter(([h]) => h !== (UI_LANG === 'ja' ? '用語' : '용어')).map(([h, list]) => `<div class="rule-card"><p class="rule-h">${h}</p><ul>${list.map(r => `<li>${r}</li>`).join('')}</ul></div>`).join('')}
     <div class="actions"><button class="btn-primary" id="rulesClose" type="button">닫기</button></div></div>
     <button class="book-x" id="rulesX" type="button" aria-label="규칙 닫기">닫기 ✕</button>`;
   ov.hidden = false;
@@ -7743,21 +7845,31 @@ function altarPics() {
 function renderGuide() {
   const id = (document.querySelector('input[name="map"]:checked') || {}).value || 'flat';
   const cv = $('guideCv'); if (!cv) return;
-  const lines = (GUIDE[id] && GUIDE[id].lines) || (INTRO[id] && INTRO[id].lines) || (MAPS[id] ? [MAPS[id].short] : []);
-  $('guideName').textContent = id === 'random' ? '무작위' : MAPS[id].name;
+  const source = UI_LANG === 'ja' ? GUIDE_JA : GUIDE;
+  const lines = (source[id] && source[id].lines) || (INTRO[id] && INTRO[id].lines) || (MAPS[id] ? [MAPS[id].short] : []);
+  $('guideName').textContent = UI_LANG === 'ja' ? (MAP_NAME_JA[id] || MAPS[id]?.name || '地形') : (id === 'random' ? '무작위' : MAPS[id].name);
   $('guideList').innerHTML = lines.map(l => `<li class="on">${l}</li>`).join('');
   const g = cv.getContext('2d'), dpr = Math.min(2, window.devicePixelRatio || 1);
   cv.width = MN * dpr; cv.height = MN * dpr;
   cancelAnimationFrame(guideRaf);
   const t0 = performance.now();
   const frame = now => {
-    if ($('ovMenu').hidden) { guideRaf = requestAnimationFrame(frame); return; }
+    if ($('ovMenu').hidden) { guideRaf = 0; return; }
     g.setTransform(dpr, 0, 0, dpr, 0, 0); drawGuide(g, id, reduceMotion ? 0 : (now - t0) / 1000);
     if (!reduceMotion) guideRaf = requestAnimationFrame(frame);
   };
   guideRaf = requestAnimationFrame(frame);
 }
-document.querySelectorAll('input[name="map"]').forEach(r => r.addEventListener('change', () => { renderGuide(); syncLabLock(); }));
+$('mapPick').addEventListener('change', e => {
+  const r = e.target.closest('input[name="map"]'); if (!r) return;
+  if (!MAPS[r.value] && r.value !== 'random') $('map-flat').checked = true;
+  renderGuide(); syncLabLock();
+});
+$('mapPick').addEventListener('click', e => {
+  const label = e.target.closest('label[for^="map-"]'); if (!label) return;
+  const radio = $('map-' + label.htmlFor.slice(4));
+  if (radio && !radio.checked) { radio.checked = true; radio.dispatchEvent(new Event('change', { bubbles:true })); }
+});
 /* 훈련장은 단판 · 판 줄어듦 있음으로 고정 (다른 지형을 고르면 원래대로) */
 function syncLabLock() {
   const lab = (document.querySelector('input[name="map"]:checked') || {}).value === 'lab';
@@ -7779,10 +7891,11 @@ function mapIntro(onDone) {
   if (!sc) return false;
   G.introDone = typeof onDone === 'function' ? onDone : null;
   const ov = $('ovIntro');
-  $('introTitle').textContent = MAPS[m].name;
+  $('introTitle').textContent = UI_LANG === 'ja' ? (MAP_NAME_JA[m] || MAPS[m].name) : MAPS[m].name;
   const pics = $('introPics'); pics.innerHTML = ''; pics.hidden = m !== 'diamond';
   if (m === 'diamond') altarPics().forEach(f => pics.appendChild(f));
-  $('introText').innerHTML = sc.lines.map(l => `<li>${l}</li>`).join('');
+  const introLines = UI_LANG === 'ja' && GUIDE_JA[m] ? GUIDE_JA[m].lines : sc.lines;
+  $('introText').innerHTML = introLines.map(l => `<li>${l}</li>`).join('');
   const lis = [...$('introText').children];
   const play = () => {
     clearTimeout(introTimer);
@@ -7828,7 +7941,7 @@ function startBlink() {
 }
 function renderWho() {
   const m = document.querySelector('input[name="mode"]:checked').value, opp = document.querySelector('input[name="opp"]:checked').value;
-  const chip = (pr, tag, which, team) => `<div class="who-chip">${avatar({ team, char: pr.c, dot: '' })}<span class="who-txt"><span class="tag">${tag}</span><b>${esc(profName(pr))}</b><small>${CHAR[pr.c].title}</small></span><button class="btn-ghost" type="button" data-prof="${which}">바꾸기</button></div>`;
+  const chip = (pr, tag, which, team) => `<div class="who-chip">${avatar({ team, char: pr.c, dot: '' })}<span class="who-txt"><span class="tag">${tag}</span><b>${esc(profName(pr))}</b><small>${charTitle(CHAR[pr.c])}</small></span><button class="btn-ghost" type="button" data-prof="${which}">바꾸기</button></div>`;
   let html = chip(PROF.me, m === 'net' ? '내 기객' : '흑 · 내 기객', 'me', 0);
   if (m === '1v1' && opp === 'human') html += chip(PROF.p2, '백 · 같은 화면의 상대', 'p2', 1);
   else if (m === '1v1') html += '<p class="who-note">CPU는 다른 기객 가운데 하나로 앉습니다.</p>';
@@ -7838,15 +7951,15 @@ function renderWho() {
 function renderProfDetail() {
   const c = CHAR[profSel];
   const st = $('profStage'); st.style.setProperty('--c', c.color);
-  st.innerHTML = `<img class="pix" src="${pixURL(c.id, 'bust')}" alt="${c.name}의 초상">`;
-  $('profInfo').innerHTML = `<span class="prof-title">${c.title}</span>
-    <div class="prof-name"><span class="seal seal-sm">${c.seal}</span><b>${c.name}</b><span class="h">${c.hanja}</span></div>
-    <div class="prof-traits">${c.traits.map(t => `<span>${t}</span>`).join('')}</div>
-    <p class="prof-story">${c.story}</p>
-    <p class="prof-bond"><b>인연</b>${c.bond}</p>
-    <p class="prof-quote">“${c.quote}”</p>
-    <p class="prof-note">기객은 겉모습과 이야기만 다릅니다. 능력치는 모두 같습니다.</p>`;
-  $('nickIn').placeholder = `${c.name} (비워 두면 이 이름)`;
+  st.innerHTML = `<img class="pix" src="${pixURL(c.id, 'bust')}" alt="${charName(c)}의 초상">`;
+  $('profInfo').innerHTML = `<span class="prof-title">${charTitle(c)}</span>
+    <div class="prof-name"><span class="seal seal-sm">${c.seal}</span><b>${charName(c)}</b><span class="h">${c.hanja}</span></div>
+    <div class="prof-traits">${c.traits.map((t,i) => `<span>${UI_LANG === 'ja' ? CHAR_JA[c.id].traits[i] : t}</span>`).join('')}</div>
+    <p class="prof-story">${charText(c,'story')}</p>
+    <p class="prof-bond"><b>${UI_LANG === 'ja' ? '縁' : '인연'}</b>${charText(c,'bond')}</p>
+    <p class="prof-quote">“${charText(c,'quote')}”</p>
+    <p class="prof-note">${UI_LANG === 'ja' ? '人物ごとに外見と物語は異なりますが、能力値はすべて同じです。' : '기객은 겉모습과 이야기만 다릅니다. 능력치는 모두 같습니다.'}</p>`;
+  $('nickIn').placeholder = UI_LANG === 'ja' ? `${charName(c)}（空欄の場合はこの名前）` : `${c.name} (비워 두면 이 이름)`;
   startBlink();
 }
 function openProfile(which, first = false) {
@@ -7854,9 +7967,9 @@ function openProfile(which, first = false) {
   const ov = $('ovProfile');
   ov.innerHTML = `<div class="ov-card prof" role="dialog" aria-modal="true" aria-labelledby="profTitle">
     <p class="eyebrow">棋客 · 기객 고르기</p>
-    <h2 id="profTitle">${which === 'me' ? '어느 기객으로 판에 앉으시겠습니까?' : '같은 화면에서 백을 칠 기객을 고르세요'}</h2>
+    <h2 id="profTitle">${UI_LANG === 'ja' ? (which === 'me' ? 'どの棋客で対局しますか？' : '同じ画面で白を担当する棋客を選んでください') : (which === 'me' ? '어느 기객으로 판에 앉으시겠습니까?' : '같은 화면에서 백을 칠 기객을 고르세요')}</h2>
     <div class="prof-main"><div class="prof-stage" id="profStage"></div><div class="prof-info" id="profInfo"></div></div>
-    <div class="prof-pick" role="radiogroup" aria-label="기객">${CHARS.map(c => `<input type="radio" name="pchar" id="pc-${c.id}" value="${c.id}"${c.id === profSel ? ' checked' : ''}><label for="pc-${c.id}"><span class="ava" style="--c:${c.color}"><img class="pix" src="${pixURL(c.id, 'face')}" alt=""></span>${c.name}</label>`).join('')}</div>
+    <div class="prof-pick" role="radiogroup" aria-label="기객">${CHARS.map(c => `<input type="radio" name="pchar" id="pc-${c.id}" value="${c.id}"${c.id === profSel ? ' checked' : ''}><label for="pc-${c.id}"><span class="ava" style="--c:${c.color}"><img class="pix" src="${pixURL(c.id, 'face')}" alt=""></span>${charName(c)}</label>`).join('')}</div>
     <div class="prof-row"><label for="nickIn">이름</label><input class="nick-in" id="nickIn" maxlength="10" autocomplete="nickname" spellcheck="false"><button class="btn-primary" id="profOk" type="button">이 기객으로 입장</button>${first ? '' : '<button class="btn-ghost" id="profCancel" type="button">취소</button>'}</div>
   </div>`;
   ov.hidden = false;
