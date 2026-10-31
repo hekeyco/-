@@ -4145,6 +4145,11 @@ function rollMapSeq(n = 9) {
 }
 const curMap = () => (G.world ? G.world.map : 'flat');
 const targetTxt = () => UI_LANG === 'ja' ? (G.target === 1 ? '1局勝負' : `${G.target}先取`) : (G.target === 1 ? '단판' : `${G.target}선승`);
+/* 첫 증강 선택 단계: 모든 참가자가 첫 선택을 마칠 때까지 선택 내용을 공개하지 않습니다. */
+function openingDraftHidden() {
+  const w = G.world;
+  return !!(G.started && w && !w.lab && G.after === 'start' && G.players.length > 1 && G.players.some(p => (w.picks[p.id] || 0) < 1));
+}
 
 /* ---------- flow ---------- */
 function newMatch() {
@@ -4791,7 +4796,7 @@ function showDecree(p, after) {
 function peekUI(ov) {
   ov.classList.remove('peek');
   const card = ov.querySelector('.ov-card');
-  if (!card) return;
+  if (!card || openingDraftHidden()) return;
   const cards = card.querySelector('.cards');
   const rr = card.querySelector('.reroll-note') || card.querySelector('.draft-timer') || card.querySelector('.reroll-row');
   (rr || cards || card.lastElementChild).insertAdjacentHTML('afterend', '<div class="peek-row"><button type="button" class="peek-btn" aria-label="고르기 창을 숨기고 판 보기">숨기기 ▾</button></div>');
@@ -5019,7 +5024,7 @@ function renderSkills() {
   const bar = $('skillBar');
   if (!bar) return;
   const w = G.world, p = G.started && w ? skillOwner() : null;
-  if (!p || !SKILL_IDS.some(id => cnt(p, id)) || G.state === 'roundEnd' || G.state === 'matchEnd') {
+  if (!p || openingDraftHidden() || !SKILL_IDS.some(id => cnt(p, id)) || G.state === 'roundEnd' || G.state === 'matchEnd') {
     if (!bar.hidden) { bar.hidden = true; bar.innerHTML = ''; resize(); }
     return;
   }
@@ -5193,20 +5198,20 @@ $('labCard').addEventListener('click', e => {
   drainEvents(); renderAll();
 });
 function renderPlayers() {
-  const w = G.world;
+  const w = G.world, privateOpening = openingDraftHidden();
   const list = G.started ? G.players : makePlayers('1v1', false);
   $('players').innerHTML = list.map(p => {
     const n = w ? w.stones.filter(s => live(s) && s.owner === p.id).length : 0;
     const active = G.started && !coinBusy() && (G.state === 'aim' || G.state === 'moving' || G.state === 'remote' || G.state === 'replay') && p.id === G.current;
-    const items = uniq(p.augs).map(id => {
+    const items = privateOpening ? '' : uniq(p.augs).map(id => {
       const c = cnt(p, id), a = AUG[id], text = augCopyDisplay(id);
       return `<li class="tier-${a.tier}"><span class="seal seal-xs">${a.seal}</span><div class="aug-line" data-aug="${id}" tabindex="0"><b><i class="tier-dot">${displayTier(a.tier)}</i>${displayAugName(id)}${c > 1 ? ` ×${c}` : ''}${a.quest ? `<span class="quest-tag">${UI_LANG === 'ja' ? '任務' : '퀘스트'}</span>` : ''}</b> <span class="aug-summary">${statTextUI(text.keyword)}</span></div></li>`;
     }).join('');
     return `<div class="pcard card${active ? ' active' : ''}">
       <div class="pcard-head">${avatar(p)}<span class="pcard-who"><span class="pcard-name">${esc(pSelf(p))}</span><small>${teamName(p.team)} · ${charTitle(charOf(p))}</small></span>${p.cpu ? `<span class="chip">CPU ${LVL_NAME[G.cpuLevel] || ''}</span>` : ''}${active ? '<span class="chip turn">차례</span>' : ''}<span class="pcount">돌 ${n}</span></div>
-      ${items ? `<ul class="aug-list">${items}</ul>` : '<p class="empty">아직 증강이 없습니다</p>'}
-      ${K.synOf(p).length ? `<div class="syn-list">${K.synOf(p).map(y => `<span class="syn-chip" data-syn="${y.id}" tabindex="0">조합 <b>${y.name}</b></span>`).join('')}</div>` : ''}
-      ${G.started && w ? `<div class="pmeta">${pmeta(w, p)}</div>` : ''}
+      ${privateOpening ? `<p class="empty">${UI_LANG === 'ja' ? '初回強化の選択完了後に公開' : '첫 증강 선택 완료 후 공개'}</p>` : items ? `<ul class="aug-list">${items}</ul>` : '<p class="empty">아직 증강이 없습니다</p>'}
+      ${!privateOpening && K.synOf(p).length ? `<div class="syn-list">${K.synOf(p).map(y => `<span class="syn-chip" data-syn="${y.id}" tabindex="0">조합 <b>${y.name}</b></span>`).join('')}</div>` : ''}
+      ${G.started && w && !privateOpening ? `<div class="pmeta">${pmeta(w, p)}</div>` : ''}
     </div>`;
   }).join('');
 }
@@ -5571,6 +5576,7 @@ function drainEvents() {
   const w = G.world;
   if (!w || !w.events.length) return;
   const ev = w.events; w.events = [];
+  if (openingDraftHidden()) return; /* 초기 증강 선택이 모두 끝날 때까지 선택 이펙트·기록은 공개하지 않음 */
   let panel = false;
   for (const e of ev) {
     const p = e.pid != null ? G.players[e.pid] : null;
@@ -6564,7 +6570,7 @@ function drawShrink(w, now) {
     ctx.lineDashOffset = reduceMotion ? 0 : -now / 30;
     ctx.strokeRect(lo, lo, hi - lo, hi - lo); ctx.restore();
   }
-  const msg = done ? '맵 줄어듦 끝' : extra ? '추가 샷 · 이번에는 판이 줄지 않습니다' : next ? (w.shrink < smax ? '다음 수에 붉은 색으로 표시된 가장자리가 사라집니다' : '') : soon ? `${left}수 뒤 판이 줄어들기 시작합니다` : '';
+  const msg = done ? '' : extra ? '추가 샷 · 이번에는 판이 줄지 않습니다' : next ? (w.shrink < smax ? '다음 수에 붉은 색으로 표시된 가장자리가 사라집니다' : '') : soon ? `${left}수 뒤 판이 줄어들기 시작합니다` : '';
   setShrinkHint(msg, soon && !next);   /* 글은 판 위가 아니라 차례 줄에 */
 }
 /* ---------- v29 증강 그림 ---------- */
