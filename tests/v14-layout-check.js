@@ -18,8 +18,9 @@ assert.match(css, /@media\s*\(max-width:\s*860px\)[\s\S]*?grid-template-columns:
   'Narrow screens must preserve the single-column layout');
 assert.match(css, /@media\s*\(max-width:\s*520px\)[\s\S]*?quick-rule\s*\{\s*grid-template-columns:\s*1fr/,
   'Compact quick rules must fit phone widths');
-assert.match(html, /function showBookAugTip\(/, 'Book hover detail renderer must remain');
-assert.match(html, /function augTipHTML\(/, 'Owned augmentation tooltip renderer must remain');
+assert(!html.includes('function showBookAugTip('), 'book must not open a second hover explanation');
+assert(!html.includes('function augTipHTML('), 'owned augment list must not open a second detail popup');
+assert.match(html, /const augCopy = id =>/, 'single-line augmentation summaries must be available');
 assert.match(html, /function resize\(\)[\s\S]*?Math\.min\(side, W\)/,
   'Board size must remain constrained by available height and width');
 
@@ -28,4 +29,4 @@ console.log(' - uploaded UI theme retained with a wider desktop lobby and one-ro
 console.log(' - desktop-only width expansion to 1600px');
 console.log(' - single-column responsive layout below 861px');
 console.log(' - phone-friendly quick-rules layout');
-console.log(' - augmentation tooltip and height-limited board sizing retained');
+console.log(' - single-pass augmentation descriptions and height-limited board sizing');

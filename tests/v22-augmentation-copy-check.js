@@ -1,0 +1,30 @@
+'use strict';
+const fs = require('fs');
+const assert = require('assert');
+const html = fs.readFileSync(__dirname + '/../public/index.html', 'utf8');
+const augStart = html.indexOf('const AUG = {');
+const augEnd = html.indexOf('const AUG_DISABLED', augStart);
+assert(augStart >= 0 && augEnd > augStart, 'augmentation definitions must be present');
+const augIds = [...html.slice(augStart, augEnd).matchAll(/^  ([A-Za-z0-9_]+):\s*\{/gm)].map(m => m[1]);
+assert(augIds.length >= 50, 'all current augmentation definitions must remain present');
+assert.match(html, /const AUG_COPY = \{\};[\s\S]*?const keyword = typeof a\.short === 'function'[\s\S]*?const detail = typeof a\.desc === 'function'[\s\S]*?a\.short = \(\) => keyword;\s*a\.desc = \(\) => detail;/,
+  'preserve short keywords and detailed descriptions independently');
+assert.match(html, /function cardHTML\([\s\S]*?aug-desc[^\n]*text\.detail/);
+assert.match(html, /function renderPlayers\(\)[\s\S]*?aug-summary[^\n]*text\.keyword/);
+assert.match(html, /const bookQuick = id =>[\s\S]*?book-quick[^\n]*text\.keyword/);
+assert.match(html, /function buildAugTipV22\([\s\S]*?statHTML\(id\)[\s\S]*?text\.detail/);
+assert.match(html, /function showAugTip\([\s\S]*?buildAugTipV22\(id, owner\)/);
+assert(!html.includes('tip-keyword'), 'v22-style tooltip must not add a separate keyword panel');
+assert.match(html, /\.st-up\{color:#bfecc6/);
+assert.match(html, /\.st-foe\{color:#c9dcff/);
+assert.match(html, /\.st-down\{color:#ffc2b5/);
+assert.match(html, /curve: \(\) => '약 30° 또는 60°로 좌우 휘어 쏘며, 조준 중 실제 예상 궤적을 보여 줍니다\.'/);
+assert.match(html, /\[-2, '◀◀ 60°'/);
+assert.match(html, /\[-1, '◀ 30°'/);
+assert.match(html, /\[1, '30° ▶'/);
+assert.match(html, /\[2, '60° ▶▶'/);
+assert.match(html, /if \(!shaky && o && o\.cv\) \{\s*drawPrediction\(s, ang, pw, p, o, 'curve'\)/,
+  'curved trajectory must be previewed before generic prediction and without needing an aim-pull anchor');
+console.log('v22 augmentation copy/curve checks: PASS');
+console.log(` - ${augIds.length} augmentation definitions retain concise keyword and detailed copy`);
+console.log(' - hover uses the concise v22 presentation, and Curve Ball shows 30° / 60° trajectory controls');

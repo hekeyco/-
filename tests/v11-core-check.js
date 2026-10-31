@@ -41,13 +41,21 @@ const ordered = centerFirst({}, [
 assert.deepStrictEqual(ordered.map(x => x.id), [3, 4, 1, 9]);
 
 assert(/edgeF:\s*1\.65,\s*edgeD:\s*1\.6\s*\*\s*GAP/.test(html), 'cliff range and 65% friction should remain configured');
-assert(/boltEvery:\s*2,\s*boltV:\s*620/.test(html), 'lightning should be buffed to 620');
+assert(/boltEvery:\s*3,\s*boltV:\s*620/.test(html), 'lightning should strike every three of the owner’s shots');
 assert(html.includes("ef *= hasSyn(owner, 'fortress') ? 2.5 : A.edgeF;"), 'cliff drag application missing');
 assert(!html.includes('A.edgeM') && !html.includes('P.wallRest'), 'old cliff armor or separate wall restitution remains');
 assert(html.includes("${G.round}:${p.id}:${w.picks[p.id]}:${offer.bonus ? 'bonus' : 'base'}"), 'reveal key missing');
 assert(html.includes("id=\"netCopy\""), 'room copy control missing');
 assert(html.includes("K.baseLeft(w, p.team, p.id) < left ? '다음 증강 <b>없음</b>'"), 'unavailable next basic pick should display none');
-assert(/revive: 3,/.test(html) && /kingV: 1\.4/.test(html) && /denseV: 1\.24/.test(html) && /dragonM: 2\.1/.test(html) && /tengenH: 1\.7/.test(html), 'jade tier buffs missing');
+assert(/revive: 3,/.test(html) && /kingV: 1\.4/.test(html) && /denseV: 1\.24/.test(html), 'unmodified baseline values should remain');
+assert(/sand: 1\.25/.test(html) && /markK: 1\.20/.test(html) && /wedgeM: 1\.7/.test(html) && /thorns: 0\.50/.test(html) && /bombR: 2 \* GAP/.test(html), 'requested augment values missing');
+assert(/shaky: 30 \* Math\.PI \/ 180/.test(html) && html.includes('Math.sin(now / 50)') && html.includes('Math.sin(now / 23)'), 'shaky aim should reach 15 degrees and oscillate faster');
+assert(/thriceV: 1\.30, thriceK: 1\.0/.test(html) && /glutN: Infinity/.test(html) && /bountyN: 8/.test(html), 'requested progression values missing');
+assert(html.includes("const AUG_DISABLED = new Set(['pass', 'grip', 'hammer', 'rewind', 'clone', 'ko', 'yi', 'first']);"), 'requested removed augment pool missing');
+assert(html.includes("const hasSyn = () => false;") && html.includes('const synBookHTML = () => \'\';'), 'augment combinations must be disabled');
+assert(!html.includes('|| inHole(w, s)) ef *= A.landF'), 'land territory must use normal board friction');
+assert(html.includes("['조각', '무게', `−${pc(1 - A.splitM)}%`, 'down']"), 'split weight reduction must be described');
+assert(html.includes("['보상', '초월', '1장 선택', 'up']"), 'Orleans reward must be described as one transcendent choice');
 for (const marker of [
   "const best = centerFirst(w, w.stones.filter(s => live(s) && s.owner === p.id && !s.king))[0];",
   "const best = centerFirst(w, w.stones.filter(s => live(s) && s.owner === p.id && !s.pillar))[0];",
@@ -82,10 +90,11 @@ for (let round = 0; round < 3; round++) {
 assert.strictEqual(completedDrops, 3, 'reverse map must collapse exactly three pairs');
 assert.strictEqual(activeTiles.length, 3, 'three connected tiles must remain');
 assert(html.includes('revDrops: w.revDrops || 0') && html.includes('rvc: w.revDrops || 0'), 'collapse count must persist in snapshots and online sync');
-assert(html.includes('data-book-aug=') && html.includes('book-keys'), 'quick augmentation guide and hover details missing');
+assert(html.includes('data-book-aug=') && html.includes('book-keys'), 'quick augmentation guide and original keywords missing');
+assert(!html.includes('showBookAugTip(') && html.includes('function showAugTip('), 'keep one-line descriptions and the existing hover detail tooltip');
 console.log('v12 reverse-map and quick-guide checks: PASS');
 console.log(' - three adjacent-pair collapses preserve one connected area');
 console.log(' - collapse count survives snapshots and online sync');
-console.log(' - compact descriptions/keywords with hover details');
+console.log(' - compact descriptions with original keywords and no duplicate detail popup');
 
 console.log('legacy dimension-specific checks superseded by the v15 four-portal suite');

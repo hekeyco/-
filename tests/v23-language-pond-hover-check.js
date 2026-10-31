@@ -1,0 +1,14 @@
+'use strict';
+const fs = require('fs');
+const assert = require('assert');
+const html = fs.readFileSync(__dirname + '/../public/index.html', 'utf8');
+assert(html.includes('id="btnLang"') && html.includes('data-lang="ko"') && html.includes('data-lang="ja"'), 'Korean/Japanese selector must be next to the ranking controls');
+assert(html.includes('function applyLanguage(lang)') && html.includes("'平野'"), 'language switch must apply Japanese labels and map descriptions');
+assert(html.includes('function showAugTip(') && html.includes('text.detail') && html.includes('.book li[data-book-aug]'), 'detailed hover help must remain available in cards, owned list and guide');
+assert(html.includes('data-aug="${id}" tabindex="0"'), 'owned augment rows must expose hover detail');
+assert(html.includes('fishStay: 1,'), 'pond fish must return after one turn');
+assert(html.includes('d = h.r + GAP * (0.65 + hsh(seed + 1) * 0.8)'), 'fish must stay close to the pond');
+assert(html.includes('h.y - 2 * GAP') && html.includes('h.y + 2 * GAP'), 'fish movement must be constrained around each pond');
+assert(html.includes('const gain = 0.10'), 'fish catch must grant only +10% next-shot power');
+assert(html.includes('금붕어는 연못 주변에 나타나 1수 뒤 돌아갑니다.'), 'pond quick description must be concise and current');
+console.log('v23 language/pond/hover checks: PASS');

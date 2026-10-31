@@ -19,7 +19,7 @@ const S = 2 * 83.835 + GAP * 18;
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 const MAPS = { dim: { portals: true }, pond: { frog: true } };
 const emitted = [];
-const portalApi = new Function('MAPS', 'clamp', 'S', 'GAP', 'emit', `
+const portalApiFactory = new Function('MAPS', 'clamp', 'S', 'GAP', 'emit', 'freeAt', 'nearSpot', `
   ${extractFunction('portalRand')}
   ${extractFunction('portalLayoutAt')}
   ${extractFunction('makePortalLayout')}
@@ -27,7 +27,8 @@ const portalApi = new Function('MAPS', 'clamp', 'S', 'GAP', 'emit', `
   const portalAt = (P, x, y) => { if (!P) return -1; for (let i = 0; i < P.length; i++) { const q = P[i]; if (x >= q.x0 && x <= q.x1 && y >= q.y0 && y <= q.y1) return i; } return -1; };
   ${extractFunction('portalStep')}
   return { makePortalLayout, portalsOf, portalStep, portalAt };
-`)(MAPS, clamp, S, GAP, (_w, e) => emitted.push(e));
+`);
+const portalApi = portalApiFactory(MAPS, clamp, S, GAP, (_w, e) => emitted.push(e), () => true, () => null);
 
 // 1,000 deterministic seeds: four edge gates, top/bottom 甲 and left/right 乙.
 for (let i = 1; i <= 1000; i++) {
@@ -77,81 +78,72 @@ for (const [sourceIndex, destinationIndex, label, team] of [[0, 1, '甲', 0], [1
   const w = { map: 'dim', portalSeed: 42, shrink: 0 };
   const gates = portalApi.makePortalLayout(w);
   const source = gates[sourceIndex], destination = gates[destinationIndex];
-  const stone = { x: source.cx, y: source.cy, vx: 300, vy: -400, _mv: true, ptl: -1 };
+  const stone = { x: source.cx, y: source.cy, r: GAP * 0.45, vx: 300, vy: -400, _mv: true, ptl: -1 };
   const beforeAngle = Math.atan2(stone.vy, stone.vx);
   portalApi.portalStep(w, stone);
-  assert(Math.abs(stone.x - destination.cx) < 1e-8 && Math.abs(stone.y - destination.cy) < 1e-8);
+  if (destinationIndex === 0) assert(stone.y > destination.y1, 'exit beyond top portal edge into board');
+  if (destinationIndex === 1) assert(stone.y < destination.y0, 'exit beyond bottom portal edge into board');
+  if (destinationIndex === 2) assert(stone.x > destination.x1, 'exit beyond left portal edge into board');
+  if (destinationIndex === 3) assert(stone.x < destination.x0, 'exit beyond right portal edge into board');
   assert(Math.abs(stone.vx - 360) < 1e-8 && Math.abs(stone.vy + 480) < 1e-8);
   assert(Math.abs(Math.atan2(stone.vy, stone.vx) - beforeAngle) < 1e-8);
   const event = emitted[emitted.length - 1];
   assert.strictEqual(event.label, label);
   assert.strictEqual(event.team, team);
   assert.strictEqual(event.boost, 1.2);
+  assert(Math.abs(event.speedAfter / event.speedBefore - 1.2) < 1e-8, 'portal must retain its 1.2x boost');
+}
+
+// If no safe landing spot exists, do not fall back to the destination portal center or overlap stones.
+const blockedEvents = [];
+const blockedApi = portalApiFactory(MAPS, clamp, S, GAP, (_w, e) => blockedEvents.push(e), () => false, () => null);
+{
+  const w = { map: 'dim', portalSeed: 91, shrink: 0 };
+  const gates = blockedApi.makePortalLayout(w), source = gates[0];
+  const stone = { x: source.cx, y: source.cy, r: GAP * 0.45, vx: 300, vy: -400, _mv: true, ptl: -1 };
+  const before = { x: stone.x, y: stone.y };
+  blockedApi.portalStep(w, stone);
+  assert.strictEqual(stone.x, before.x);
+  assert.strictEqual(stone.y, before.y);
+  assert.strictEqual(stone.ptl, 0, 'blocked portal should remain locked to source until it exits');
+  assert.strictEqual(blockedEvents.length, 0, 'blocked teleport should not emit a false portal event');
 }
 
 // Rewind invalidates the edge-geometry cache so the next portal read fits the current shrunken board.
-assert(html.includes('w.portalGeomShrink = -1;'), 'rewind must invalidate the cached portal geometry');
-assert(html.includes('portalGeomShrink !== (w.shrink || 0)'), 'portal geometry must be recomputed after the board shrinks');
+assert(html.includes('w.portalGeomShrink = -1;'), 'rewind must invalidate cached portal geometry');
+assert(html.includes('portalGeomShrink !== (w.shrink || 0)'), 'portal geometry must be recomputed after shrink');
 assert(html.includes('pa: w.portalAxis') && html.includes('pt: w.portalAlongT'), 'portal layout seed must be saved online');
-assert(html.includes('pl: (MAPS[w.map].portals ? portalsOf(w) : []).map'), 'portal coordinates and pair labels must be serialized online');
-assert(html.includes('w.fish = (o.fs || []).map(([x, y, px, py, left])'), 'fish lifetime must survive online restore');
-assert(html.includes('fs: (w.fish || []).map(f => [r1(f.x), r1(f.y), f.px, f.py, f.left])'), 'fish lifetime must be serialized online');
-assert(html.includes('fish: (w.fish || []).map(f => Object.assign({}, f))'), 'fish lifetime must be preserved by snapshots and CPU clones');
+assert(html.includes('pl: (MAPS[w.map].portals ? portalsOf(w) : []).map'), 'portal coordinates must be serialized online');
+assert(html.includes('w.fish = (o.fs || []).map(([x, y, px, py, left, hop = 1, ox = x, oy = y])'), 'fish hop state must survive online restore');
+assert(html.includes('fs: (w.fish || []).map(f => [r1(f.x), r1(f.y), f.px, f.py, f.left, f.hop || 1'), 'fish hop state must be serialized');
+assert(html.includes('fish: (w.fish || []).map(f => Object.assign({}, f))'), 'fish state must be preserved by snapshots and CPU clones');
 assert(html.includes('portalAxis: w.portalAxis, portalAlongT: w.portalAlongT'), 'portal layout seed must be cloned for CPU simulation');
 console.log('v15 dimension checks: PASS');
 console.log(' - 1,000 seeded layouts create mirrored top/bottom 甲 and left/right 乙 portal pairs');
-console.log(' - each opposite-edge pair uses a mirrored position across the board center');
-console.log(' - all four portals follow their edges and remain non-overlapping at maximum shrink');
-console.log(' - 甲↔甲 and 乙↔乙 transport preserve direction and apply 1.2x speed');
+console.log(' - all four portals follow the shrinking edges and remain non-overlapping');
+console.log(' - portal exits are placed beyond the destination opening without overlap');
 console.log(' - online/CPU/rewind portal geometry state is retained');
 
-// Pond fish spawn, then remain in the same place for three complete following turns.
-const A = { fishStay: 3, fishPower: 1.10, frogEvery: 5, fishLeapMin: 1.4, fishLeapSpan: 1.4, fishCatch: 20 };
+// Pond fish returns after one turn and each successful catch grants a fixed +10%.
+const A = { fishStay: 1, fishPower: 1.10, frogEvery: 5, fishLeapMin: 2.8, fishLeapSpan: 2.6, fishCatch: 20 };
 const fishPlan = new Function('S', 'GAP', 'CX', 'CY', 'A', 'clamp', `${extractFunction('fishPlan')}; return fishPlan;`)(S, GAP, S / 2, S / 2, A, clamp);
-const pondWorld = { shrink: 0, shots: 5, holes: [{ x: 500, y: 500, r: 40, pond: true }, { x: 1500, y: 1300, r: 40, pond: true }], fish: [] };
-const spawned = fishPlan(pondWorld);
-assert.strictEqual(spawned.length, 2, 'fish should spawn from both ponds at the interval');
-assert(spawned.every(f => f.left === 3), 'fish must begin with three full turns remaining');
-let current = { ...spawned[0] };
-for (const left of [2, 1]) {
-  const next = fishPlan({ ...pondWorld, shots: 6 + (3 - left), fish: [current] })[0];
-  assert.strictEqual(next.left, left);
-  assert.strictEqual(next.stay, true);
-  assert.strictEqual(next.x, current.x);
-  assert.strictEqual(next.y, current.y);
-  current = next;
-}
-const expired = fishPlan({ ...pondWorld, shots: 9, fish: [current] })[0];
-assert.strictEqual(expired.left, 0);
-assert.strictEqual(expired.gone, true, 'fish must leave after the third full following turn');
-
-// A fish grants +10% per pickup, stacks on the same stone, and is removed on collection.
+const pondWorld = { shrink: 0, shots: 5, holes: [{ x: 500, y: 500, r: 40, pond: true }], fish: [] };
+let fish = fishPlan(pondWorld)[0];
+assert(fish && fish.hop === 1 && fish.left === 0, 'fish must appear for one turn');
+const gone = fishPlan({ ...pondWorld, shots: 6, fish: [fish] })[0];
+assert(gone.gone, 'fish must return after one turn');
 const collectFish = new Function('live', 'hyp', 'emit', 'A', `${extractFunction('collectFish')}; return collectFish;`)(
   s => !s.dead, (x, y) => Math.hypot(x, y), (_w, event) => emitted.push(event), A
 );
 const collector = { id: 10, owner: 0, x: 100, y: 100, r: 20, _mv: true, fishBoost: 0, dead: false };
-const catchWorld = { shot: {}, stones: [collector], fish: [
-  { x: 100, y: 100, px: 80, py: 100 }, { x: 100, y: 100, px: 80, py: 100 }
-] };
+const catchWorld = { shot: {}, stones: [collector], fish: [{ ...fish, x: 100, y: 100, px: 80, py: 100, hop: 1 }] };
 assert.strictEqual(collectFish(catchWorld), true);
-assert.strictEqual(collector.fishBoost, 1);
-assert.strictEqual(catchWorld.fish.length, 1, 'caught fish must disappear immediately');
-assert.strictEqual(collectFish(catchWorld), true);
-assert.strictEqual(collector.fishBoost, 2, 'same stone can collect repeatedly');
-assert.strictEqual(catchWorld.fish.length, 0);
-assert.match(html, /const vmaxOf = \(w, s, pid = s\.owner\) => maxV\(w, w\.players\[pid\]\) \* \(1 \+ \(A\.fishPower - 1\) \* Math\.max\(0, Math\.floor\(s\.fishBoost \\|\\\\\\| 0\)\)\)/, 'shot speed must multiply by +10% per fish charge');
-const oneFishSpeed = 100 * (1 + (A.fishPower - 1));
-const testSpeed = 100 * (1 + (A.fishPower - 1) * 2);
-assert(Math.abs(oneFishSpeed - 110) < 1e-9, 'one fish grants +10% power on the next firing');
-assert(Math.abs(testSpeed - 120) < 1e-9, 'two fish grants +20% power on next firing speed');
-assert(/const fishCharges = Math\.max\(0, Math\.floor\(s\.fishBoost \|\| 0\)\);\s*if \(fishCharges\) \{ s\.fishBoost = 0;/.test(html), 'fish charges must be consumed on the next launch');
-assert(html.includes('fishStay: 3') && html.includes('fishPower: 1.10'), 'pond balance constants must be 3 turns and +10% per fish');
-assert(html.includes('const plans = MAPS[w.map].frog ? fishPlan(w) : []') && html.includes('w.fish = [];'), 'phase updates must remove expired fish from the board');
-assert(html.includes('금붕어는 3수 동안 머문 뒤 연못으로 돌아갑니다'), 'pond rules must describe the three-turn stay');
-assert(html.includes('ctx.fillText(`${left}수`, f.x, f.y - 48)'), 'pond fish must show the number of turns remaining');
-assert(html.includes('갑(甲)은 갑(甲)으로, 을(乙)은 을(乙)로 연결'), 'dimension introduction must explain the two matching pairs');
+assert.strictEqual(collector.fishBoost, 0.1, 'each catch must grant exactly +10%');
+assert(html.includes('fishStay: 1'), 'pond fish duration must be one turn');
+assert(html.includes('const gain = 0.10;'), 'fish reward must be fixed at +10%');
+assert(html.includes('1수 뒤 돌아갑니다'), 'pond rules must describe the one-turn return');
+assert(!html.includes('+8%·+6%'), 'old diminishing fish rewards must be removed');
 console.log('v15 pond checks: PASS');
-console.log(' - fish spawn with three full turns and stay at one location');
-console.log(' - uncaught fish exits after the third following turn');
-console.log(' - each catch stacks +10% on the same stone and removes the fish immediately');
-console.log(' - stacked bonus is consumed at the next shot');
+console.log(' - fish returns after one turn; each catch grants fixed +10%');
+console.log(' - diminishing fish rewards removed');
+console.log(' - online/CPU snapshots preserve fish state');

@@ -1,11 +1,11 @@
 {
   "name": "augment-alkkagi",
-  "version": "1.7.0",
+  "version": "1.31.0",
   "description": "증강 알까기 — 1대1 온라인 대전 서버",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "node tests/v11-core-check.js && node tests/v14-layout-check.js && node tests/v15-dim-pond-check.js && node tests/v16-map-lobby-check.js"
+    "test": "node tests/v11-core-check.js && node tests/v14-layout-check.js && node tests/v15-dim-pond-check.js && node tests/v16-map-lobby-check.js && node tests/v17-user-request-check.js && node tests/v18-visual-ux-check.js && node tests/v19-dragon-owner-buff-check.js && node tests/v20-startup-check.js && node tests/v21-wedge-lightning-check.js && node tests/v22-augmentation-copy-check.js && node tests/v23-language-pond-hover-check.js && node tests/v24-lightning-boundary-check.js && node tests/v25-lobby-order-startup-check.js && node tests/v26-knockback-stats-check.js && node tests/v27-zone-visibility-and-motion-start-check.js && node tests/v28-startup-scope-check.js && node tests/v29-augment-keyword-tooltip-check.js && node tests/v31-selection-japanese-check.js"
   },
   "engines": {
     "node": ">=18"
