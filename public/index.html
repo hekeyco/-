@@ -845,6 +845,49 @@ html, body { max-width: 100%; overflow-x: clip; }
 @media (max-width: 520px) {
   .quick-rule { grid-template-columns: 1fr; gap: 2px; }
 }
+
+/* v54: 데스크톱 증강 설명표를 넓히고 등급별 다단 배치 (모바일 레이아웃 유지) */
+@media (min-width: 861px) {
+  .bookcard { width: min(96vw, 1280px); max-height: calc(100dvh - 40px); overflow-y: auto; }
+  .bookcard .book { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; }
+}
+@media (min-width: 1200px) {
+  .bookcard .book { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 24px; }
+}
+
+/* v55: 모바일 진행 수 표시와 타이머를 한 줄 안에서 분리하고 판 터치 영역과 겹치지 않게 함 */
+@media (max-width:560px) {
+  .turn-strip { box-sizing:border-box; padding-right:104px; grid-template-columns:auto minmax(0,1fr) auto; column-gap:6px; }
+  .turn-strip:not(:has(.ava)) { grid-template-columns:minmax(0,1fr) auto; }
+  .turn-strip:not(:has(.ava))>.turn-name { grid-column:1; min-width:0; }
+  .turn-count,
+  .turn-strip:not(:has(.ava))>.turn-count { position:static !important; grid-row:1; grid-column:3; justify-self:end; align-self:center; margin:0 !important; padding:3px 5px; font-size:10px; }
+  .turn-strip:not(:has(.ava))>.turn-count { grid-column:2; }
+  .turn-name { min-width:0; font-size:clamp(15px,4.2vw,19px); }
+  .turn-hint { grid-column:2/4; }
+  .turn-strip:not(:has(.ava))>.turn-hint { grid-column:1/3; }
+  .turn-count,.turn-timer,.turn-strip { pointer-events:none; }
+  .turn-timer { padding:3px 7px; }
+}
+
+
+/* v55: 모바일 진행 수를 타이머 왼쪽 별도 칸에 놓고 안내 UI가 판 터치를 가로채지 않게 함 */
+@media (max-width:560px) {
+  .turn-strip { box-sizing:border-box; padding-right:96px; grid-template-columns:auto minmax(0,1fr) auto; column-gap:6px; }
+  .turn-strip:not(:has(.ava)) { grid-template-columns:minmax(0,1fr) auto; }
+  .turn-strip:not(:has(.ava))>.turn-name { grid-column:1; min-width:0; }
+  .turn-count,
+  .turn-strip:not(:has(.ava))>.turn-count { position:static !important; grid-row:1; grid-column:3; justify-self:end; align-self:center; margin:0 !important; padding:3px 5px; font-size:10px; }
+  .turn-strip:not(:has(.ava))>.turn-count { grid-column:2; }
+  .turn-name { min-width:0; font-size:clamp(15px,4.2vw,19px); }
+  .turn-hint { grid-column:2/4; }
+  .turn-strip:not(:has(.ava))>.turn-hint { grid-column:1/3; }
+  .turn-strip,.turn-count,.turn-timer { pointer-events:none; }
+  .turn-timer { padding:3px 7px; }
+  .turn-strip>.alert { grid-row:2; grid-column:2/4; justify-self:start; }
+  .turn-strip:has(.alert) .turn-hint { display:none; }
+}
+
 </style>
 
 <header class="bar">
@@ -2057,6 +2100,7 @@ function pendingPick(w) {
 }
 function canTake(w, p, id) {
   const a = AUG[id];
+  if (id === 'pillar' && teamCount(w, p.team) <= 1) return false;
   const orleansReward = !!(w.orl && w.orl[p.id] > 0 && a && a.tier === 4);
   if (w.noAug && w.noAug[p.id] && !orleansReward) return false;
   if (cnt(p, id) > 0) return false;   /* 한 번 고른 증강은 그 국 안에서 다시 나오지 않습니다 */
@@ -2781,17 +2825,18 @@ function portalLayoutAt(w) {
   const lo = w.shrink || 0, hi = S - lo, span = hi - lo;
   /* 甲: 위·아래 한 쌍 / 乙: 왼쪽·오른쪽 한 쌍. 반대편 문은 중심축 기준 거울 반전 위치. */
   const t = clamp(Number.isFinite(w.portalAlongT) ? w.portalAlongT : 0.5, 0.42, 0.58);
-  const along = lo + span * t, inset = 0.5 * GAP;
-  const edgeLo = lo + inset, edgeHi = hi - inset;
+  const along = lo + span * t;
   const alongMirror = lo + span * (1 - t);
+  /* 포털은 판의 테두리에 맞닿는 얇은 틈으로 배치합니다. */
+  const depth = 0.3 * GAP;
   const centers = [
-    { cx: along, cy: edgeLo, vertical: false, pair: 0, team: 0, label: '甲' },
-    { cx: alongMirror, cy: edgeHi, vertical: false, pair: 0, team: 0, label: '甲' },
-    { cx: edgeLo, cy: along, vertical: true, pair: 1, team: 1, label: '乙' },
-    { cx: edgeHi, cy: alongMirror, vertical: true, pair: 1, team: 1, label: '乙' }
+    { cx: along, cy: lo + depth / 2, vertical: false, pair: 0, team: 0, label: '甲' },
+    { cx: alongMirror, cy: hi - depth / 2, vertical: false, pair: 0, team: 0, label: '甲' },
+    { cx: lo + depth / 2, cy: along, vertical: true, pair: 1, team: 1, label: '乙' },
+    { cx: hi - depth / 2, cy: alongMirror, vertical: true, pair: 1, team: 1, label: '乙' }
   ];
   return centers.map(({ cx, cy, vertical, pair, team, label }, index) => {
-    const hw = (vertical ? 0.5 : 1.5) * GAP, hh = (vertical ? 1.5 : 0.5) * GAP;
+    const hw = (vertical ? depth / 2 : 1.5 * GAP), hh = (vertical ? 1.5 * GAP : depth / 2);
     return { x0: cx - hw, y0: cy - hh, x1: cx + hw, y1: cy + hh, cx, cy, vertical, index, pair, team, label };
   });
 }
@@ -2830,15 +2875,27 @@ function portalStep(w, s) {
   const i = portalAt(P, s.x, s.y);
   if (s.ptl != null && s.ptl >= 0) { if (i !== s.ptl) s.ptl = -1; return; }
   if (i < 0 || !s._mv) return;
-  const src = P[i], dst = P.find(q => q.pair === src.pair && q.index !== src.index);
+  const src = P[i];
+  /* 한쪽 면만 개방: 판 안쪽에서 테두리 바깥 방향으로 진입할 때만 작동합니다. */
+  const inwardToEdge = src.index === 0 ? s.vy < 0
+    : src.index === 1 ? s.vy > 0
+    : src.index === 2 ? s.vx < 0
+    : s.vx > 0;
+  if (!inwardToEdge) return;
+  const dst = P.find(q => q.pair === src.pair && q.index !== src.index);
   if (!dst) return;
   const fx = s.x, fy = s.y, speedBefore = Math.hypot(s.vx, s.vy), pad = s.r + 12;
-  /* 목적지 문 가장자리 바깥에서 재출발해 문 안에 겹치지 않게 합니다. */
+  /* 목적지 문 가장자리 바깥에서 재출발합니다. 진입 지점의 문 폭 방향 오프셋은
+     반전해 전달하므로 오른쪽으로 들어가면 출구의 왼쪽으로, 위쪽이면 아래쪽으로 나옵니다. */
   let ex = dst.cx, ey = dst.cy;
+  if (!src.vertical) ex = dst.cx - (s.x - src.cx);
+  else ey = dst.cy - (s.y - src.cy);
   if (dst.index === 0) ey = dst.y1 + pad;
   else if (dst.index === 1) ey = dst.y0 - pad;
   else if (dst.index === 2) ex = dst.x1 + pad;
   else if (dst.index === 3) ex = dst.x0 - pad;
+  if (!dst.vertical) ex = clamp(ex, dst.x0 + s.r + 2, dst.x1 - s.r - 2);
+  else ey = clamp(ey, dst.y0 + s.r + 2, dst.y1 - s.r - 2);
   const lo = w.shrink + s.r + 4, hi = S - w.shrink - s.r - 4;
   ex = clamp(ex, lo, hi); ey = clamp(ey, lo, hi);
   if (!freeAt(w, ex, ey, s.r, s, s.team)) {
@@ -3892,10 +3949,10 @@ Object.assign(JA_EXACT, {
   '판 양쪽 가장자리 가까이에 바람문(가로 3칸 · 세로 1칸)이 둘 있습니다.':'盤の左右端近くに風門（横3マス・縦1マス）が2つあります。',
   '흑·백 누구의 샷이든, 바람문을 지나는 돌은 빨라집니다.':'黒白どちらのショットでも、風門を通る石は加速します。',
   [`한 번 쓰인 문은 ${K.P.gateCool}수 동안 닫힙니다. 처음 자리에서 바로 상대 돌을 떨어뜨릴 만큼 세지는 않습니다.`]:`一度使った門は${K.P.gateCool}手の間閉じます。開始位置からすぐ相手の石を落とすほど強くはありません。`,
-  '가로 또는 세로로 마주 보는 가장자리에 1×3 또는 3×1 차원문 네 개가 놓입니다.':'向かい合う辺に、横1×3または縦3×1の次元門が4つ配置されます。',
+  '맵 가장자리 끝에 얇은 차원문 네 개가 놓이며, 안쪽에서 가장자리 방향으로 접근할 때만 통과할 수 있습니다.':'向かい合う辺に、横1×3または縦3×1の次元門が4つ配置されます。',
   '두 쌍의 문은 좌우·상하 반전 대칭이며, 위치와 방향은 매 대국 무작위로 정해집니다.':'2組の門は左右・上下に対称で、位置と向きは対局ごとにランダムに決まります。',
   '갑(甲)은 갑(甲)으로, 을(乙)은 을(乙)로 연결되며 통과 시 속도가 1.2배가 됩니다.':'甲は甲へ、乙は乙へつながり、通過すると速度が1.2倍になります。',
-  '포털 한쪽 끝은 판 테두리에 맞닿으며, 판이 줄어들면 테두리를 따라 안쪽으로 이동합니다.':'門の片側は盤の縁に接し、盤が縮むと縁に沿って内側へ移動します。',
+  '차원문은 판 테두리에 붙어 있으며, 판이 줄어들면 가장자리를 따라 함께 이동합니다.':'門の片側は盤の縁に接し、盤が縮むと縁に沿って内側へ移動します。',
   '판 가운데에 4×4칸 사각 구멍이 있고, 돌의 가운데가 들어가면 떨어집니다.':'盤の中央に4×4マスの四角い穴があり、石の中心が入ると落下します。',
   '판 둘레는 흰 밧줄이라 돌이 판 밖으로 떨어지지 않고 세게 튕겨 나옵니다(밀려 온 돌은 반동 +50%).':'盤の縁は白いロープで、石は盤外へ落ちず強く跳ね返ります（押されてきた石の反動+50%）。',
   [`${K.P.shrinkStart}수부터 구멍이 2번 커지고 밧줄이 3번 좁혀집니다. 이후 판을 3×3 구역으로 나눠, 빈 구역을 포함한 무작위 두 구역을 4수 뒤 함께 없앱니다. 남은 구역은 서로 연결된 상태를 유지합니다.`]:`${K.P.shrinkStart}手から穴が2回広がり、ロープが3回狭まります。その後、盤を3×3区画に分け、空区画を含むランダムな2区画を4手後に同時に消します。残る区画は互いにつながった状態を保ちます。`,
