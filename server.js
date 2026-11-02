@@ -67,6 +67,8 @@ const saveMatches = () => { clearTimeout(saveTimer); saveTimer = setTimeout(() =
 const DEFAULT_NICKS = new Set(['청운', '홍매', '백운', '솔하', '돌이']);
 const NICK = v => typeof v === 'string' && v.trim().length > 0 && v.length <= 20 && !/[<>"'`&\\\u0000-\u001f]/.test(v);
 const postBudget = new Map();   // ip -> { n, at } : 1분에 10번까지
+/* 오래된 IP 기록은 5분마다 지워 메모리가 계속 늘지 않게 함 */
+setInterval(() => { const old = Date.now() - 120000; for (const [ip, b] of postBudget) if (b.at < old) postBudget.delete(ip); }, 300000).unref();
 function matchesApi(req, res) {
   const send = (code, obj) => { res.writeHead(code, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' }); res.end(JSON.stringify(obj)); };
   if (req.method === 'GET') return ready.then(() => send(200, { matches: matches.slice(-400).reverse() }));
@@ -77,13 +79,15 @@ function matchesApi(req, res) {
   if (++b.n > 10) { postBudget.set(ip, b); return send(429, { error: 'slow down' }); }
   postBudget.set(ip, b);
   let body = '';
-  req.on('data', c => { body += c; if (body.length > 2000) req.destroy(); });
+  let tooBig = false;
+  req.on('data', c => { if (tooBig) return; body += c; if (body.length > 2000) { tooBig = true; send(413, { error: 'too large' }); req.destroy(); } });
   req.on('end', async () => {
+    if (tooBig) return;
     await ready;
     let m; try { m = JSON.parse(body); } catch (e) { return send(400, { error: 'json' }); }
     if (!m || !NICK(m.a) || !NICK(m.b) || !NICK(m.w) || (m.w !== m.a && m.w !== m.b) || m.a === m.b) return send(400, { error: 'fields' });
     if (DEFAULT_NICKS.has(m.a.trim()) || DEFAULT_NICKS.has(m.b.trim())) return send(200, { ok: true, skipped: 'default-nickname' });
-    const rec = { a: m.a, b: m.b, w: m.w, s: String(m.s || '').slice(0, 7), m: String(m.m || '').slice(0, 12), t: Number(m.t) || 1, at: now };
+    const rec = { a: m.a, b: m.b, w: m.w, s: String(m.s || '').slice(0, 7), m: String(m.m || '').slice(0, 12), t: Math.min(9, Math.max(1, Math.round(Number(m.t)) || 1)), at: now };
     matches.push(rec); if (matches.length > MAX_MATCHES) matches = matches.slice(-MAX_MATCHES);
     saveMatches(); send(200, { ok: true });
   });
