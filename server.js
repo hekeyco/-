@@ -64,6 +64,7 @@ const saveMatches = () => { clearTimeout(saveTimer); saveTimer = setTimeout(() =
   try { fs.mkdirSync(DATA_DIR, { recursive: true }); fs.writeFileSync(MATCH_FILE, JSON.stringify(matches)); } catch (e) {}
   if (KV_URL && KV_TOKEN) kv(['SET', KV_KEY, JSON.stringify(matches)]).catch(e => console.error('전적 저장 실패:', e.message));
 }, 500); };
+const DEFAULT_NICKS = new Set(['청운', '홍매', '백운', '솔하', '돌이']);
 const NICK = v => typeof v === 'string' && v.trim().length > 0 && v.length <= 20 && !/[<>"'`&\\\u0000-\u001f]/.test(v);
 const postBudget = new Map();   // ip -> { n, at } : 1분에 10번까지
 function matchesApi(req, res) {
@@ -81,6 +82,7 @@ function matchesApi(req, res) {
     await ready;
     let m; try { m = JSON.parse(body); } catch (e) { return send(400, { error: 'json' }); }
     if (!m || !NICK(m.a) || !NICK(m.b) || !NICK(m.w) || (m.w !== m.a && m.w !== m.b) || m.a === m.b) return send(400, { error: 'fields' });
+    if (DEFAULT_NICKS.has(m.a.trim()) || DEFAULT_NICKS.has(m.b.trim())) return send(200, { ok: true, skipped: 'default-nickname' });
     const rec = { a: m.a, b: m.b, w: m.w, s: String(m.s || '').slice(0, 7), m: String(m.m || '').slice(0, 12), t: Number(m.t) || 1, at: now };
     matches.push(rec); if (matches.length > MAX_MATCHES) matches = matches.slice(-MAX_MATCHES);
     saveMatches(); send(200, { ok: true });

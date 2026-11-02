@@ -888,6 +888,48 @@ html, body { max-width: 100%; overflow-x: clip; }
   .turn-strip:has(.alert) .turn-hint { display:none; }
 }
 
+
+/* v58: 대기실 안쪽 장식 테두리는 문서 스크롤과 분리해 브라우저 화면에 고정 */
+#ovMenu .menu::before {
+  position: fixed;
+  inset: 12px;
+  z-index: 2;
+  pointer-events: none;
+}
+/* v58: 옥 등급 제목은 투명 글자색 대신 옥빛 그라데이션 밑줄 사용 */
+.book h3[data-tier="3"] {
+  border-bottom: 2px solid transparent;
+  border-image: var(--nacre) 1;
+}
+
+/* v59: 스크롤되는 증강 선택창에서는 내부 장식 테두리가 스크롤 뷰포트에 고정되어
+   내용 위를 가로지르지 않도록 제거하고, 외곽 테두리만 정돈해 표시 */
+#ovDraft .ov-card::before{content:none}
+#ovDraft .ov-card{
+  border:1px solid rgba(201,164,92,.48);
+  border-radius:6px;
+  box-shadow:0 24px 64px rgba(0,0,0,.62),0 0 0 1px rgba(201,164,92,.08);
+  scrollbar-width:thin;
+  scrollbar-color:rgba(201,164,92,.48) rgba(30,25,21,.55);
+}
+#ovDraft .ov-card::-webkit-scrollbar{width:8px}
+#ovDraft .ov-card::-webkit-scrollbar-track{background:rgba(30,25,21,.55);border-radius:8px}
+#ovDraft .ov-card::-webkit-scrollbar-thumb{background:rgba(201,164,92,.48);border:2px solid #1e1915;border-radius:8px}
+#ovDraft .ov-card::-webkit-scrollbar-thumb:hover{background:rgba(232,190,90,.72)}
+
+/* v60: 증강 설명표도 증강 선택창과 동일한 테두리·스크롤바 처리 */
+#ovBook .bookcard::before{content:none}
+#ovBook .bookcard{
+  border:1px solid rgba(201,164,92,.48);
+  border-radius:6px;
+  box-shadow:0 24px 64px rgba(0,0,0,.62),0 0 0 1px rgba(201,164,92,.08);
+  scrollbar-width:thin;
+  scrollbar-color:rgba(201,164,92,.48) rgba(30,25,21,.55);
+}
+#ovBook .bookcard::-webkit-scrollbar{width:8px}
+#ovBook .bookcard::-webkit-scrollbar-track{background:rgba(30,25,21,.55);border-radius:8px}
+#ovBook .bookcard::-webkit-scrollbar-thumb{background:rgba(201,164,92,.48);border:2px solid #1e1915;border-radius:8px}
+#ovBook .bookcard::-webkit-scrollbar-thumb:hover{background:rgba(232,190,90,.72)}
 </style>
 
 <header class="bar">
@@ -5261,10 +5303,12 @@ async function rankSrc() {
 }
 function rankAgg(ms) {
   const by = new Map();
+  const defaultNicks = new Set(['청운', '홍매', '백운', '솔하', '돌이']);
   const get = n => { if (!by.has(n)) by.set(n, { name: n, w: 0, l: 0, games: [] }); return by.get(n); };
   for (const m of ms) {
     if (!m || typeof m.a !== 'string' || typeof m.b !== 'string' || typeof m.w !== 'string') continue;
     for (const [me, op] of [[m.a, m.b], [m.b, m.a]]) {
+      if (defaultNicks.has(me)) continue;
       const r = get(me), win = m.w === me;
       win ? r.w++ : r.l++;
       if (r.games.length < 8) r.games.push({ op, win, s: m.s || '', map: m.m || '', at: m.at || 0, mine: me === m.a ? 'b' : 'w' });
@@ -5343,6 +5387,8 @@ async function recordOnlineMatch() {
   G.recordedKey = key;
   const a = G.players[0], b = G.players[1];
   if (!a || !b) return;
+  const defaultNicks = new Set(['청운', '홍매', '백운', '솔하', '돌이']);
+  if (defaultNicks.has(String(a.name || '').trim()) || defaultNicks.has(String(b.name || '').trim())) return;
   const wt = G.score[0] >= G.target ? 0 : 1, clip = v => String(v || '').slice(0, 20);
   const m = { a: clip(a.name), b: clip(b.name), w: clip(G.players.find(p => p.team === wt).name), s: `${G.score[0]}:${G.score[1]}`, m: clip(MAPS[G.world.map].name), t: G.target, at: Date.now() };
   try { const src = await rankSrc(); if (src) { await src.add(m); loadRanks(true); } } catch (e) { addLog('순위표에 이번 대국을 남기지 못했습니다'); }
@@ -8463,3 +8509,20 @@ requestAnimationFrame(frame);
 
 </body>
 </html>
+
+
+/* v61: 네 화면의 안쪽 테두리는 스크롤 콘텐츠와 따로 움직이지 않도록
+   장식 pseudo-element 대신 컨테이너 자체의 inset stroke로 고정 */
+#ovMenu .menu::before,
+#ovDraft .ov-card::before,
+#ovBook .bookcard::before { content:none !important; display:none !important; }
+#ovMenu .menu,
+#ovDraft .ov-card,
+#ovBook .bookcard {
+  position:relative;
+  border:1px solid rgba(201,164,92,.52);
+  box-shadow: inset 0 0 0 1px rgba(201,164,92,.22),
+              0 24px 64px rgba(0,0,0,.62),
+              0 0 0 1px rgba(201,164,92,.08);
+  background-clip:padding-box;
+}
