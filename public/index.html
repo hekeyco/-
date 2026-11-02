@@ -930,6 +930,21 @@ html, body { max-width: 100%; overflow-x: clip; }
 #ovBook .bookcard::-webkit-scrollbar-track{background:rgba(30,25,21,.55);border-radius:8px}
 #ovBook .bookcard::-webkit-scrollbar-thumb{background:rgba(201,164,92,.48);border:2px solid #1e1915;border-radius:8px}
 #ovBook .bookcard::-webkit-scrollbar-thumb:hover{background:rgba(232,190,90,.72)}
+
+
+/* v62: 내부 테두리는 스크롤 콘텐츠가 아닌 각 창의 외곽 상자에 고정 */
+#ovMenu .menu::before,
+#ovDraft .ov-card::before,
+#ovBook .bookcard::before {
+  content: none !important;
+  display: none !important;
+}
+#ovMenu .menu,
+#ovDraft .ov-card,
+#ovBook .bookcard {
+  outline: 1px solid rgba(201,164,92,.58);
+  outline-offset: -9px;
+}
 </style>
 
 <header class="bar">
@@ -4014,7 +4029,6 @@ Object.assign(JA_EXACT, {
  '다음 국은':'次の対局は','증강은 모두 사라지고 새로 고릅니다':'強化はすべてリセットされ、新たに選びます',
  '방장이 다음 국을 시작하기를 기다리고 있습니다.':'ルームホストが次の対局を始めるまでお待ちください。','방장이 새 대국을 열면 바로 이어집니다.':'ルームホストが新しい対局を開始すると続行します。',
  '온라인 대국을 끝까지 마치면 닉네임별로 승·패가 쌓입니다. 이름에 마우스를 올리면(휴대폰은 누르면) 최근 전적이 보입니다.':'オンライン対局を最後までプレイすると、ニックネームごとに勝敗が記録されます。名前にカーソルを合わせる（スマートフォンではタップする）と最近の戦績が表示されます。',
- '닉네임 기준의 간단한 기록이라, 같은 닉네임은 같은 사람으로 셉니다.':'ニックネームを基準にした簡易記録です。同じニックネームは同一人物として扱います。',
  '당겨서 쏘기':'引いて撃つ','조준 취소':'照準をキャンセル','증강 고르기':'強化を選ぶ','이기는 법':'勝利条件','다 배웠어요':'学習完了',
  '조작 배우기 ·':'操作ガイド・','다음':'次へ','이전':'前へ','닫기 ✕':'閉じる ✕','온라인 전적':'オンライン戦績'
 });
@@ -5368,7 +5382,6 @@ function openRanks() {
     <p class="eyebrow">榜 · 온라인 전적</p><h2 id="rankTitle">온라인 순위표</h2>
     <p class="why">온라인 대국을 끝까지 마치면 닉네임별로 승·패가 쌓입니다. 이름에 마우스를 올리면(휴대폰은 누르면) 최근 전적이 보입니다.</p>
     <div class="rank-body">${rankTableHTML(100)}</div>
-    <p class="rank-note">닉네임 기준의 간단한 기록이라, 같은 닉네임은 같은 사람으로 셉니다.</p>
     <div class="actions"><button class="btn-ghost" id="rankRefresh" type="button">새로 불러오기</button><button class="btn-primary" id="rankClose" type="button">닫기</button></div></div>
     <button class="book-x" id="rankX" type="button" aria-label="순위표 닫기">닫기 ✕</button>`;
   ov.hidden = false;
@@ -8509,20 +8522,3 @@ requestAnimationFrame(frame);
 
 </body>
 </html>
-
-
-/* v61: 네 화면의 안쪽 테두리는 스크롤 콘텐츠와 따로 움직이지 않도록
-   장식 pseudo-element 대신 컨테이너 자체의 inset stroke로 고정 */
-#ovMenu .menu::before,
-#ovDraft .ov-card::before,
-#ovBook .bookcard::before { content:none !important; display:none !important; }
-#ovMenu .menu,
-#ovDraft .ov-card,
-#ovBook .bookcard {
-  position:relative;
-  border:1px solid rgba(201,164,92,.52);
-  box-shadow: inset 0 0 0 1px rgba(201,164,92,.22),
-              0 24px 64px rgba(0,0,0,.62),
-              0 0 0 1px rgba(201,164,92,.08);
-  background-clip:padding-box;
-}
