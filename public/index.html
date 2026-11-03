@@ -1202,7 +1202,7 @@ const P = {
 /* augment numbers (tunable) */
 const A = {
   ironM: 1.14, sizeN: 2, bigR: 1.25, bigM: 1.12, bigV: 1.04, denseR: 0.8, denseM: 1.0, denseV: 1.24, fast: 1.07, reinforce: 1,
-  shaky: 30 * Math.PI / 180, seal: 2, root: 1.18, rootMax: 0.24, rootStep: 0.08, aimNoise: 0.5194, shackle: 0.94,
+  shaky: 30 * Math.PI / 180, shakyT: 420, seal: 2, root: 1.18, rootMax: 0.24, rootStep: 0.08, aimNoise: 0.5194, shackle: 0.94,
   bombR: 2 * GAP, bombF: 1040, bombBase: 234, oil: 0.8458, markD: 3 * GAP, markK: 1.20, combo: 1, comboRound: 2,
   wedgeM: 1.7, splitImpact: 560, splitR: 0.8, splitM: 0.8, splitV: 0.7, splitN: 2, wallSave: 1,
   pierce: 1.0, thorns: 0.50, traps: 2, trapR: 28, doubleV: 0.55, doubleH: 0.9,
@@ -1217,7 +1217,7 @@ const A = {
   loneV: 1.2, loneM: 1.2, loneR: 1.2, trainN: 3,
   curveA: 30 * Math.PI / 180, curveB: 60 * Math.PI / 180, thriceV: 1.30, thriceK: 1.0, brandK: 1.0, iceF: 0.4,
   glutR: 1.06, glutM: 1.06, glutV: 1.06, glutN: Infinity, bountyN: 8, bountyIn: 2 * GAP, bountyH: 0.6,
-  yiN: 3, shardHs: 0.3 * GAP, portalZ: 3 * GAP, tengenH: 1.1, gambleV: 1.35, fortV0: 0.9, fortV1: 1.1, fortH0: 0.9, fortH1: 1.1, rebK: 0.7, revH0: 2 * GAP, revStep: 0.5 * GAP, revMax: 5 * GAP, ropeRest: 1.8, ropePushK: 1.5, ropeMaxV: 2200, revGrowN: 2, revShrinkN: 3, crackMax: 2, crackR: 2 * GAP, crackF: 1400, shardN: 3, shardR: 0.3 * GAP, shardBack: 0.85, frogEvery: 5, frogAir: 1.1, fishStay: 1, frogBox: 1.8 * GAP, frogPush: GAP, fishLeapMin: 2.8, fishLeapSpan: 2.6, fishCatch: 0.62 * GAP, fishPower: 1.10, sqrV: 1.3, sqrN: 2, heavenRow: 3 * GAP, vortexN: 3, vortexR: 3 * GAP, vortexPull: 0.5 * GAP, vortexH: 0.5, ikiN: 3, pajukN: 2, pajukTurns: 12, holeR: 8 * GAP, holePull: 1 * GAP, holeKill: 0.5 * GAP, lianV: 0.75, landW: 1 * GAP, landF: 4.5, passK: 0.75, passF: 5
+  yiN: 3, shardHs: 0.3 * GAP, portalZ: 3 * GAP, tengenH: 1.1, gambleV: 1.35, fortV0: 0.9, fortV1: 1.1, fortH0: 0.9, fortH1: 1.1, rebK: 0.7, revH0: 2 * GAP, revStep: 0.5 * GAP, revMax: 5 * GAP, ropeRest: 1.8, ropePushK: 1.5, ropeMaxV: 2200, revGrowN: 2, revShrinkN: 3, crackMax: 2, crackR: 2 * GAP, crackF: 1400, shardN: 3, shardR: 0.3 * GAP, shardBack: 0.85, frogEvery: 5, frogAir: 1.1, fishStay: 1, frogBox: 1.8 * GAP, frogPush: GAP, fishLeapMin: 2.8, fishLeapSpan: 2.6, fishCatch: 0.62 * GAP, fishPower: 1.10, sqrV: 1.3, sqrN: 2, heavenRow: 3 * GAP, vortexN: 3, vortexR: 3 * GAP, vortexPull: 0.5 * GAP, vortexH: 0.5, ikiN: 4, orlJade: 2, pajukN: 2, pajukTurns: 12, holeR: 8 * GAP, holePull: 1 * GAP, holeKill: 0.5 * GAP, lianV: 0.75, landW: 1 * GAP, landF: 4.5, passK: 0.75, passF: 5
 };
 /* tier odds per pick: [silver, gold, prism]; always silver > gold > prism, a little richer on later picks */
 const TIER_ODDS = [[60, 30, 10], [50, 33, 17], [45, 35, 20]];
@@ -1372,8 +1372,8 @@ const AUG = {
     desc: () => `우리 돌이 ${A.lastN}개 이하로 줄면 남은 내 돌이 크기 +${pct(A.lastR - 1)}%, 방어력 ${pm(A.lastM)}, 힘 +${pct(A.lastV - 1)}%가 됩니다.` },
   dense:     { name: '차돌', seal: '小', tier: 3, max: 1, short: () => `돌 ${A.sizeN}개 크기 −${pct(1 - A.denseR)}% · 힘 +${pct(A.denseV - 1)}%`,
     desc: () => `고르는 즉시 내 돌 ${A.sizeN}개를 골라 크기 −${pct(1 - A.denseR)}%, 힘 +${pct(A.denseV - 1)}%로 만듭니다. 맞히기 어렵고 더 멀리 나갑니다. 내 돌이 ${A.sizeN}개 이하면 바로 적용됩니다.` },
-  shaky:     { name: '손떨림', seal: '震', tier: 3, max: 1, short: () => '상대 조준을 더 빠르게 15° 흔듦',
-    desc: () => `상대가 조준하는 동안 화살표를 더 빠르게 흔들어 샷을 최대 15° 빗나가게 합니다.` },
+  shaky:     { name: '손떨림', seal: '震', tier: 3, max: 1, short: () => '상대 조준을 일정한 박자로 빠르게 ±15° 흔듦',
+    desc: () => `상대가 조준하는 동안 화살표가 일정한 박자로 빠르게 좌우로 흔들리고, 쏜 순간 기울어진 만큼(최대 15°) 빗나갑니다.` },
   dragon:    { name: '대마', seal: '龍', tier: 3, max: 1, short: () => `이어진 돌 1개마다 방어력 +${pct(A.dragonStep)}%`,
     desc: () => `멈춰 있는 내 돌은 ${f1(A.dragonD / GAP)}칸 안으로 줄줄이 이어진 돌 1개마다 방어력이 ${pct(A.dragonStep)}%씩 올라갑니다. 많이 뭉칠수록 단단해집니다.` },
   ko:        { name: '패', seal: '劫', tier: 3, max: 1, short: () => `내 돌을 잃으면 다음 차례 한 번 더 (${A.ko}회)`,
@@ -1386,8 +1386,8 @@ const AUG = {
     desc: () => `내 차례가 시작될 때마다 힘과 방어력이 각각 −${pct(1 - A.fortV0)}~+${pct(A.fortV1 - 1)}% 사이에서 새로 정해지고, 다음 내 차례까지 유지됩니다. 정해진 값은 차례 줄에 보입니다.` },
   rebound:   { name: '되튐', seal: '彈', tier: 2, max: 1, short: () => '쏜 돌이 가장자리에서 한 번 튕김',
     desc: () => `내가 쏜 돌이 떨어질 수 있는 가장자리에 처음 닿으면 한 번 튕겨 나옵니다(빠르기 ${pct(A.rebK)}%).` },
-  orleans:   { name: '오를레앙의 최윤재', seal: '旗', tier: 3, max: 1, short: () => '기존 증강 제거 · 초월 1장 · 이후 추가 획득 불가 · 상대 옥 1장',
-    desc: () => '획득 즉시 초월을 제외한 내 기존 증강을 모두 제거하고 초월 증강 1장을 고릅니다. 이후 나는 이번 국에 증강을 더 얻지 못합니다. 대신 상대는 옥 증강 1장을 추가로 고르며, 이 증강은 어명으로도 지울 수 없습니다.' },
+  orleans:   { name: '오를레앙의 최윤재', seal: '旗', tier: 3, max: 1, short: () => `기존 증강 제거 · 초월 1장 · 이후 추가 획득 불가 · 상대 옥 ${A.orlJade}장`,
+    desc: () => '획득 즉시 초월을 제외한 내 기존 증강을 모두 제거하고 초월 증강 1장을 고릅니다. 이후 나는 이번 국에 증강을 더 얻지 못합니다. 대신 상대는 옥 증강 2장을 추가로 고릅니다.' },
   crack:     { name: '균열', seal: '罅', tier: 2, max: 1, short: () => `친 상대 돌에 금 · 금 간 돌을 또 치면 깨짐 (${A.crackMax}개)`,
     desc: () => `내 샷으로 상대 돌을 치면 금이 가고, 금 간 돌을 다시 치면 깨져 주변 상대 돌을 밀어냅니다. 깨질 때 파편 ${A.shardN}개가 남아 ${f1(A.crackR / GAP)}칸 안의 상대 돌을 밀어냅니다. 이번 국에 최대 ${A.crackMax}개까지 깰 수 있으며, 파편은 상대가 밟으면 사라집니다.` },
   pillar:    { name: '주춧돌', seal: '礎', tier: 2, max: 1, short: () => '돌 하나를 중앙에 고정 · 매 수 능력치 +1% (최대 +20%)',
@@ -1405,7 +1405,7 @@ const AUG = {
   bundle:    { name: '보따리', seal: '褓', tier: 3, max: 1, short: () => '은·금 증강 3개 무작위 획득',
     desc: () => '고르는 즉시 은 또는 금 등급 증강 3개를 무작위로 얻습니다.' },
   pajuk:     { name: '파죽지세', seal: '竹', tier: 3, max: 1, quest: true, short: () => `12수 안에 상대 기본 돌 2개 격파하면 초월 1장`,
-    desc: () => '획득 후 12수 안에 상대 기본 돌 2개를 떨어뜨리면 초월 1장을 고릅니다. 실패하면 은 증강 1개를 무작위로 얻습니다.' },
+    desc: () => '획득 후 12수 안에 상대 기본 돌 2개를 떨어뜨리면 초월 1장을 고릅니다. 실패하면 보상은 없습니다.' },
   pass:      { name: '관통', seal: '貫', tier: 3, max: 1, short: () => `첫 상대 돌을 뚫고 속도 −${pct(1 - A.passK)}%로 계속 (한 샷 2개)`,
     desc: () => `내 샷이 처음 맞힌 상대 돌을 튕겨 낸 뒤에도 멈추지 않고, 맞히기 전보다 속도 ${pct(1 - A.passK)}% 감소한 상태로 뚫고 나가 다음 돌을 맞힙니다. 뚫고 나간 뒤에는 금방 멈추고, 한 샷에 두 개까지 맞힙니다.` },
   /* ---- 초월: 퀘스트(일기당천·파죽지세) 보상으로만, 한 국에 한 사람당 1장 ---- */
@@ -1472,14 +1472,14 @@ const AUG_SUMMARY = {
   clone: () => `우리 진영에 분신 ${A.clone}개가 추가되며, 각 분신은 처음 떨어질 때 한 번 되돌아옵니다.`,
   last: () => `우리 돌이 ${A.lastN}개 이하로 줄면 남은 내 돌의 크기·방어력·힘이 오릅니다.`,
   dense: () => `내 돌 ${A.sizeN}개를 즉시 골라 크기를 줄이고 힘을 높입니다.`,
-  shaky: () => '상대가 조준하는 동안 조준 방향을 더 빠르게 흔들어 최대 15° 빗나가게 합니다.',
+  shaky: () => '상대 조준이 일정한 박자로 빠르게 흔들려, 쏜 순간 기운 만큼 최대 15° 빗나갑니다.',
   dragon: () => `멈춘 내 돌은 이어진 돌 1개마다 방어력이 ${pct(A.dragonStep)}%씩 올라갑니다.`,
   ko: () => `상대 샷에 내 돌이 떨어지면 다음 내 차례를 한 번 더 진행합니다(국당 ${A.ko}회).`,
   wish: () => '고르는 즉시 내 증강을 모두 버리고, 다음 고르기에서 한 등급 위 카드 3장을 모두 얻습니다(옥까지).',
   gamble: () => `힘이 ${pct(A.gambleV - 1)}% 세지지만, 상대 돌을 못 떨어뜨린 샷은 쏜 돌을 잃고 효과가 끝납니다.`,
   fortune: () => '내 차례마다 힘·방어력이 조금씩 오르내리고, 다음 내 차례까지 유지됩니다.',
   rebound: () => '내가 쏜 돌이 가장자리에 처음 닿으면 한 번 튕겨 나옵니다.',
-  orleans: () => '획득 즉시 초월을 제외한 내 기존 증강을 모두 없애고 초월 증강 하나를 고릅니다. 이후 나는 이번 국에 증강을 더 얻지 못하며, 상대는 옥 증강 하나를 추가로 고릅니다(이 증강은 지울 수 없음).',
+  orleans: () => '획득 즉시 초월을 제외한 내 기존 증강을 모두 없애고 초월 증강 하나를 고릅니다. 이후 나는 이번 국에 증강을 더 얻지 못하며, 상대는 옥 증강 2장을 추가로 고릅니다.',
   crack: () => `내 샷으로 상대 돌에 금을 내고, 다시 맞히면 깨뜨려 주변을 밀어냅니다(국당 최대 ${A.crackMax}개).`,
   pillar: () => '내 돌 하나를 판 중앙에 고정해 매 수 크기·방어력·힘을 1%씩 높입니다(최대 20%).',
   tide: () => `내 샷이 끝날 때마다 모든 상대 돌을 가장 가까운 가장자리 쪽으로 ${Math.round(A.tideD / GAP * 10) / 10}칸 밀어냅니다.`,
@@ -1488,7 +1488,7 @@ const AUG_SUMMARY = {
   vortex: () => `발사 전에 켜면 멈춘 자리에 반경 3칸 소용돌이가 생겨 매 수 상대 돌을 0.5칸 끌어당깁니다.`,
   land: () => `판 둘레 바깥 ${f1(A.landW / GAP)}칸이 우리 땅이 되어 내 돌은 살아남고 상대 돌은 떨어집니다.`,
   bundle: () => '은 또는 금 등급 증강 세 개를 무작위로 즉시 얻습니다.',
-  pajuk: () => '획득 후 12수 안에 상대 기본 돌 2개를 떨어뜨리면 초월을 고르고, 실패하면 은 증강을 얻습니다.',
+  pajuk: () => '획득 후 12수 안에 상대 기본 돌 2개를 떨어뜨리면 초월 증강 하나를 고릅니다.',
   pass: () => '내 샷이 첫 상대 돌을 맞힌 뒤에도 관통해 다음 돌까지 맞힙니다(한 샷 최대 2개).',
   decree: () => '상대의 모든 증강을 없애고 이후 증강을 획득하지 못하게 합니다.',
   heaven: () => '이번 국에 떨어진 내 기본 돌을 모두 되살리고, 이후 증강을 더 받지 않습니다.',
@@ -2036,8 +2036,8 @@ function applyGain(w, p, id) {
       const foes = w.players.filter(q => q.team !== team && !(w.noAug && w.noAug[q.id]) && !cnt(q, 'lone') && !cnt(q, 'heaven'));
       const foe = foes.length ? pickR(foes) : null;
       if (foe) {
-        w.bonus[foe.id] = (w.bonus[foe.id] || 0) + 1;
-        w.jadeBonus[foe.id] = (w.jadeBonus[foe.id] || 0) + 1;
+        w.bonus[foe.id] = (w.bonus[foe.id] || 0) + A.orlJade;   /* 상대는 옥 증강을 2장 더 고름 */
+        w.jadeBonus[foe.id] = (w.jadeBonus[foe.id] || 0) + A.orlJade;
         emit(w, { type: 'quest', pid: foe.id, tier: 3, kind: 'orleansPenalty' });
       }
       emit(w, { type: 'orleans', pid: p.id, target: foe ? foe.id : -1, reward: !alreadyHasTranscend });
@@ -2108,12 +2108,12 @@ const STEAL_FULL = () => ({ revive: 2 * A.revive, buddy: 2 * A.buddy, rewind: 2 
 function decreeOptions(w, pid) {
   if (!w.lab && w.noAug && w.noAug[pid]) return [];   /* 일반 대국: 증강 획득 제한 상태에서는 빼앗아서도 얻을 수 없음 */
   const p = w.players[pid], out = [];
-  for (const q of w.players) if (q.team !== p.team) for (const id of q.augs) if (!NO_STEAL.has(id) && (w.lab || !protAug(w, q.id, id)) && AUG[id].tier <= 3 && !out.includes(id) && !p.augs.includes(id) && (w.lab || !gotAug(w, pid, id))) out.push(id);
+  for (const q of w.players) if (q.team !== p.team) for (const id of q.augs) if (!NO_STEAL.has(id) && AUG[id].tier <= 3 && !out.includes(id) && !p.augs.includes(id) && (w.lab || !gotAug(w, pid, id))) out.push(id);
   return out;
 }
 function stealAug(w, pid, id) {
   if (!w.lab && w.noAug && w.noAug[pid]) return false;   /* 일반 대국: 증강 획득 제한 상태에서는 어명으로도 획득 불가 */
-  const p = w.players[pid], q = w.players.find(x => x.team !== p.team && x.augs.includes(id) && (w.lab || !protAug(w, x.id, id)));
+  const p = w.players[pid], q = w.players.find(x => x.team !== p.team && x.augs.includes(id));
   if (!q || NO_STEAL.has(id) || AUG[id].tier > 3 || (!w.lab && gotAug(w, pid, id))) return false;
   q.augs.splice(q.augs.indexOf(id), 1); p.augs.push(id); markGot(w, pid, id);
   { const code = { king: 'K', big: 'B', dense: 'D', pillar: 'P' }[id]; if (code && w.bsel[q.id]) w.bsel[q.id] = String(w.bsel[q.id]).split(code).join(''); }   /* 아직 고르지 않은 버프는 함께 사라짐 */
@@ -2236,7 +2236,6 @@ function gainAug(w, pid, id) {
   const orleansReward = !!(w.orl && w.orl[pid] > 0 && AUG[id] && AUG[id].tier === 4);
   if (!w.lab && w.noAug && w.noAug[pid] && !orleansReward) return false;
   p.augs.push(id); markGot(w, pid, id);
-  if (w.jgp && w.jgp[pid]) { w.jgp[pid] = 0; w.prot[pid] = (w.prot[pid] ? w.prot[pid] + ',' : '') + id; }
   if (AUG[id].tier === 4) w.tq[pid] = 1;
   if (orleansReward) w.orl[pid] = 0;   /* 초월 보상 선택이 끝나면 추가 획득 금지 상태만 남김 */
   w.picks[pid]++;
@@ -2330,7 +2329,7 @@ function rollOffer(w, pid, n = 3) {
   let forced = fq.length ? +fq[0] : 0;
   if (forced) w.fq[pid] = fq.slice(1);
   const jadeGift = !forced && (w.jadeBonus[pid] || 0) > 0 && (w.picks[pid] || 0) > 0;
-  if (jadeGift) { w.jadeBonus[pid]--; w.jgp[pid] = 1; }   /* 오를레앙으로 받은 옥: 다음에 얻는 증강을 지울 수 없게 표시 */
+  if (jadeGift) w.jadeBonus[pid]--;
   if (forced === 4) {
     const p4 = AUG_IDS.filter(id => AUG[id].tier === 4 && canTake(w, p, id)), ids = [];
     while (ids.length < 2 && p4.length) ids.push(p4.splice(Math.floor(rnd() * p4.length), 1)[0]);
@@ -3241,7 +3240,6 @@ function ropeStep(w, s) {
 const protAug = (w, pid, id) => !!w.prot && String(w.prot[pid] || '').split(',').includes(id);   /* 오를레앙으로 상대가 받은 옥: 지울 수 없음 */
 function removeAug(w, pid, id, quiet = false) {
   if (!w.lab && AUG[id] && AUG[id].tier === 4) return false;
-  if (!w.lab && protAug(w, pid, id)) return false;   /* 일반 대국에서는 초월 보호, 실험실에서는 제거 가능 */
   const p = w.players[pid], i = p.augs.lastIndexOf(id);
   if (i < 0) return false;
   p.augs.splice(i, 1);
@@ -3472,7 +3470,7 @@ function startShot(w, pid, stoneId, vx, vy, opt) {
 /* real shot: shaky noise applies */
 function fire(w, pid, id, ang, pw, o) {
   const p = w.players[pid];
-  if (w.players.some(q => q.team !== p.team && cnt(q, 'shaky') > 0)) ang += (rnd() - 0.5) * A.shaky;
+  if (w.players.some(q => q.team !== p.team && cnt(q, 'shaky') > 0)) ang += o && Number.isFinite(o.shk) ? clamp(o.shk, -A.shaky / 2, A.shaky / 2) : (rnd() - 0.5) * A.shaky;   /* 손떨림: 화면에 보인 흔들림 그대로 (없으면 무작위) */
   fireExact(w, pid, id, ang, pw, o);
   return ang;
 }
@@ -3577,10 +3575,7 @@ function afterShot0(w) {
     w.pajukShots[sp.id] = (w.pajukShots[sp.id] || 0) + 1;
     if (w.pajukShots[sp.id] >= A.pajukTurns) {
       w.tq[sp.id] = 1;
-      let pool = AUG_IDS.filter(id => AUG[id].tier === 1 && !AUG[id].quest && canTake(w, sp, id));
-      if (!pool.length) pool = AUG_IDS.filter(id => AUG[id].tier === 1 && !AUG[id].quest && !cnt(sp, id));
-      if (pool.length) giveAug(w, sp, pickR(pool));
-      emit(w, { type: 'pajukFail', pid: sp.id });
+      emit(w, { type: 'pajukFail', pid: sp.id });   /* 실패하면 보상 없음 */
     }
   }
   /* 행복한 다람쥐: 힘이 오른 샷을 하나 쓰고, 내 돌로 상대 돌을 떨어뜨리면 다시 채움 */
@@ -4078,7 +4073,7 @@ const AUG_JA = {
  ice:['氷の道','通った道が4手の間凍る','自分が撃った石が通った道は4手の間凍り、相手の石がより遠くへ滑ります。'],
  glut:['暴食','落とすたびにサイズ・防御力・威力 +6%','自分のショットで相手の石を落とすたびに、撃った石のサイズ・防御力・威力が6%ずつ上がります。'],
  bounty:['賞金','印の付いた相手の石を全体8手以内に落とすと玉1枚','印の付いた相手の石を、双方の手番を合わせて全体8手以内に落とすと、玉の強化をもう1枚選べます。'],
- iki:['一騎当千','石1個で相手の基本石3個を落とすと超越1枚','自分の石1個で相手の基本石を3個落とすと、超越の強化をもう1枚選べます。'],
+ iki:['一騎当千','石1個で相手の基本石4個を落とすと超越1枚','自分の石1個で相手の基本石を4個落とすと、超越の強化をもう1枚選べます。'],
  revive:['復活','自分の石が3個未満なら2回・それ以外は3回復帰','自分の石が落ちると自陣に戻ります。獲得時に石が3個未満なら2回、それ以外は3回発動します。'],
  buddy:['道連れ','落ちるとき相手の石1個を道連れにしてもう一度（1回）','自分の石が落ちると相手の石1個を道連れにし、自分の手番をもう一度行います（1局1回）。'],
  tengen:['天元','天元を守れば勝利・天元の上で防御力 +10%','天元の上にいる自分の石は防御力が10%上がり、次の自分の手番まで天元を守れば勝利です。'],
@@ -4089,14 +4084,14 @@ const AUG_JA = {
  clone:['分身','分身 +1・一度だけ復帰','自陣に分身が1個増え、分身は最初に落ちたとき一度だけ戻ってきます。'],
  last:['背水','3個以下でサイズ +15%・防御力 +20%・威力 +12%','自分の石が3個以下になると、残った石のサイズ・防御力・威力が上がります。'],
  dense:['岩石','石2個のサイズ −20%・威力 +24%','自分の石を2個すぐに選び、サイズを小さくして威力を上げます。'],
- shaky:['手ぶれ','相手の狙いを速く15°揺らす','相手が狙っている間、狙いの向きを速く揺らして最大15°ずらします。'],
+ shaky:['手ぶれ','相手の狙いを一定のリズムで速く±15°揺らす','相手の狙いが一定のリズムで速く揺れ、撃った瞬間の傾きのぶん最大15°ずれます。'],
  dragon:['大魔','つながった石1個ごとに防御力 +40%','止まっている自分の石は、つながった石1個ごとに防御力が40%ずつ上がります。'],
  ko:['劫','石を失うと次の手番にもう一度（3回）','相手のショットで自分の石が落ちると、次の自分の手番にもう一度撃てます（1局3回）。'],
  wish:['念願','今の強化をすべて捨て、次は1ランク上を3枚すべて（玉まで）','選んですぐ自分の強化をすべて捨て、次の選択で1ランク上のカード3枚をすべて受け取ります（玉まで）。'],
  gamble:['勝負手','威力 +35%・落とせないと撃った石を失う','威力が35%上がりますが、相手の石を落とせなかったショットでは撃った石を失い、効果も終わります。'],
  fortune:['運勢','手番ごとに威力・防御力が±10%上下','自分の手番ごとに威力と防御力が少しずつ上下し、次の自分の手番まで続きます。'],
  rebound:['跳ね返り','撃った石が盤端で一度跳ね返る','自分が撃った石が盤端に初めて触れると、一度跳ね返ってきます。'],
- orleans:['オルレアンのチェ・ユンジェ','今の強化を除去・超越1枚・以後獲得不可・相手に玉1枚','選んですぐ超越以外の自分の強化をすべてなくし、超越の強化を1枚選びます。以後この局では強化を受け取れず、相手は玉の強化を1枚追加で選びます（この強化は消せません）。'],
+ orleans:['オルレアンのチェ・ユンジェ','今の強化を除去・超越1枚・以後獲得不可・相手に玉2枚','選んですぐ超越以外の自分の強化をすべてなくし、超越の強化を1枚選びます。以後この局では強化を受け取れず、相手は玉の強化を2枚追加で選びます。'],
  crack:['亀裂','打った相手の石にひび・ひびの入った石をまた打つと割れる（2個）','自分のショットで相手の石にひびを入れ、もう一度当てると割って周りを押し出します（1局最大2個）。'],
  pillar:['礎石','石1個を中央に固定・毎手 能力 +1%（最大+20%）','自分の石1個を盤の中央に固定し、毎手サイズ・防御力・威力を1%ずつ上げます（最大20%）。'],
  tide:['潮','ショットごとに相手の石を0.8マス押し出す','自分のショットが終わるたびに、すべての相手の石をいちばん近い盤端の方へ0.8マス押し出します。'],
@@ -4105,7 +4100,7 @@ const AUG_JA = {
  vortex:['渦','半径3マス・毎手0.5マス引き寄せ','撃つ前に使うと、止まった場所に半径3マスの渦ができ、毎手相手の石を0.5マス引き寄せます。'],
  land:['陣取り','盤の外周（反転は穴の縁）1マスが自分の陣地','盤の外周1マスが自分の陣地になり、自分の石は生き残り、相手の石は落ちます。'],
  bundle:['包み','銀・金の強化3枚をランダムに獲得','銀または金の強化3枚をランダムにすぐ受け取ります。'],
- pajuk:['破竹の勢い','12手以内に相手の基本石2個を落とすと超越1枚','獲得後12手以内に相手の基本石を2個落とすと超越を選べ、失敗すると銀の強化を受け取ります。'],
+ pajuk:['破竹の勢い','12手以内に相手の基本石2個を落とすと超越1枚','獲得後12手以内に相手の基本石を2個落とすと、超越の強化を1枚選べます。'],
  pass:['貫通','最初の相手の石を貫いて速さ −25%で進む（1ショット2個）','自分のショットが最初の相手の石に当たった後も貫いて、次の石まで当てます（1ショット最大2個）。'],
  decree:['御命','相手の強化をすべて除去・相手は強化獲得不可','相手の強化をすべてなくし、以後強化を受け取れなくします。'],
  heaven:['逆天','落ちた石をすべて蘇らせ自陣3マス前の列に並べる・以後強化なし','この局で落ちた自分の基本石をすべて蘇らせ、以後強化を受け取りません。'],
@@ -4868,6 +4863,7 @@ function nextTurn() {
 function fire(pid, id, ang, pw, o) {
   const pk = powerOf(pid, id);
   if (G.world && G.world.lab && (!G.online || NET.seat === 0)) G.labHistoryPending = { before: labCaptureState(), pid };
+  if (enemyHas(G.players[pid], 'shaky')) o = Object.assign({}, o || {}, { shk: shakyOff(performance.now()) });
   const fa = K.fire(G.world, pid, id, ang, pw, o);
   netShot(pid, id, fa, pw, o);
   G.state = 'moving';
@@ -5241,7 +5237,7 @@ const STATS = () => { const A = K.A, P = K.P; return {
   gamble: [['내 돌', '힘', `+${pc(A.gambleV - 1)}%`, 'up'], ['못 떨어뜨리면', '쏜 돌', '잃음', 'down']],
   fortune: [['내 차례마다', '힘', `±${pc(A.fortV1 - 1)}%`, 'up'], ['내 차례마다', '방어력', `±${pc(A.fortH1 - 1)}%`, 'up']],
   rebound: [['쏜 돌', '가장자리에서 튕김', '한 번', 'up'], ['튕긴 뒤', '빠르기', `${pc(A.rebK)}%`, 'down']],
-  orleans: [['기존 증강', '초월 제외 전부 제거', '즉시', 'down'], ['보상', '초월', '1장 선택', 'up'], ['나', '추가 증강 획득', '이후 불가', 'down'], ['상대', '옥 증강', '1장 선택 · 지울 수 없음', 'foe']],
+  orleans: [['기존 증강', '초월 제외 전부 제거', '즉시', 'down'], ['보상', '초월', '1장 선택', 'up'], ['나', '추가 증강 획득', '이후 불가', 'down'], ['상대', '옥 증강', `${A.orlJade}장 선택`, 'foe']],
   crack: [['친 상대 돌', '금', '1번째', 'foe'], ['금 간 돌', '깨짐', `${A.crackMax}개`, 'foe'], ['파편', '상대 돌 튕김', `${A.shardN}개`, 'foe']],
   double: [['매 차례', '샷', '2번', 'up'], ['내 돌', '힘', `−${pc(1 - A.doubleV)}%`, 'down'], ['내 돌', '방어력', `${pm(A.doubleH)}`, 'down']],
   gust: [['가까운 상대 돌', '밀어냄', `${cell(A.gustD)}칸`, 'foe']],
@@ -5282,7 +5278,7 @@ const STATS = () => { const A = K.A, P = K.P; return {
   bundle: [['바로', '은·금 증강', '3장', 'up']],
   pass: [['첫 상대 돌', '뚫고 나감', `속도 −${pc(1 - A.passK)}%`, 'up'], ['한 샷', '맞히는 돌', '2개', 'up']],
   iki: [['조건', '한 돌로 떨어뜨린 기본 돌', `${A.ikiN}개`, 'up'], ['보상', '초월', '2장 중 1장', 'up']],
-  pajuk: [['조건', '12수 안에 상대 기본 돌', '2개 격파', 'up'], ['성공', '초월', '1장 선택', 'up'], ['실패', '은', '무작위 1장', 'up']],
+  pajuk: [['조건', '12수 안에 상대 기본 돌', '2개 격파', 'up'], ['성공', '초월', '1장 선택', 'up']],
   decree: [['상대 증강', '전부 제거', '즉시', 'foe'], ['상대', '증강 획득', '이후 불가', 'foe']],
   heaven: [['떨어진 기본 돌', '되살림', '모두', 'up'], ['내 돌 모두', '처음 자리로', '바로', 'up'], ['이번 국', '증강', '더 받지 않음', 'down']],
   hole: [['판 가운데', '블랙홀', `${cell(A.holeR)}칸`, 'foe'], ['한 수마다', '상대 돌 끌어옴', `${cell(A.holePull)}칸`, 'foe']],
@@ -6526,10 +6522,10 @@ function drainEvents() {
       case 'rope': if (e.v > 80) { boing(Math.min(1.6, 0.6 + e.v / 1800), e.push); fxRing(e.x, e.y, '#ffffff', 8, e.push ? 80 : 60, 0.35); } break;
       case 'revFall': fxRing(e.x, e.y, '#ff6a4a', 40, 6, 0.5); sfx(110, 0.4, 0.35); break;
       case 'labOff': addLog(`훈련장 · ${pLabel(p)}의 ${AUG[e.id].name} 뺌`, p.team); panel = true; break;
-      case 'orleans': addLog(`오를레앙의 최윤재 · ${pLabel(p)}의 초월 외 증강을 제거하고 추가 획득을 막았습니다. ${e.target >= 0 ? `${pLabel(G.players[e.target])}에게 옥 증강 1장을 부여했습니다. ` : ''}${e.reward ? '초월 1장을 고르세요.' : '보유한 초월 증강은 유지됩니다.'}`, p.team, true); panel = true; break;
+      case 'orleans': addLog(`오를레앙의 최윤재 · ${pLabel(p)}의 초월 외 증강을 제거하고 추가 획득을 막았습니다. ${e.target >= 0 ? `${pLabel(G.players[e.target])}에게 옥 증강 ${K.A.orlJade}장을 부여했습니다. ` : ''}${e.reward ? '초월 1장을 고르세요.' : '보유한 초월 증강은 유지됩니다.'}`, p.team, true); panel = true; break;
       case 'decreeAll': addLog(`어명 · ${pLabel(p)}이(가) ${pLabel(G.players[e.target])}의 증강을 모두 제거하고 추가 획득을 봉쇄했습니다.`, p.team, true); panel = true; break;
       case 'pajukStep': addLog(`파죽지세 · 상대 기본 돌 ${e.n}/2개 격파`, p.team, true); panel = true; break;
-      case 'pajukFail': addLog('파죽지세 · 12수 조건 실패, 은 증강 1장을 무작위로 얻었습니다.', p.team, true); panel = true; break;
+      case 'pajukFail': addLog('파죽지세 · 12수 안에 이루지 못했습니다.', p.team, true); panel = true; break;
       case 'revGrow': sfx(90, 0.6, 0.45); G.shake = Math.max(G.shake, 0.15); addLog('반전 · 가운데 구멍이 커졌습니다'); panel = true; break;
       case 'revRope': boing(1.3); sfx(140, 0.4, 0.3); G.shake = Math.max(G.shake, 0.12); addLog(`반전 · 밧줄이 안쪽으로 좁혀졌습니다${e.left ? '' : ' · 이제 더 바뀌지 않습니다'}`); panel = true; break;
       case 'revTileWarn':
@@ -7210,6 +7206,8 @@ function drawStone(s, alone) {
   ctx.globalAlpha = 1;
 }
 
+/* 손떨림: 빠르지만 일정한 박자로 좌우 흔들림 (최대 ±15°) */
+const shakyOff = t => Math.sin(t / K.A.shakyT * TAU) * K.A.shaky / 2;
 function drawAim(s, pw, ang, pull, shaky, now, p, o) {
   if (pull) {
     ctx.save(); ctx.strokeStyle = 'rgba(242,236,223,.4)'; ctx.lineWidth = 4; ctx.setLineDash([7, 9]);
@@ -7227,7 +7225,7 @@ function drawAim(s, pw, ang, pull, shaky, now, p, o) {
   }
   /* 화살표는 당긴 정도만 짧게 보여 주고, 실제로 어디까지 가는지는 그리지 않음 (거리는 손감각으로) */
   let a = ang, len = 46 + 130 * pw;
-  if (shaky) { a += Math.sin(now / 50) * 0.13 + Math.sin(now / 23) * 0.05; len *= 0.45; }
+  if (shaky) { a += shakyOff(now); len *= 0.45; }
   void blue;
   const col = aimColor(pw);   /* 0~100%: 연한 한지색 → 노랑 → 주황 → 붉은색으로 자연스럽게 */
   /* 변화구: 화살표도 고른 쪽으로 휘어 보임 */
