@@ -1,6 +1,6 @@
 {
   "name": "augment-alkkagi",
-  "version": "1.55.0",
+  "version": "1.58.0",
   "description": "증강 알까기 — 1대1 온라인 대전 서버",
   "main": "server.js",
   "scripts": {

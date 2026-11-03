@@ -236,10 +236,11 @@ button,input{font:inherit;color:inherit}
 .btn-ghost{background:transparent;border:1px solid var(--hair);border-radius:2px;padding:7px 14px;cursor:pointer;font-size:13px;letter-spacing:.08em;color:var(--ivory);transition:border-color .2s,color .2s}
 .btn-ghost:hover{border-color:var(--gold);color:var(--gold-hi)}
 .btn-ghost:disabled{opacity:.45;cursor:default}
-.btn-primary{position:relative;background:var(--gold-leaf);color:#1c140a;border:0;border-radius:2px;padding:13px 26px;font-family:var(--font-display);font-weight:700;font-size:16px;letter-spacing:.14em;cursor:pointer;box-shadow:0 10px 26px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.45)}
-.btn-primary:hover{filter:brightness(1.06)}
-.btn-primary:active{transform:translateY(1px)}
-.btn-primary:disabled{filter:grayscale(.7) brightness(.7);cursor:default}
+/* 모든 단추를 '취소' 단추와 같은 모양으로 통일 */
+.btn-primary{position:relative;background:transparent;border:1px solid var(--hair);border-radius:2px;padding:7px 14px;cursor:pointer;font-size:13px;letter-spacing:.08em;color:var(--ivory);font-family:inherit;font-weight:400;transition:border-color .2s,color .2s}
+.btn-primary:hover{border-color:var(--gold);color:var(--gold-hi)}
+.btn-primary:active{transform:none}
+.btn-primary:disabled{opacity:.45;cursor:default}
 
 .seal{display:inline-grid;place-items:center;background:var(--inju);color:#f6eee0;font-family:var(--font-seal);font-weight:900;border-radius:3px;box-shadow:inset 0 0 0 1.5px rgba(246,238,224,.35);line-height:1;transform:rotate(-3deg);flex:none}
 .seal-sm{width:30px;height:30px;font-size:19px}
@@ -579,6 +580,11 @@ button,input{font:inherit;color:inherit}
 .skin-opts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
 .skin-opts canvas{width:100%;height:auto;aspect-ratio:2/1}
 .skin-opts .ill-opt b{font-size:13px}
+.skin-col-h{margin:14px 0 8px;font-size:13px;color:var(--gold-hi,#e8cd8e);letter-spacing:.08em}
+.skin-cols{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+.skin-cols canvas{width:100%;height:auto;aspect-ratio:2/1}
+.skin-cols .ill-opt{padding:6px 4px;gap:4px}.skin-cols .ill-opt b{font-size:12px}
+@media (max-width:640px){.skin-cols{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media (max-width:640px){.skin-opts{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 /* 기객 일러스트 */
@@ -1191,27 +1197,27 @@ const L = i => INSET + i * GAP;
 /* physics + rules (tunable) */
 const P = {
   maxSpeed: 1720, decel: 700, drag: 1.1, rest: 0.92, bumpRest: 0.92, bumpKick: 160,
-  padMult: 1.3, padAdd: 500, padMaxV: 2200, padCool: 5, gateCool: 2, padStart: 0, padOn: 0, padOff: 0, rockHits: 7, rockMinV: 150, shrinkStart: 25, shrinkTurns: 11, shrinkStep: GAP * 0.5, tengenR: 65, timeout: 16, lossPerPick: 3, lastKB: 0.25, pityAfter: 3
+  padMult: 1.3, padAdd: 500, padMaxV: 2200, padCool: 5, gateCool: 2, padStart: 0, padOn: 0, padOff: 0, rockHits: 7, rockMinV: 150, shrinkStart: 25, shrinkTurns: 11, shrinkStep: GAP * 0.5, tengenR: GAP, timeout: 16, lossPerPick: 3, lastKB: 0.25, pityAfter: 3
 };
 /* augment numbers (tunable) */
 const A = {
-  ironM: 1.12, sizeN: 2, bigR: 1.25, bigM: 1.12, bigV: 1.04, denseR: 0.8, denseM: 1.0, denseV: 1.24, fast: 1.07, massK: 0.5, reinforce: 1,
-  shaky: 30 * Math.PI / 180, seal: 2, root: 1.18, aimNoise: 0.5194, shackle: 0.94,
+  ironM: 1.14, sizeN: 2, bigR: 1.25, bigM: 1.12, bigV: 1.04, denseR: 0.8, denseM: 1.0, denseV: 1.24, fast: 1.07, reinforce: 1,
+  shaky: 30 * Math.PI / 180, seal: 2, root: 1.18, rootMax: 0.24, rootStep: 0.08, aimNoise: 0.5194, shackle: 0.94,
   bombR: 2 * GAP, bombF: 1040, bombBase: 234, oil: 0.8458, markD: 3 * GAP, markK: 1.20, combo: 1, comboRound: 2,
   wedgeM: 1.7, splitImpact: 560, splitR: 0.8, splitM: 0.8, splitV: 0.7, splitN: 2, wallSave: 1,
-  pierce: 1.0, thorns: 0.50, traps: 2, trapR: 28, doubleV: 0.68,
-  revive: 3, buddy: 1, thief: 1, rewind: 2, kingR: 1.5, kingM: 1.5, kingV: 1.4, boltEvery: 3, boltV: 620,
+  pierce: 1.0, thorns: 0.50, traps: 2, trapR: 28, doubleV: 0.55, doubleH: 0.9,
+  revive: 3, buddy: 1, thief: 1, rewind: 2, kingR: 1.5, kingM: 1.5, kingV: 1.3, boltEvery: 3, boltV: 620,
   clone: 1, cloneK: 1.0, buddyD: 500, lastN: 3, lastR: 1.15, lastM: 1.2, lastV: 1.12, tideD: 0.75 * GAP,
   /* 새 증강 */
-  momV: 1.25, ctrV: 1.35, grip: 1.12, sand: 1.25, starM: 1.8, starD: 0.8 * GAP, edgeF: 1.65, edgeD: 1.6 * GAP, firstK: 1.8, firstN: 2,
+  momV: 1.25, ctrV: 1.35, grip: 1.12, sand: 1.25, starM: 1.6, starD: 0.8 * GAP, edgeH: 1.7, edgeD: 1.6 * GAP, firstK: 1.8, firstN: 2,
   gustD: 1.0 * GAP, hamM: 1.16, pressD: 2 * GAP, pressM: 0.37, shockR: 2 * GAP, shockD: 1.6 * GAP, chainK: 1.5,
   dragonN: 1, dragonD: 2.2 * GAP, dragonH: 2.0, dragonStep: 0.4, ko: 3, pillarR: 1.01, pillarM: 1.01, pillarV: 1.01, pillarCap: 20, pillarFree: 3,
   /* v29 새 증강 */
   clayV: 1.18, clayH: 0.85, milletR: 0.85, milletM: 0.96, milletV: 1.10, gritStep: 0.06, gritMax: 4, lateV0: 0.95, lateV1: 1.12, lateH: 1.08,
-  loneV: 1.1, loneM: 1.1, loneR: 1.1, trainN: 3,
+  loneV: 1.2, loneM: 1.2, loneR: 1.2, trainN: 3,
   curveA: 30 * Math.PI / 180, curveB: 60 * Math.PI / 180, thriceV: 1.30, thriceK: 1.0, brandK: 1.0, iceF: 0.4,
   glutR: 1.06, glutM: 1.06, glutV: 1.06, glutN: Infinity, bountyN: 8, bountyIn: 2 * GAP, bountyH: 0.6,
-  yiN: 3, shardHs: 0.3 * GAP, portalZ: 3 * GAP, tengenH: 1.2, gambleV: 1.3, fortV0: 0.93, fortV1: 1.07, fortH0: 0.93, fortH1: 1.07, fortM0: 0.93, fortM1: 1.07, rebK: 0.7, revH0: 2 * GAP, revStep: 0.5 * GAP, revMax: 5 * GAP, ropeRest: 1.8, ropePushK: 1.5, ropeMaxV: 2200, revGrowN: 2, revShrinkN: 3, crackMax: 2, crackR: 2 * GAP, crackF: 1400, shardN: 3, shardR: 0.3 * GAP, shardBack: 0.85, frogEvery: 5, frogAir: 1.1, fishStay: 1, frogBox: 1.8 * GAP, frogPush: GAP, fishLeapMin: 2.8, fishLeapSpan: 2.6, fishCatch: 0.62 * GAP, fishPower: 1.10, sqrV: 1.3, sqrN: 2, heavenRow: 3 * GAP, vortexN: 3, vortexR: 3 * GAP, vortexPull: 0.5 * GAP, vortexH: 0.5, ikiN: 3, pajukN: 2, pajukTurns: 12, holeR: 8 * GAP, holePull: 1 * GAP, holeKill: 0.5 * GAP, lianV: 0.75, landW: 1 * GAP, landF: 4.5, passK: 0.75, passF: 5
+  yiN: 3, shardHs: 0.3 * GAP, portalZ: 3 * GAP, tengenH: 1.1, gambleV: 1.35, fortV0: 0.9, fortV1: 1.1, fortH0: 0.9, fortH1: 1.1, rebK: 0.7, revH0: 2 * GAP, revStep: 0.5 * GAP, revMax: 5 * GAP, ropeRest: 1.8, ropePushK: 1.5, ropeMaxV: 2200, revGrowN: 2, revShrinkN: 3, crackMax: 2, crackR: 2 * GAP, crackF: 1400, shardN: 3, shardR: 0.3 * GAP, shardBack: 0.85, frogEvery: 5, frogAir: 1.1, fishStay: 1, frogBox: 1.8 * GAP, frogPush: GAP, fishLeapMin: 2.8, fishLeapSpan: 2.6, fishCatch: 0.62 * GAP, fishPower: 1.10, sqrV: 1.3, sqrN: 2, heavenRow: 3 * GAP, vortexN: 3, vortexR: 3 * GAP, vortexPull: 0.5 * GAP, vortexH: 0.5, ikiN: 3, pajukN: 2, pajukTurns: 12, holeR: 8 * GAP, holePull: 1 * GAP, holeKill: 0.5 * GAP, lianV: 0.75, landW: 1 * GAP, landF: 4.5, passK: 0.75, passF: 5
 };
 /* tier odds per pick: [silver, gold, prism]; always silver > gold > prism, a little richer on later picks */
 const TIER_ODDS = [[60, 30, 10], [50, 33, 17], [45, 35, 20]];
@@ -1257,23 +1263,24 @@ const pm = x => { const v = Math.round((x - 1) * 1000) / 10; return `${v > 0 ? '
 /* 화면에 보이는 거리·배수는 필요한 자리까지만 표시 */
 const f1 = x => Math.round(x * 100) / 100;
 const deg = x => Math.round(x * 180 / Math.PI);
+const cellTxt = d => { const v = Math.round(d / GAP * 10) / 10; return v % 1 ? v.toFixed(1) : String(v); };
 const AUG = {
   /* ---- silver ---- */
-  iron:      { name: '쇳덩이', seal: '鐵', tier: 1, max: 3, short: () => `무게 ${pm(A.ironM)}`,
-    desc: () => `내 돌이 모두 무게 ${pm(A.ironM)}가 됩니다. 덜 밀리고 부딪힐 때 상대를 더 멀리 밀어내며, 무거운 만큼 사거리는 조금 줄어듭니다.` },
-  big:       { name: '큰 돌', seal: '巨', tier: 1, max: 1, short: () => `돌 ${A.sizeN}개 크기 +${pct(A.bigR - 1)}% · 무게 ${pm(A.bigM)} · 힘 +${pct(A.bigV - 1)}%`,
-    desc: () => `고르는 즉시 내 돌 ${A.sizeN}개를 골라 크기 +${pct(A.bigR - 1)}%, 무게 ${pm(A.bigM)}, 힘 +${pct(A.bigV - 1)}%로 만듭니다. 무거워진 만큼 줄어드는 사거리를 힘으로 메웁니다. 내 돌이 ${A.sizeN}개 이하면 바로 적용됩니다.` },
-  fast:      { name: '강속구', seal: '速', tier: 1, max: 2, short: () => `힘 +${pct(A.fast - 1)}%`,
+  iron:      { name: '쇳덩이', seal: '鐵', tier: 1, max: 1, short: () => `방어력 ${pm(A.ironM)}`,
+    desc: () => `내 돌이 모두 방어력 ${pm(A.ironM)}가 되어, 상대 샷에 맞아도 덜 밀립니다.` },
+  big:       { name: '큰 돌', seal: '巨', tier: 1, max: 1, short: () => `돌 ${A.sizeN}개 크기 +${pct(A.bigR - 1)}% · 방어력 ${pm(A.bigM)} · 힘 +${pct(A.bigV - 1)}%`,
+    desc: () => `고르는 즉시 내 돌 ${A.sizeN}개를 골라 크기 +${pct(A.bigR - 1)}%, 방어력 ${pm(A.bigM)}, 힘 +${pct(A.bigV - 1)}%로 만듭니다. 내 돌이 ${A.sizeN}개 이하면 바로 적용됩니다.` },
+  fast:      { name: '강속구', seal: '速', tier: 1, max: 1, short: () => `힘 +${pct(A.fast - 1)}%`,
     desc: () => `내 힘이 ${pct(A.fast - 1)}% 세집니다. 사거리 싸움에서 한발 먼저 닿습니다.` },
-  reinforce: { name: '증원', seal: '援', tier: 1, max: 3, short: () => `돌 +${A.reinforce}`,
+  reinforce: { name: '증원', seal: '援', tier: 1, max: 1, short: () => `돌 +${A.reinforce}`,
     desc: () => `고르는 즉시 우리 진영에 내 돌이 ${A.reinforce}개 더 놓입니다. 늘어난 돌은 다음 증강까지 세는 기본 돌에 들어가지 않습니다.` },
-  seal:      { name: '봉인', seal: '封', tier: 1, max: 2, short: () => `상대 돌 ${A.seal}개 봉인`,
+  seal:      { name: '봉인', seal: '封', tier: 1, max: 1, short: () => `상대 돌 ${A.seal}개 봉인`,
     desc: () => `고르는 즉시 상대 돌 ${A.seal}개를 봉인합니다. 봉인된 돌은 쏠 수 없고, 상대 돌이 하나 떨어질 때마다 봉인이 하나씩 풀립니다. 상대 돌이 모두 봉인되면 한꺼번에 풀리고, 상대 돌이 2개 이하일 때는 선택지에 나오지 않습니다.` },
-  root:      { name: '뿌리', seal: '根', tier: 1, max: 2, short: () => `방어력 ${pm(A.root)}`,
-    desc: () => `내 돌의 방어력이 ${pm(A.root)}가 됩니다. 상대 샷에 맞을 때 그만큼 덜 밀려나고, 내 샷에는 영향이 없습니다.` },
+  root:      { name: '뿌리', seal: '根', tier: 1, max: 1, short: () => `가운데에 가까울수록 방어력 ↑ (최대 +${pct(A.rootMax)}%)`,
+    desc: () => `판 가운데에 가까운 내 돌일수록 덜 밀립니다. 가운데에서 방어력 +${pct(A.rootMax)}%, 한 칸 멀어질 때마다 ${pct(A.rootStep)}%씩 줄어 ${Math.round(A.rootMax / A.rootStep)}칸부터는 효과가 없습니다.` },
   aim:       { name: '정조준', seal: '準', tier: 2, max: 1, short: () => '첫 충돌까지 궤적 표시',
     desc: () => '조준할 때 내 돌이 처음 부딪히는 곳까지의 궤적과, 맞은 돌이 날아갈 방향을 보여 줍니다. 상대의 손떨림에 걸려 있으면 보이지 않습니다.' },
-  shackle:   { name: '족쇄', seal: '鎖', tier: 1, max: 2, short: () => `상대 힘 −${pct(1 - A.shackle)}%`,
+  shackle:   { name: '족쇄', seal: '鎖', tier: 1, max: 1, short: () => `상대 힘 −${pct(1 - A.shackle)}%`,
     desc: () => `상대 힘이 ${pct(1 - A.shackle)}% 약해져, 상대 사거리가 그만큼 짧아집니다.` },
   momentum:  { name: '기세', seal: '勢', tier: 1, max: 1, short: () => `떨어뜨리면 다음 샷 힘 +${pct(A.momV - 1)}%`,
     desc: () => `내 샷으로 상대 돌을 떨어뜨리면, 바로 다음 샷의 힘이 ${pct(A.momV - 1)}% 세집니다.` },
@@ -1285,20 +1292,20 @@ const AUG = {
     desc: () => `상대가 쏜 돌의 마찰이 ${pct(A.sand - 1)}% 늘어 덜 나갑니다. 멈춰 있는 상대 돌의 마찰은 그대로입니다.` },
   star:      { name: '화점', seal: '星', tier: 1, max: 1, short: () => `화점 위 방어력 ${pm(A.starM)}`,
     desc: () => `바둑판 화점(굵은 점 9곳)에서 ${f1(A.starD / GAP)}칸 안에 있는 내 돌의 방어력이 ${pm(A.starM)}가 됩니다. 판의 화점이 우리 편 색으로 빛납니다.` },
-  edge:      { name: '벼랑', seal: '崖', tier: 1, max: 1, short: () => `가장자리 마찰 +${pct(A.edgeF - 1)}%`,
-    desc: () => `떨어질 수 있는 가장자리에서 ${f1(A.edgeD / GAP)}칸 안에 있는 내 돌은 마찰이 ${pct(A.edgeF - 1)}% 높아져 움직임이 빠르게 줄어듭니다. 벽에 막힌 가장자리는 효과 범위에서 제외됩니다.` },
+  edge:      { name: '벼랑', seal: '崖', tier: 1, max: 1, short: () => `가장자리 방어력 ${pm(A.edgeH)}`,
+    desc: () => `떨어질 수 있는 가장자리에서 ${f1(A.edgeD / GAP)}칸 안에 있는 내 돌은 방어력이 ${pm(A.edgeH)}가 되어 덜 밀립니다. 벽으로 막힌 가장자리는 빠집니다.` },
   first:     { name: '선제', seal: '先', tier: 1, max: 1, short: () => `고른 뒤 ${A.firstN}샷 동안 첫 타격 +${pct(A.firstK - 1)}%`,
     desc: () => `이 증강을 고른 뒤 내 샷 ${A.firstN}번 동안, 쏜 돌의 첫 타격이 ${pct(A.firstK - 1)}% 세집니다.` },
   clay:      { name: '질그릇', seal: '陶', tier: 1, max: 1, short: () => `힘 +${pct(A.clayV - 1)}% · 방어력 ${pm(A.clayH)}`,
     desc: () => `내 힘이 ${pct(A.clayV - 1)}% 세집니다. 대신 내 돌의 방어력이 ${pm(A.clayH)}로 떨어져, 상대 샷에 맞으면 더 멀리 밀려납니다.` },
-  millet:    { name: '좁쌀', seal: '粟', tier: 1, max: 1, short: () => `크기 −${pct(1 - A.milletR)}% · 무게 ${pm(A.milletM)} · 힘 +${pct(A.milletV - 1)}%`,
-    desc: () => `내 돌이 모두 크기 −${pct(1 - A.milletR)}%, 무게 ${pm(A.milletM)}, 힘 +${pct(A.milletV - 1)}%가 되어 맞히기 어렵고 더 멀리 나갑니다. 대신 가벼운 만큼 맞으면 더 밀리고, 칠 때 덜 밀어냅니다.` },
+  millet:    { name: '좁쌀', seal: '粟', tier: 1, max: 1, short: () => `크기 −${pct(1 - A.milletR)}% · 방어력 ${pm(A.milletM)} · 힘 +${pct(A.milletV - 1)}%`,
+    desc: () => `내 돌이 모두 크기 −${pct(1 - A.milletR)}%, 방어력 ${pm(A.milletM)}, 힘 +${pct(A.milletV - 1)}%가 됩니다. 맞히기 어렵고 멀리 나가지만, 맞으면 조금 더 밀립니다.` },
   grit:      { name: '오기', seal: '傲', tier: 1, max: 1, short: () => `빗나갈 때마다 힘 +${pct(A.gritStep)}% (최대 +${pct(A.gritStep * A.gritMax)}%)`,
     desc: () => `내 샷이 아무 돌도 맞히지 못할 때마다 다음 샷부터 힘이 ${pct(A.gritStep)}%씩 세집니다(최대 +${pct(A.gritStep * A.gritMax)}%). 상대 돌을 맞히면 처음으로 돌아갑니다.` },
   late:      { name: '늦바람', seal: '晩', tier: 1, max: 1, short: () => `${P.shrinkStart}수 전 힘 −${pct(1 - A.lateV0)}% · ${P.shrinkStart}수부터 힘 +${pct(A.lateV1 - 1)}%`,
     desc: () => `대국이 ${P.shrinkStart}수에 이르기 전에는 내 힘이 ${pct(1 - A.lateV0)}% 약하지만, ${P.shrinkStart}수부터는 힘 +${pct(A.lateV1 - 1)}%, 방어력 ${pm(A.lateH)}가 됩니다. 판 줄어듦이 시작되는 때와 같습니다.` },
-  lone:      { name: '외길', seal: '徑', tier: 1, max: 1, short: () => `증강을 더 받지 않음 · 힘 +${pct(A.loneV - 1)}% · 무게 ${pm(A.loneM)} · 크기 +${pct(A.loneR - 1)}%`,
-    desc: () => `이번 국에서 증강을 더 받지 않는 대신 내 돌이 모두 힘 +${pct(A.loneV - 1)}%, 무게 ${pm(A.loneM)}, 크기 +${pct(A.loneR - 1)}%가 됩니다. 이번 국에 증강을 한 번 이상 더 받을 수 있을 때만 나옵니다.` },
+  lone:      { name: '외길', seal: '徑', tier: 1, max: 1, short: () => `증강을 더 받지 않음 · 크기 +${pct(A.loneR - 1)}% · 방어력 ${pm(A.loneM)} · 힘 +${pct(A.loneV - 1)}%`,
+    desc: () => `이번 국에 증강을 더 받지 않는 대신 내 돌이 모두 크기 +${pct(A.loneR - 1)}%, 방어력 ${pm(A.loneM)}, 힘 +${pct(A.loneV - 1)}%가 됩니다. 이번 국에 증강을 더 받을 수 있을 때만 나옵니다.` },
   train:     { name: '수련', seal: '修', tier: 1, max: 1, quest: true, short: () => `상대 기본 돌 ${A.trainN}개 떨어뜨리면 금 1장`,
     desc: () => `고를 때는 효과가 없습니다. 내 샷으로 상대 기본 돌 ${A.trainN}개를 떨어뜨리면 금 증강 3장 중 하나를 더 고릅니다(분열 조각은 반 개). 상대 기본 돌이 ${A.trainN + 1}개 이상일 때 등장하며, 상대의 자멸이나 지형 효과로 떨어진 돌도 내 기록에 포함됩니다.` },
   /* ---- gold ---- */
@@ -1308,22 +1315,22 @@ const AUG = {
     desc: () => `내가 쏜 돌이 멈추는 순간 터져 ${f1(A.bombR / GAP)}칸 안의 돌을 모두 밀어냅니다. 가까울수록 세게 밀리고, 내 돌도 예외는 아닙니다.` },
   marks:     { name: '명사수', seal: '射', tier: 2, max: 1, short: () => `${Math.round(A.markD / GAP)}칸 이상 날아가 맞히면 타격 +20%`,
     desc: () => `쏜 돌이 출발점에서 ${Math.round(A.markD / GAP)}칸 이상 날아간 뒤 상대 돌을 맞히면 첫 타격이 20% 강해집니다.` },
-  wedge:     { name: '쐐기', seal: '楔', tier: 2, max: 1, short: () => `쏜 돌이 멈추면 무게 ${pm(A.wedgeM)}`,
-    desc: () => `내가 쏜 돌이 멈추면 그 자리에 박혀, 다음 내 차례가 올 때까지 무게 ${pm(A.wedgeM)}가 됩니다.` },
+  wedge:     { name: '쐐기', seal: '楔', tier: 2, max: 1, short: () => `쏜 돌이 멈추면 방어력 ${pm(A.wedgeM)}`,
+    desc: () => `내가 쏜 돌이 멈추면, 다음 내 차례까지 그 돌의 방어력이 ${pm(A.wedgeM)}가 됩니다.` },
   wall:      { name: '철벽', seal: '壁', tier: 2, max: 1, team: true, short: () => '우리 돌만 막는 뒤쪽 벽',
     desc: () => `우리 진영 뒤 가장자리에 우리 돌만 막아 주는 고무벽이 생겨, 뒤로 밀린 우리 돌이 튕겨 돌아옵니다. 판이 줄어들면 벽도 따라 들어오고, 그때 벽 밖에 남은 우리 돌을 ${A.wallSave}번 안으로 되돌려 줍니다.` },
-  split:     { name: '분열', seal: '裂', tier: 1, max: 1, short: () => `조각 크기·무게 −20%`,
-    desc: () => `강한 타격을 받은 내 돌이 둘로 갈라집니다. 조각은 크기와 무게가 각각 20% 작고, 기본 돌 조각은 다음 증강 조건에서 반 개씩 셉니다.` },
+  split:     { name: '분열', seal: '裂', tier: 1, max: 1, short: () => `조각 크기·방어력 −${pct(1 - A.splitR)}%`,
+    desc: () => `세게 맞은 내 돌이 둘로 갈라집니다. 조각은 크기와 방어력이 ${pct(1 - A.splitR)}%씩 낮고, ${pct(A.splitV)}% 빠르기로 튀어 나갑니다. 기본 돌 조각은 다음 증강 조건에서 반 개로 셉니다.` },
   pierce:    { name: '굳건', seal: '堅', tier: 2, max: 1, short: () => '첫 타격에 힘을 모두 실음 · 쏜 돌은 멈춤',
     desc: () => `쏜 돌이 처음 맞힌 상대 돌에 힘을 모두 실어 보내고, 쏜 돌은 그 자리에 멈춥니다.${A.pierce > 1 ? ` 그 타격은 ${pct(A.pierce - 1)}% 더 셉니다.` : ''}` },
   thorns:    { name: '가시', seal: '棘', tier: 2, max: 1, short: () => `나와 부딪힌 상대 돌에 타격 ${pct(A.thorns)}% 되돌림`,
     desc: () => `상대 샷 동안 내 돌과 부딪힌 상대 돌은 충돌 세기의 ${pct(A.thorns)}%를 되돌려 받아 더 튕겨 나갑니다.` },
-  double:    { name: '쌍발', seal: '雙', tier: 2, max: 1, short: () => `같은 돌로 2번 · 힘 −${pct(1 - A.doubleV)}%`,
-    desc: () => `매 차례 두 번씩 칩니다. 두 번째는 첫 번째로 친 돌로만 칠 수 있고, 내 힘이 ${pct(1 - A.doubleV)}% 줄어듭니다.` },
+  double:    { name: '쌍발', seal: '雙', tier: 2, max: 1, short: () => `같은 돌로 2번 · 힘 −${pct(1 - A.doubleV)}% · 방어력 ${pm(A.doubleH)}`,
+    desc: () => `매 차례 두 번씩 칩니다. 두 번째는 첫 번째로 친 돌로만 칠 수 있습니다. 대신 내 힘이 ${pct(1 - A.doubleV)}%, 방어력이 ${pct(1 - A.doubleH)}% 줄어듭니다.` },
   gust:      { name: '돌풍', seal: '颯', tier: 2, max: 1, short: () => `샷이 끝나면 가까운 상대 돌 ${f1(A.gustD / GAP)}칸 밀어냄`,
     desc: () => `내 샷이 끝나면, 쏜 돌에서 가장 가까운 상대 돌 하나를 쏜 돌 반대쪽으로 ${f1(A.gustD / GAP)}칸 밀어냅니다.` },
-  hammer:    { name: '철퇴', seal: '鎚', tier: 2, max: 1, short: () => `쏜 돌 무게 ${pm(A.hamM)}`,
-    desc: () => `내가 쏜 돌은 굴러가는 동안만 무게 ${pm(A.hamM)}가 되어 더 세게 부딪힙니다. 힘은 줄지 않고, 멈추면 원래 무게로 돌아옵니다.` },
+  hammer:    { name: '철퇴', seal: '鎚', tier: 2, max: 1, short: () => `쏜 돌 타격 ${pm(A.hamM)}`,
+    desc: () => `내가 쏜 돌은 굴러가는 동안 더 세게 부딪힙니다(타격 ${pm(A.hamM)}). 멈추면 원래대로 돌아옵니다.` },
   press:     { name: '압박', seal: '壓', tier: 2, max: 1, short: () => `쏜 돌 둘레 상대 돌 방어력 ${pm(A.pressM)}`,
     desc: () => `내가 쏜 돌이 멈춘 자리에서 ${f1(A.pressD / GAP)}칸 안의 상대 돌은, 다음 내 샷이 끝날 때까지 방어력이 ${pm(A.pressM)}로 떨어집니다.` },
   shock:     { name: '파문', seal: '波', tier: 2, max: 1, short: () => `첫 타격 때 둘레 상대 돌 ${f1(A.shockD / GAP)}칸 밀어냄`,
@@ -1333,13 +1340,13 @@ const AUG = {
   curve:     { name: '변화구', seal: '曲', tier: 2, max: 1, ctrl: true, short: () => `휘어 들어가는 샷`,
     desc: () => `쏘기 전 판 위 단추로 방향(왼쪽·오른쪽)과 휨(약 ${deg(A.curveA)}°·강 ${deg(A.curveB)}°)을 고르면, 쏜 돌이 날아가며 휘어 들어갑니다. 처음 무언가에 닿으면 더 휘지 않습니다. 바위·바람문·다른 돌 뒤에 숨은 돌을 노릴 수 있습니다.` },
   thrice:    { name: '삼세번', seal: '三', tier: 2, max: 1, short: () => `세 번째 샷마다 힘 +30%`,
-    desc: () => '내 세 번째 샷마다 발사 힘이 30% 증가합니다. 타격 증가는 없습니다.' },
+    desc: () => '내 세 번째 샷마다 발사 힘이 30% 증가합니다.' },
   brand:     { name: '낙인', seal: '烙', tier: 2, max: 1, short: () => '맞고 버틴 상대 돌의 방어력 −25%',
     desc: () => '내 돌에 맞고 살아남은 상대 돌에 낙인을 남깁니다. 낙인 대상은 내 돌에 다시 맞기 전까지 방어력이 25% 낮아집니다. 다시 맞으면 낙인이 사라집니다.' },
   ice:       { name: '빙판길', seal: '氷', tier: 2, max: 1, short: () => '내가 지나간 길이 4턴 동안 얼어붙음',
     desc: () => '내가 쏜 돌이 지나간 길이 4수 동안 얼어붙습니다. 그 위에서 밀리는 상대 돌은 마찰이 60% 줄어 더 멀리 미끄러집니다.' },
-  glut:      { name: '탐식', seal: '貪', tier: 2, max: 1, short: () => `상대 돌을 떨어뜨릴 때마다 크기·무게·힘 +${pct(A.glutR - 1)}%`,
-    desc: () => '내 샷으로 상대 돌을 떨어뜨릴 때마다 쏜 돌의 크기·무게·힘이 각각 6% 증가합니다. 제한 없이 자랍니다.' },
+  glut:      { name: '탐식', seal: '貪', tier: 2, max: 1, short: () => `상대 돌을 떨어뜨릴 때마다 크기·방어력·힘 +${pct(A.glutR - 1)}%`,
+    desc: () => `내 샷으로 상대 돌을 떨어뜨릴 때마다 쏜 돌의 크기·방어력·힘이 ${pct(A.glutR - 1)}%씩 오릅니다. 제한 없이 자랍니다.` },
   bounty:    { name: '현상금', seal: '賞', tier: 2, max: 1, quest: true, short: () => `표시된 상대 돌을 전체 8수 안에 떨어뜨리면 옥 1장`,
     desc: () => `상대 돌 하나에 현상금을 겁니다. 양쪽의 차례를 합쳐 전체 8수 안에 그 돌을 떨어뜨리면 옥 증강 1장을 추가로 고릅니다.` },
   iki:       { name: '일기당천', seal: '騎', tier: 2, max: 1, quest: true, short: () => `돌 하나로 상대 기본 돌 ${A.ikiN}개 떨어뜨리면 초월 1장`,
@@ -1350,19 +1357,19 @@ const AUG = {
   buddy:     { name: '길동무', seal: '伴', tier: 3, max: 1, short: () => `떨어질 때 상대 돌 하나 데려가고 한 번 더 (${A.buddy}회)`,
     desc: () => `내 돌이 떨어지면, 판 위의 상대 돌 하나를 직접 골라 함께 데려가고 내 차례를 한 번 더 진행합니다. 이번 국에 ${A.buddy}번까지 됩니다.` },
   tengen:    { name: '천원', seal: '天', tier: 3, max: 1, short: () => `천원을 지키면 승리 · 천원 위 방어력 +${pct(A.tengenH - 1)}%`,
-    desc: () => `천원에 내 돌을 세우고 다음 내 차례까지 지키면 승리합니다. 천원 위 내 돌은 방어력이 ${pct(A.tengenH - 1)}% 증가합니다.` },
-  thief:     { name: '도둑', seal: '盜', tier: 3, max: 2, short: () => `상대 돌 ${A.thief}개 빼앗기 · 원래 주인의 증강 카운터에 반영`,
+    desc: () => `천원에서 ${cellTxt(P.tengenR)}칸 안에 내 돌을 세우고 다음 내 차례까지 지키면 승리합니다. 천원 위 내 돌은 방어력이 ${pct(A.tengenH - 1)}% 증가합니다.` },
+  thief:     { name: '도둑', seal: '盜', tier: 3, max: 1, short: () => `상대 돌 ${A.thief}개 빼앗기 · 원래 주인의 증강 카운터에 반영`,
     desc: () => `고르는 즉시 상대 돌 ${A.thief}개를 빼앗아 내 돌로 만들고 우리 진영으로 데려옵니다. 빼앗긴 기본 돌은 원래 주인이 잃은 돌로 계산되어 상대의 다음 증강 획득 카운터에 반영됩니다.` },
   rewind:    { name: '되감기', seal: '返', tier: 3, max: 1, short: () => `상대 샷 무르기 (${A.rewind}회)`,
     desc: () => `상대 샷에 내 돌이 떨어지면 그 샷을 통째로 없던 일로 되돌립니다. 이번 국에 ${A.rewind}번까지 됩니다.` },
-  king:      { name: '왕돌', seal: '王', tier: 3, max: 1, short: () => `돌 하나 크기 +${pct(A.kingR - 1)}% · 무게 ${pm(A.kingM)} · 힘 +${pct(A.kingV - 1)}%`,
-    desc: () => `고르는 즉시 내 돌 하나를 골라 왕돌로 만듭니다. 왕돌은 크기 +${pct(A.kingR - 1)}%, 무게 ${pm(A.kingM)}, 힘 +${pct(A.kingV - 1)}%가 됩니다. 내 돌이 ${A.sizeN}개 이하면 가운데에 가까운 돌에 바로 적용됩니다.` },
+  king:      { name: '왕돌', seal: '王', tier: 3, max: 1, short: () => `돌 하나 크기 +${pct(A.kingR - 1)}% · 방어력 ${pm(A.kingM)} · 힘 +${pct(A.kingV - 1)}%`,
+    desc: () => `고르는 즉시 내 돌 하나를 왕돌로 만듭니다. 왕돌은 크기 +${pct(A.kingR - 1)}%, 방어력 ${pm(A.kingM)}, 힘 +${pct(A.kingV - 1)}%가 됩니다. 내 돌이 ${A.sizeN}개 이하면 가운데에 가까운 돌에 바로 적용됩니다.` },
   bolt:      { name: '번개', seal: '雷', tier: 3, max: 1, short: () => `내 샷 3번째마다 3×3 낙뢰`,
-    desc: () => '내가 쏜 세 번째 샷마다 무작위 위치에 3×3 낙뢰가 떨어집니다. 범위 안의 돌은 모두 사라집니다. 낙뢰 자리는 처음 정해진 곳에서 움직이지 않고, 자리와 3·2·1 카운트는 나에게만 보입니다.' },
+    desc: () => '내가 쏜 세 번째 샷마다 3×3 낙뢰가 떨어져 범위 안의 돌이 모두 사라집니다. 낙뢰 자리는 상대 돌이 1개 이하인 곳으로 정해지고, 정해진 뒤에는 움직이지 않습니다. 자리와 3·2·1 카운트는 나에게만 보입니다.' },
   clone:     { name: '분신', seal: '影', tier: 3, max: 1, short: () => `분신 +${A.clone} · 한 번 되살아남`,
-    desc: () => `고르는 즉시 우리 진영에 분신 ${A.clone}개가 놓입니다. ${A.cloneK >= 1 ? '분신은 내 돌과 크기·무게가 같고' : `분신은 내 돌보다 ${pct(1 - A.cloneK)}% 작고 가벼우며`}, 처음 판 밖으로 떨어질 때 한 번은 우리 진영으로 되돌아옵니다. 분신은 다음 증강까지 세는 기본 돌에 들어가지 않습니다.` },
-  last:      { name: '배수진', seal: '背', tier: 3, max: 1, short: () => `${A.lastN}개 이하일 때 크기 +${pct(A.lastR - 1)}% · 무게 ${pm(A.lastM)} · 힘 +${pct(A.lastV - 1)}%`,
-    desc: () => `우리 돌이 ${A.lastN}개 이하로 줄면 남은 내 돌이 크기 +${pct(A.lastR - 1)}%, 무게 ${pm(A.lastM)}, 힘 +${pct(A.lastV - 1)}%가 됩니다.` },
+    desc: () => `고르는 즉시 우리 진영에 분신 ${A.clone}개가 놓입니다. ${A.cloneK >= 1 ? '분신은 내 돌과 크기·방어력이 같고' : `분신은 내 돌보다 ${pct(1 - A.cloneK)}% 작고 약하며`}, 처음 판 밖으로 떨어질 때 한 번은 우리 진영으로 되돌아옵니다. 분신은 다음 증강까지 세는 기본 돌에 들어가지 않습니다.` },
+  last:      { name: '배수진', seal: '背', tier: 3, max: 1, short: () => `${A.lastN}개 이하일 때 크기 +${pct(A.lastR - 1)}% · 방어력 ${pm(A.lastM)} · 힘 +${pct(A.lastV - 1)}%`,
+    desc: () => `우리 돌이 ${A.lastN}개 이하로 줄면 남은 내 돌이 크기 +${pct(A.lastR - 1)}%, 방어력 ${pm(A.lastM)}, 힘 +${pct(A.lastV - 1)}%가 됩니다.` },
   dense:     { name: '차돌', seal: '小', tier: 3, max: 1, short: () => `돌 ${A.sizeN}개 크기 −${pct(1 - A.denseR)}% · 힘 +${pct(A.denseV - 1)}%`,
     desc: () => `고르는 즉시 내 돌 ${A.sizeN}개를 골라 크기 −${pct(1 - A.denseR)}%, 힘 +${pct(A.denseV - 1)}%로 만듭니다. 맞히기 어렵고 더 멀리 나갑니다. 내 돌이 ${A.sizeN}개 이하면 바로 적용됩니다.` },
   shaky:     { name: '손떨림', seal: '震', tier: 3, max: 1, short: () => '상대 조준을 더 빠르게 15° 흔듦',
@@ -1371,20 +1378,20 @@ const AUG = {
     desc: () => `멈춰 있는 내 돌은 ${f1(A.dragonD / GAP)}칸 안으로 줄줄이 이어진 돌 1개마다 방어력이 ${pct(A.dragonStep)}%씩 올라갑니다. 많이 뭉칠수록 단단해집니다.` },
   ko:        { name: '패', seal: '劫', tier: 3, max: 1, short: () => `내 돌을 잃으면 다음 차례 한 번 더 (${A.ko}회)`,
     desc: () => `상대 샷에 내 돌이 떨어지면, 다음 내 차례에 한 번 더 칩니다. 이번 국에 ${A.ko}번까지 됩니다.` },
-  wish:      { name: '염원', seal: '願', tier: 3, max: 1, short: () => '지금 증강을 모두 버리고, 다음엔 한 등급 위 3장 모두 받기',
-    desc: () => '고르는 즉시 내 증강을 모두 버립니다(초월은 남음). 다음 증강 고르기에서는 한 등급 위 카드 3장을 모두 얻습니다. 내 두 번째 증강 고르기에서만 나옵니다.' },
+  wish:      { name: '염원', seal: '願', tier: 3, max: 1, short: () => '지금 증강을 모두 버리고, 다음엔 한 등급 위 3장 모두 받기 (옥까지)',
+    desc: () => '고르는 즉시 내 증강을 모두 버립니다(초월은 남음). 다음 증강 고르기에서는 한 등급 위 카드 3장을 모두 얻습니다. 가장 높게는 옥이고, 초월은 나오지 않습니다. 내 두 번째 증강 고르기에서만 나옵니다.' },
   gamble:    { name: '승부수', seal: '賭', tier: 2, max: 1, short: () => `힘 +${pct(A.gambleV - 1)}% · 못 떨어뜨리면 쏜 돌을 잃음`,
     desc: () => `내 힘이 ${pct(A.gambleV - 1)}% 세집니다. 내 샷이 상대 돌을 하나도 못 떨어뜨리면 쏜 돌을 잃고 효과가 끝납니다.` },
-  fortune:   { name: '운수', seal: '運', tier: 1, max: 1, short: () => '차례마다 힘·방어력·무게가 ±7% 오르내림',
-    desc: () => `내 차례가 시작될 때마다 힘·방어력·무게가 각각 −7~+7% 사이에서 새로 정해지고, 다음 내 차례까지 그대로 갑니다. 정해진 값은 차례 줄에 보입니다.` },
+  fortune:   { name: '운수', seal: '運', tier: 1, max: 1, short: () => `차례마다 힘·방어력이 ±${pct(A.fortV1 - 1)}% 오르내림`,
+    desc: () => `내 차례가 시작될 때마다 힘과 방어력이 각각 −${pct(1 - A.fortV0)}~+${pct(A.fortV1 - 1)}% 사이에서 새로 정해지고, 다음 내 차례까지 유지됩니다. 정해진 값은 차례 줄에 보입니다.` },
   rebound:   { name: '되튐', seal: '彈', tier: 2, max: 1, short: () => '쏜 돌이 가장자리에서 한 번 튕김',
     desc: () => `내가 쏜 돌이 떨어질 수 있는 가장자리에 처음 닿으면 한 번 튕겨 나옵니다(빠르기 ${pct(A.rebK)}%).` },
   orleans:   { name: '오를레앙의 최윤재', seal: '旗', tier: 3, max: 1, short: () => '기존 증강 제거 · 초월 1장 · 이후 추가 획득 불가 · 상대 옥 1장',
-    desc: () => '획득 즉시 초월을 제외한 내 기존 증강을 모두 제거하고 초월 증강 1장을 고릅니다. 이후 나는 이번 국에 증강을 더 얻지 못합니다. 대신 상대는 옥 증강 1장을 추가로 고릅니다.' },
+    desc: () => '획득 즉시 초월을 제외한 내 기존 증강을 모두 제거하고 초월 증강 1장을 고릅니다. 이후 나는 이번 국에 증강을 더 얻지 못합니다. 대신 상대는 옥 증강 1장을 추가로 고르며, 이 증강은 어명으로도 지울 수 없습니다.' },
   crack:     { name: '균열', seal: '罅', tier: 2, max: 1, short: () => `친 상대 돌에 금 · 금 간 돌을 또 치면 깨짐 (${A.crackMax}개)`,
     desc: () => `내 샷으로 상대 돌을 치면 금이 가고, 금 간 돌을 다시 치면 깨져 주변 상대 돌을 밀어냅니다. 깨질 때 파편 ${A.shardN}개가 남아 ${f1(A.crackR / GAP)}칸 안의 상대 돌을 밀어냅니다. 이번 국에 최대 ${A.crackMax}개까지 깰 수 있으며, 파편은 상대가 밟으면 사라집니다.` },
   pillar:    { name: '주춧돌', seal: '礎', tier: 2, max: 1, short: () => '돌 하나를 중앙에 고정 · 매 수 능력치 +1% (최대 +20%)',
-    desc: () => '내 돌 하나를 판 한가운데 고정합니다. 밀리지 않고 매 수 크기·무게·힘이 각각 1%씩, 최대 20%까지 증가합니다. 다른 아군 돌이 모두 사라지면 고정이 풀립니다. 반전 맵에는 등장하지 않습니다.' },
+    desc: () => '내 돌 하나를 판 한가운데 고정합니다. 밀리지 않고, 매 수 크기·방어력·힘이 1%씩 올라 최대 20%까지 커집니다. 다른 내 돌이 모두 사라지면 고정이 풀립니다. 반전 지형에는 나오지 않습니다.' },
   tide:      { name: '밀물', seal: '潮', tier: 3, max: 1, short: () => `내 샷마다 상대 돌 ${Math.round(A.tideD / GAP * 10) / 10}칸 밀어냄`,
     desc: () => `내 샷이 끝날 때마다 상대 돌을 모두 가장 가까운 가장자리 쪽으로 ${Math.round(A.tideD / GAP * 10) / 10}칸씩 밀어냅니다.` },
   yi:        { name: '이이제이', seal: '夷', tier: 3, max: 1, ctrl: true, short: () => `${A.yiN}차례 동안 상대 돌을 내가 쏨 (처음 한 번은 한 번 더)`,
@@ -1413,12 +1420,12 @@ const AUG = {
  };
 /* v23: 모든 증강 설명을 한 문장으로 완결하고, 원래의 보조 키워드는 그대로 보존합니다. */
 const AUG_SUMMARY = {
-  iron: () => `내 돌의 무게가 ${pm(A.ironM)} 증가해 충돌에 강해집니다.`,
-  big: () => `내 돌 ${A.sizeN}개를 즉시 골라 크기·무게·힘을 함께 높입니다.`,
+  iron: () => `내 돌의 방어력이 ${pm(A.ironM)} 올라 상대 샷에 덜 밀립니다.`,
+  big: () => `내 돌 ${A.sizeN}개를 즉시 골라 크기·방어력·힘을 함께 높입니다.`,
   fast: () => `내 모든 돌의 발사 힘이 ${pct(A.fast - 1)}% 증가합니다.`,
   reinforce: () => `우리 진영에 내 돌 ${A.reinforce}개가 즉시 추가됩니다.`,
   seal: () => `상대 돌 ${A.seal}개를 봉인해 쏘지 못하게 하며, 상대 돌이 떨어지면 봉인이 하나씩 풀립니다.`,
-  root: () => `내 돌의 방어력이 ${pm(A.root)} 증가해 상대 샷에 덜 밀립니다.`,
+  root: () => '판 가운데에 가까운 내 돌일수록 덜 밀립니다.',
   aim: () => '내 샷의 첫 충돌 지점과 맞은 돌이 날아갈 방향을 조준 중에 보여 줍니다.',
   shackle: () => `상대 돌의 발사 힘을 ${pct(1 - A.shackle)}% 낮춰 사거리를 줄입니다.`,
   momentum: () => `내 샷으로 상대 돌을 떨어뜨리면 다음 내 샷의 힘이 ${pct(A.momV - 1)}% 증가합니다.`,
@@ -1426,33 +1433,33 @@ const AUG_SUMMARY = {
   grip: () => `상대 샷에 밀려 움직이는 내 돌의 마찰이 ${pct(A.grip - 1)}% 증가해 덜 밀립니다.`,
   sand: () => `상대가 쏜 돌의 마찰이 ${pct(A.sand - 1)}% 증가해 이동 거리가 짧아집니다.`,
   star: () => `바둑판 화점 가까이에 있는 내 돌의 방어력이 ${pm(A.starM)} 증가합니다.`,
-  edge: () => `떨어지는 가장자리 가까이에 있는 내 돌의 마찰이 ${pct(A.edgeF - 1)}% 증가해 움직임이 빨리 줄어듭니다.`,
+  edge: () => `떨어질 수 있는 가장자리 가까이에 있는 내 돌은 방어력이 ${pm(A.edgeH)} 올라 덜 밀립니다.`,
   first: () => `획득 후 내 샷 ${A.firstN}번 동안 첫 타격이 ${pct(A.firstK - 1)}% 강해집니다.`,
   clay: () => `내 발사 힘은 ${pct(A.clayV - 1)}% 증가하지만 방어력은 ${pm(A.clayH)} 낮아집니다.`,
-  millet: () => `내 돌이 작고 가벼워지는 대신 발사 힘이 ${pct(A.milletV - 1)}% 증가합니다.`,
+  millet: () => `내 돌이 작아지고 방어력이 조금 낮아지는 대신 힘이 ${pct(A.milletV - 1)}% 오릅니다.`,
   grit: () => `내 샷이 빗나갈 때마다 다음 샷의 힘이 ${pct(A.gritStep)}%씩 오르고, 맞히면 초기화됩니다.`,
   late: () => `${P.shrinkStart}수 전까지는 힘이 약하지만, ${P.shrinkStart}수부터 힘과 방어력이 증가합니다.`,
-  lone: () => `이번 국에 증강을 더 받지 않는 대신 내 모든 돌의 힘·무게·크기가 증가합니다.`,
+  lone: () => `이번 국에 증강을 더 받지 않는 대신 내 모든 돌의 크기·방어력·힘이 오릅니다.`,
   train: () => `내 샷으로 상대 기본 돌 ${A.trainN}개를 떨어뜨리면 금 증강을 하나 더 고릅니다.`,
   combo: () => `내 샷으로 상대 돌을 떨어뜨리면 한 차례에 한 번 더 칠 수 있습니다(국당 ${A.comboRound}회).`,
   bomb: () => `내가 쏜 돌이 멈추면 ${f1(A.bombR / GAP)}칸 안의 모든 돌을 폭발로 밀어냅니다.`,
   marks: () => `내 돌이 ${Math.round(A.markD / GAP)}칸 이상 날아간 뒤 상대 돌을 맞히면 첫 타격이 20% 강해집니다.`,
-  wedge: () => `내가 쏜 돌은 멈춘 자리에 박혀 다음 내 샷이 시작될 때까지 무게가 ${pm(A.wedgeM)} 증가합니다.`,
+  wedge: () => `내가 쏜 돌이 멈추면 다음 내 차례까지 방어력이 ${pm(A.wedgeM)} 오릅니다.`,
   wall: () => `우리 진영 뒤쪽에 우리 돌만 튕겨 내는 벽이 생깁니다.`,
-  split: () => `강한 타격을 받은 내 돌이 둘로 갈라지며, 조각은 크기와 무게가 각각 20% 작아집니다.`,
+  split: () => `세게 맞은 내 돌이 둘로 갈라지며, 조각은 크기와 방어력이 ${pct(1 - A.splitR)}%씩 낮습니다.`,
   pierce: () => `쏜 돌이 처음 맞힌 상대 돌에 힘을 모두 전달하고 그 자리에 멈춥니다.`,
   thorns: () => `상대 샷 중 내 돌과 부딪힌 상대 돌은 충돌 세기의 ${pct(A.thorns)}%를 되돌려 받습니다.`,
-  double: () => `매 차례 같은 돌로 두 번 쏘지만 발사 힘은 ${pct(1 - A.doubleV)}% 감소합니다.`,
+  double: () => `매 차례 같은 돌로 두 번 쏘지만, 힘이 ${pct(1 - A.doubleV)}%, 방어력이 ${pct(1 - A.doubleH)}% 줄어듭니다.`,
   gust: () => `내 샷이 끝나면 가장 가까운 상대 돌 하나를 쏜 돌의 반대쪽으로 ${f1(A.gustD / GAP)}칸 밀어냅니다.`,
-  hammer: () => `내가 쏜 돌은 굴러가는 동안 무게가 ${pm(A.hamM)} 증가하고 멈추면 원래대로 돌아옵니다.`,
+  hammer: () => `내가 쏜 돌은 굴러가는 동안 더 세게 부딪힙니다(타격 ${pm(A.hamM)}).`,
   press: () => `내가 쏜 돌이 멈춘 자리 ${f1(A.pressD / GAP)}칸 안의 상대 돌은 다음 내 샷이 끝날 때까지 방어력이 낮아집니다.`,
   shock: () => `내 첫 타격이 발생하면 주변 ${f1(A.shockR / GAP)}칸 안의 다른 상대 돌도 가장자리 쪽으로 밀려납니다.`,
   chain: () => `내 샷 중 상대 돌끼리 부딪힐 때 타격이 ${pct(A.chainK - 1)}% 증가합니다.`,
   curve: () => '약 30° 또는 60°로 좌우 휘어 쏘며, 조준 중 실제 예상 궤적을 보여 줍니다.',
-  thrice: () => '내 세 번째 샷마다 발사 힘이 30% 증가합니다. 타격 증가는 없습니다.',
+  thrice: () => '내 세 번째 샷마다 발사 힘이 30% 증가합니다.',
   brand: () => '내 돌에 맞고 살아남은 상대 돌은 다시 맞기 전까지 방어력이 25% 낮아집니다.',
   ice: () => '내가 쏜 돌이 지나간 길은 4수 동안 얼어 상대 돌이 더 멀리 미끄러집니다.',
-  glut: () => `내 샷으로 상대 돌을 떨어뜨릴 때마다 쏜 돌의 크기·무게·힘이 각각 ${pct(A.glutR - 1)}%씩 제한 없이 증가합니다.`,
+  glut: () => `내 샷으로 상대 돌을 떨어뜨릴 때마다 쏜 돌의 크기·방어력·힘이 ${pct(A.glutR - 1)}%씩 오릅니다.`,
   bounty: () => `표시된 상대 돌을 양쪽의 차례를 합쳐 전체 ${A.bountyN}수 안에 떨어뜨리면 옥 증강을 하나 더 고릅니다.`,
   iki: () => `내 돌 하나로 상대 기본 돌 ${A.ikiN}개를 떨어뜨리면 초월 증강을 하나 더 고릅니다.`,
   revive: () => '내 돌이 떨어지면 우리 진영으로 되돌아오며, 획득 당시 돌이 3개 미만이면 2회 발동합니다.',
@@ -1460,21 +1467,21 @@ const AUG_SUMMARY = {
   tengen: () => `천원 위 내 돌은 방어력이 ${pct(A.tengenH - 1)}% 증가하며, 다음 내 차례까지 천원을 지키면 승리합니다.`,
   thief: () => `상대 돌 ${A.thief}개를 빼앗아 내 돌로 만들며, 원래 주인의 증강 획득 카운터에도 반영합니다.`,
   rewind: () => `상대 샷에 내 돌이 떨어지면 그 샷을 되돌립니다(국당 ${A.rewind}회).`,
-  king: () => `내 돌 하나를 즉시 골라 왕돌로 만들어 크기·무게·힘을 높입니다.`,
+  king: () => `내 돌 하나를 즉시 왕돌로 만들어 크기·방어력·힘을 높입니다.`,
   bolt: () => '내 세 번째 샷마다 무작위 위치에 3×3 번개가 떨어져 범위 안의 돌을 없앱니다.',
   clone: () => `우리 진영에 분신 ${A.clone}개가 추가되며, 각 분신은 처음 떨어질 때 한 번 되돌아옵니다.`,
-  last: () => `우리 돌이 ${A.lastN}개 이하로 줄면 남은 내 돌의 크기·무게·힘이 증가합니다.`,
+  last: () => `우리 돌이 ${A.lastN}개 이하로 줄면 남은 내 돌의 크기·방어력·힘이 오릅니다.`,
   dense: () => `내 돌 ${A.sizeN}개를 즉시 골라 크기를 줄이고 힘을 높입니다.`,
   shaky: () => '상대가 조준하는 동안 조준 방향을 더 빠르게 흔들어 최대 15° 빗나가게 합니다.',
   dragon: () => `멈춘 내 돌은 이어진 돌 1개마다 방어력이 ${pct(A.dragonStep)}%씩 올라갑니다.`,
   ko: () => `상대 샷에 내 돌이 떨어지면 다음 내 차례를 한 번 더 진행합니다(국당 ${A.ko}회).`,
-  wish: () => '고르는 즉시 내 증강을 모두 버리고, 다음 증강 고르기에서 한 등급 위 카드 3장을 모두 얻습니다.',
+  wish: () => '고르는 즉시 내 증강을 모두 버리고, 다음 고르기에서 한 등급 위 카드 3장을 모두 얻습니다(옥까지).',
   gamble: () => `힘이 ${pct(A.gambleV - 1)}% 세지지만, 상대 돌을 못 떨어뜨린 샷은 쏜 돌을 잃고 효과가 끝납니다.`,
-  fortune: () => '내 차례마다 힘·방어력·무게가 조금씩 오르내리고, 다음 내 차례까지 유지됩니다.',
+  fortune: () => '내 차례마다 힘·방어력이 조금씩 오르내리고, 다음 내 차례까지 유지됩니다.',
   rebound: () => '내가 쏜 돌이 가장자리에 처음 닿으면 한 번 튕겨 나옵니다.',
-  orleans: () => '획득 즉시 초월을 제외한 내 기존 증강을 모두 없애고 초월 증강 하나를 고릅니다. 이후 나는 이번 국에 증강을 더 얻지 못하며, 상대는 옥 증강 하나를 추가로 고릅니다.',
+  orleans: () => '획득 즉시 초월을 제외한 내 기존 증강을 모두 없애고 초월 증강 하나를 고릅니다. 이후 나는 이번 국에 증강을 더 얻지 못하며, 상대는 옥 증강 하나를 추가로 고릅니다(이 증강은 지울 수 없음).',
   crack: () => `내 샷으로 상대 돌에 금을 내고, 다시 맞히면 깨뜨려 주변을 밀어냅니다(국당 최대 ${A.crackMax}개).`,
-  pillar: () => '내 돌 하나를 판 중앙에 고정해 매 수 크기·무게·힘을 1%씩 높입니다(최대 20%).',
+  pillar: () => '내 돌 하나를 판 중앙에 고정해 매 수 크기·방어력·힘을 1%씩 높입니다(최대 20%).',
   tide: () => `내 샷이 끝날 때마다 모든 상대 돌을 가장 가까운 가장자리 쪽으로 ${Math.round(A.tideD / GAP * 10) / 10}칸 밀어냅니다.`,
   yi: () => `다음 내 차례 ${A.yiN}번 동안 상대 돌을 골라 내 힘으로 쏠 수 있습니다.`,
   squirrel: () => `내 샷으로 상대 돌을 떨어뜨리면 다음 내 샷 ${A.sqrN}번 동안 모든 내 돌의 힘이 증가합니다.`,
@@ -1544,8 +1551,7 @@ function statsFor(p, w) {
   if (cnt(p, 'millet')) { r *= A.milletR; m *= A.milletM; }
   if (cnt(p, 'lone')) { r *= A.loneR; m *= A.loneM; }
   if (w && cnt(p, 'last') && teamCount(w, p.team) <= A.lastN) { r *= A.lastR; m *= A.lastM; }
-  if (w && w.fts && cnt(p, 'fortune')) m *= fortuneOf(w, p.id).m;   /* 운수: 무게 */
-  return { r, m, heavy };
+  return { r, m, heavy };   /* m: 방어력 배율 (돌 질량은 모두 1) */
 }
 function maxV(w, p) {
   let v = P.maxSpeed * Math.pow(A.fast, cnt(p, 'fast')) * (cnt(p, 'double') ? A.doubleV : 1);
@@ -1570,12 +1576,10 @@ function fortuneOf(w, pid, forDefense = false) {
   void forDefense;
   const base = w.fts && w.fts[pid] ? w.fts[pid] - 1 : (w.shots || 0);   /* 내 차례가 시작될 때의 수 (추가 샷도 같은 값) */
   const g = { gseed: w.gseed, shots: base };
-  return { v: A.fortV0 + (A.fortV1 - A.fortV0) * seedRand(g, pid, 1), h: A.fortH0 + (A.fortH1 - A.fortH0) * seedRand(g, pid, 2), m: A.fortM0 + (A.fortM1 - A.fortM0) * seedRand(g, pid, 3) };
+  return { v: A.fortV0 + (A.fortV1 - A.fortV0) * seedRand(g, pid, 1), h: A.fortH0 + (A.fortH1 - A.fortH0) * seedRand(g, pid, 2) };
 }
-/* 무게와 사거리: 같은 힘이면 무거운 돌은 덜 나가고(가벼운 돌은 더 나가고), 부딪힐 때는 무거운 쪽이 상대를 더 밀고 덜 밀림.
-   쐐기로 잠깐 무거워진 무게는 사거리에 넣지 않음 */
-const rangeMass = s => s.m / (s.wedge ? A.wedgeM : 1);
-const vmaxOf = (w, s, pid = s.owner) => maxV(w, w.players[pid]) * (1 + Math.max(0, Number(s.fishBoost || 0))) * s.kv * Math.pow(rangeMass(s), -A.massK);
+/* 무게는 없음: 모든 돌의 질량은 1이고, 예전 무게 증강은 방어력(s.kd)으로 바뀜 → 사거리에는 영향 없음 */
+const vmaxOf = (w, s, pid = s.owner) => maxV(w, w.players[pid]) * (1 + Math.max(0, Number(s.fishBoost || 0))) * s.kv;
 /* 연마(내가 쏜 돌)·모래(상대가 쏜 돌): 쏜 돌의 바닥 마찰 배수 */
 function shotFric(w, pid) {
   const p = w.players[pid];
@@ -1585,7 +1589,7 @@ function shotFric(w, pid) {
 }
 function restat(w, s) {
   const p = w.players[s.owner], st = statsFor(p, w);
-  s.r = st.r * s.rs * s.kr; s.m = st.m * s.ms * s.km;
+  s.r = st.r * s.rs * s.kr; s.m = 1; s.kd = st.m * s.ms * s.km;
   s.fric = 1;
 }
 function restatAll(w) { for (const s of w.stones) if (!s.dead) restat(w, s); }
@@ -1647,12 +1651,12 @@ function segObs(x0, y0, x1, y1, o, pad) {
 
 /* ===== world ===== */
 const COUNTERS = ['reviveLeft', 'buddyLeft', 'rewindLeft', 'comboRound', 'boltCount', 'lost', 'picks', 'splitLeft', 'mom', 'ctr', 'fsd', 'koLeft', 'koArm', 'bdx', 'plk',
-  'grt', 'thr', 'trn', 'bonus', 'fq', 'bty', 'pajukKills', 'pajukShots', 'noAug', 'jadeBonus', 'yiLeft', 'yiX', 'sqr', 'vtxLeft', 'tq', 'dcr', 'hvU', 'fl', 'syn', 'orl', 'tpl', 'rr', 'brk', 'bsel', 'loneSeen', 'qs', 'bz', 'wsh', 'wshIds', 'gmb', 'fts'];
+  'grt', 'thr', 'trn', 'bonus', 'fq', 'bty', 'pajukKills', 'pajukShots', 'noAug', 'jadeBonus', 'yiLeft', 'yiX', 'sqr', 'vtxLeft', 'tq', 'dcr', 'hvU', 'fl', 'syn', 'orl', 'tpl', 'rr', 'brk', 'bsel', 'loneSeen', 'qs', 'bz', 'wsh', 'wshIds', 'gmb', 'fts', 'got', 'jgp', 'prot'];
 function blankWorld(players, mode, mapId) {
   const map = MAPS[mapId];
   const w = { lab: !!map.lab, vh: map.revHole ? A.revH0 : 0, players, mode, map: mapId, obs: map.obs, stones: [], walls: { top: false, bottom: false }, nextId: 1,
     reviveLeft: {}, buddyLeft: {}, rewindLeft: {}, comboRound: {}, boltCount: {}, lost: {}, picks: {}, splitLeft: {}, mom: {}, ctr: {}, fsd: {}, koLeft: {}, koArm: {}, bdx: {}, plk: {},
-    grt: {}, thr: {}, trn: {}, bonus: {}, fq: {}, bty: {}, pajukKills: {}, pajukShots: {}, noAug: {}, jadeBonus: {}, yiLeft: {}, yiX: {}, sqr: {}, vtxLeft: {}, tq: {}, dcr: {}, hvU: {}, fl: {}, syn: {}, orl: {}, tpl: {}, rr: {}, brk: {}, bsel: {}, loneSeen: {}, qs: {}, bz: {}, wsh: {}, wshIds: {}, gmb: {}, fts: {}, shards: [], vortex: [], ice: null, land: [false, false], noYi: -1, bh: [], lian: null, lianUsed: false,
+    grt: {}, thr: {}, trn: {}, bonus: {}, fq: {}, bty: {}, pajukKills: {}, pajukShots: {}, noAug: {}, jadeBonus: {}, yiLeft: {}, yiX: {}, sqr: {}, vtxLeft: {}, tq: {}, dcr: {}, hvU: {}, fl: {}, syn: {}, orl: {}, tpl: {}, rr: {}, brk: {}, bsel: {}, loneSeen: {}, qs: {}, bz: {}, wsh: {}, wshIds: {}, gmb: {}, fts: {}, got: {}, jgp: {}, prot: {}, shards: [], vortex: [], ice: null, land: [false, false], noYi: -1, bh: [], lian: null, lianUsed: false,
     wallSave: [0, 0], holes: (map.ponds || []).map(p => ({ x: p.x, y: p.y, r: p.r, team: -1, seen: true, pond: true })), mark: [], pads: (map.pads || []).map(p => Object.assign({}, p, { cd: 0 })), obsHits: map.obs.map(() => 0), dbl: null,
     comboLeft: A.combo, doubleUsed: false, shot: null, events: [], sim: false, shots: 0, shrink: 0, snap: null, revGrid: null, revTile: null, revGridDone: false, revDrops: 0, revSeed: map.revHole ? (Math.floor(rnd() * 4294967296) >>> 0) : 0,
     gseed: (Math.floor(rnd() * 4294967296) >>> 0), portalSeed: map.portals ? (Math.floor(rnd() * 4294967296) >>> 0) : 0, portalAxis: null, portalAlongT: null, portals: null };
@@ -1683,7 +1687,7 @@ function newWorld(players, mode, mapId) {
   return w;
 }
 function addStone(w, p, pos) {
-  const s = { id: w.nextId++, owner: p.id, team: p.team, x: pos.x, y: pos.y, vx: 0, vy: 0, r: BASE_R, m: 1, fric: 1,
+  const s = { id: w.nextId++, owner: p.id, team: p.team, x: pos.x, y: pos.y, vx: 0, vy: 0, r: BASE_R, m: 1, kd: 1, fric: 1,
     rs: 1, ms: 1, kr: 1, km: 1, kv: 1, gen: 0, king: false, sealed: false, falling: 0, dead: false, lastHit: null, oiled: false, bw: 0, home: -1, press: -1, bounty: -1, brand: -1, glut: 0, kq: 0, anchor: 0, hx: -1, hy: -1, crack: -1, fishBoost: 0, brandCdPid: -1, brandCdTurns: 0 };
   w.stones.push(s);
   restat(w, s);
@@ -2065,7 +2069,7 @@ function applyGain(w, p, id) {
 /* 보따리처럼 고르기 없이 바로 얻는 증강 (다음 증강까지의 셈에는 넣지 않음) */
 function giveAug(w, p, id) {
   if (w.noAug && w.noAug[p.id]) return false;
-  p.augs.push(id);
+  p.augs.push(id); markGot(w, p.id, id);
   applyGain(w, p, id);
   emit(w, { type: 'gain', pid: p.id, id, via: 'bundle' });
   checkSyn(w, p);
@@ -2104,14 +2108,14 @@ const STEAL_FULL = () => ({ revive: 2 * A.revive, buddy: 2 * A.buddy, rewind: 2 
 function decreeOptions(w, pid) {
   if (!w.lab && w.noAug && w.noAug[pid]) return [];   /* 일반 대국: 증강 획득 제한 상태에서는 빼앗아서도 얻을 수 없음 */
   const p = w.players[pid], out = [];
-  for (const q of w.players) if (q.team !== p.team) for (const id of q.augs) if (!NO_STEAL.has(id) && AUG[id].tier <= 3 && !out.includes(id) && !p.augs.includes(id)) out.push(id);
+  for (const q of w.players) if (q.team !== p.team) for (const id of q.augs) if (!NO_STEAL.has(id) && (w.lab || !protAug(w, q.id, id)) && AUG[id].tier <= 3 && !out.includes(id) && !p.augs.includes(id) && (w.lab || !gotAug(w, pid, id))) out.push(id);
   return out;
 }
 function stealAug(w, pid, id) {
   if (!w.lab && w.noAug && w.noAug[pid]) return false;   /* 일반 대국: 증강 획득 제한 상태에서는 어명으로도 획득 불가 */
-  const p = w.players[pid], q = w.players.find(x => x.team !== p.team && x.augs.includes(id));
-  if (!q || NO_STEAL.has(id) || AUG[id].tier > 3) return false;
-  q.augs.splice(q.augs.indexOf(id), 1); p.augs.push(id);
+  const p = w.players[pid], q = w.players.find(x => x.team !== p.team && x.augs.includes(id) && (w.lab || !protAug(w, x.id, id)));
+  if (!q || NO_STEAL.has(id) || AUG[id].tier > 3 || (!w.lab && gotAug(w, pid, id))) return false;
+  q.augs.splice(q.augs.indexOf(id), 1); p.augs.push(id); markGot(w, pid, id);
   { const code = { king: 'K', big: 'B', dense: 'D', pillar: 'P' }[id]; if (code && w.bsel[q.id]) w.bsel[q.id] = String(w.bsel[q.id]).split(code).join(''); }   /* 아직 고르지 않은 버프는 함께 사라짐 */
   const k = STEAL_KEYS[id];
   if (k) { w[k][pid] = STEAL_FULL()[id]; w[k][q.id] = 0; }
@@ -2224,11 +2228,15 @@ function morePicks(w, p) {
   const need = P.lossPerPick * (w.picks[p.id] + 1 - (w.bonus[p.id] || 0)) - w.lost[p.id];
   return baseLeft(w, p.team, p.id) > need;
 }
+/* 한 국 안에서 한 번 얻은 증강은 버려지거나 지워져도 다시 얻지 못함 */
+const gotAug = (w, pid, id) => !!w.got && String(w.got[pid] || '').split(',').includes(id);
+function markGot(w, pid, id) { if (!w.got) w.got = {}; if (!gotAug(w, pid, id)) w.got[pid] = (w.got[pid] ? w.got[pid] + ',' : '') + id; }
 function gainAug(w, pid, id) {
   const p = w.players[pid];
   const orleansReward = !!(w.orl && w.orl[pid] > 0 && AUG[id] && AUG[id].tier === 4);
   if (!w.lab && w.noAug && w.noAug[pid] && !orleansReward) return false;
-  p.augs.push(id);
+  p.augs.push(id); markGot(w, pid, id);
+  if (w.jgp && w.jgp[pid]) { w.jgp[pid] = 0; w.prot[pid] = (w.prot[pid] ? w.prot[pid] + ',' : '') + id; }
   if (AUG[id].tier === 4) w.tq[pid] = 1;
   if (orleansReward) w.orl[pid] = 0;   /* 초월 보상 선택이 끝나면 추가 획득 금지 상태만 남김 */
   w.picks[pid]++;
@@ -2268,7 +2276,7 @@ function canTake(w, p, id) {
   if (id === 'pillar' && teamCount(w, p.team) <= 1) return false;
   const orleansReward = !!(w.orl && w.orl[p.id] > 0 && a && a.tier === 4);
   if (w.noAug && w.noAug[p.id] && !orleansReward) return false;
-  if (cnt(p, id) > 0) return false;   /* 한 번 고른 증강은 그 국 안에서 다시 나오지 않습니다 */
+  if (cnt(p, id) > 0 || (!w.lab && gotAug(w, p.id, id))) return false;   /* 한 번 얻은 증강은 버려지거나 지워져도 그 국 안에서 다시 나오지 않습니다 */
   if (a.team && w.players.some(q => q.team === p.team && cnt(q, id) > 0)) return false;
   if (id === 'seal' && teamCount(w, 1 - p.team) <= 2) return false;
   if (id === 'thief' && teamCount(w, 1 - p.team) <= A.thief) return false;   /* 도둑: 상대 돌이 빼앗을 수보다 많을 때만 */
@@ -2322,7 +2330,7 @@ function rollOffer(w, pid, n = 3) {
   let forced = fq.length ? +fq[0] : 0;
   if (forced) w.fq[pid] = fq.slice(1);
   const jadeGift = !forced && (w.jadeBonus[pid] || 0) > 0 && (w.picks[pid] || 0) > 0;
-  if (jadeGift) w.jadeBonus[pid]--;
+  if (jadeGift) { w.jadeBonus[pid]--; w.jgp[pid] = 1; }   /* 오를레앙으로 받은 옥: 다음에 얻는 증강을 지울 수 없게 표시 */
   if (forced === 4) {
     const p4 = AUG_IDS.filter(id => AUG[id].tier === 4 && canTake(w, p, id)), ids = [];
     while (ids.length < 2 && p4.length) ids.push(p4.splice(Math.floor(rnd() * p4.length), 1)[0]);
@@ -2362,7 +2370,7 @@ function wishOffer(w, p, odds) {
 /* 염원 발동: 3장 모두 얻음 (고르기 횟수는 1만 셈) */
 function takeWish(w, pid, ids) {
   const p = w.players[pid], before = w.picks[pid] || 0;
-  for (const id of ids) if (AUG[id] && !cnt(p, id)) gainAug(w, pid, id);
+  for (const id of ids) if (AUG[id] && !cnt(p, id) && !gotAug(w, pid, id)) gainAug(w, pid, id);
   w.picks[pid] = before + 1;
   w.wsh[pid] = 2; w.wshIds[pid] = ids.join(','); setQuest(w, pid, 'wish', 'd');
   emit(w, { type: 'wishDone', pid, ids: ids.slice() });
@@ -2451,18 +2459,20 @@ const dragonDefenseMul = (w, s) => (inDragon(w, s) ? 1 + A.dragonStep * dragonSi
 function holdMul(w, s, shT, ignoreDefenseBoosts = false) {
   if (shT < 0 || s.team === shT) return 1;
   const p = w.players[s.owner];
-  let k = 1;
-  /* 정지한 돌이 직접 맞을 때는 해당 돌의 방어 상승 증강이 피격 질량을 높이지 않는다. */
-  if (!ignoreDefenseBoosts && cnt(p, 'root')) k *= A.root * (hasSyn(p, 'bedrock') || hasSyn(p, 'steelcore') ? 1.15 : 1);
+  let k = s.kd || 1;   /* 돌마다의 방어력 (쇳덩이·큰 돌·왕돌·쐐기 등) */
+  /* 뿌리: 판 가운데에 가까울수록 방어력 ↑ (가운데 +24%, 1칸마다 −8%, 0% 밑으로는 안 내려감) */
+  if (cnt(p, 'root')) k *= 1 + Math.max(0, A.rootMax - A.rootStep * hyp(s.x - CX, s.y - CY) / GAP);
   if (s.brand >= 0 && w.players[s.brand] && w.players[s.brand].team === shT) k *= 0.75;
   if (teamCount(w, s.team) === 1) k *= lastMass();
-  if (!ignoreDefenseBoosts && cnt(p, 'star') && nearStar(s)) k *= A.starM;
-  if (!ignoreDefenseBoosts && cnt(p, 'tengen') && !MAPS[w.map].noTengen && hyp(s.x - CX, s.y - CY) < P.tengenR) k *= A.tengenH;   /* 천원 위에 선 돌은 버팀 */
-  if (!ignoreDefenseBoosts && hasSyn(p, 'formation') && cnt(p, 'star') && nearStar(s)) k *= 1.12;
+  if (cnt(p, 'star') && nearStar(s)) k *= A.starM;
+  if (cnt(p, 'tengen') && !MAPS[w.map].noTengen && hyp(s.x - CX, s.y - CY) < P.tengenR) k *= A.tengenH;   /* 천원 위에 선 돌은 버팀 */
+  if (hasSyn(p, 'formation') && cnt(p, 'star') && nearStar(s)) k *= 1.12;
   if (s.press >= 0 && w.players[s.press] && w.players[s.press].team === shT) k *= A.pressM;
   if (cnt(p, 'clay')) k *= A.clayH;
+  if (cnt(p, 'edge') && nearEdge(w, s)) k *= A.edgeH;   /* 벼랑: 떨어지는 가장자리 가까이에서 버팀 */
+  if (cnt(p, 'double')) k *= A.doubleH;   /* 쌍발: 대가로 방어력 −10% */
   if (cnt(p, 'fortune')) k *= fortuneOf(w, p.id, true).h;   /* 운수 */
-  if (!ignoreDefenseBoosts && cnt(p, 'late') && (w.shots || 0) >= P.shrinkStart) k *= A.lateH;
+  if (cnt(p, 'late') && (w.shots || 0) >= P.shrinkStart) k *= A.lateH;
   if (s.bounty >= 0 && w.players[s.bounty] && w.players[s.bounty].team === shT) k *= A.bountyH;
   if (w.vortex && w.vortex.length) for (const v of w.vortex) if (v.team === shT && hyp(v.x - s.x, v.y - s.y) < A.vortexR) { k *= A.vortexH; break; }
   return k;
@@ -2487,11 +2497,6 @@ function step(w) {
       const sp = Math.sqrt(s.vx * s.vx + s.vy * s.vy);
       let ef = 1;
       if (w.ice && !(sh && s.id === sh.stoneId) && iceApplies(w.ice, s)) ef *= A.iceF;   /* 빙판길: 해당 경로를 밟은 상대 돌만 미끄러짐 */
-      if (cnt(w.players[s.owner], 'edge') && nearEdge(w, s)) {
-        const owner = w.players[s.owner];
-        ef *= hasSyn(owner, 'fortress') ? 2.5 : A.edgeF;
-        if (hasSyn(owner, 'formation')) ef *= 1.12;
-      }
       /* 땅따먹기 영역도 일반 판과 같은 마찰로 움직입니다. 영역에 멈춘 돌은 inLand 판정으로 생존합니다. */
       const dragFactor = s.fric * ef * (sh && s.id === sh.stoneId ? sh.fk : 1) * (shT >= 0 && s.team !== shT && sh.grip[s.owner] ? A.grip * (hasSyn(w.players[s.owner], 'sandguard') ? 1.15 : 1) : 1);
       const ns = Math.max(0, sp - (P.decel + P.drag * sp) * dragFactor * DT);
@@ -2547,11 +2552,8 @@ function step(w) {
       if (d2 >= rr * rr) continue;
       const d = Math.sqrt(d2);
       const nx = d > 1e-6 ? dx / d : 1, ny = d > 1e-6 ? dy / d : 0;
-      /* 정지한 상대 돌이 직접 피격될 때는 일반 방어 상승을 피격 질량에 섞지 않는다.
-         대마 방어는 멈춘 상태에서 연결된 자기 돌에만 별도로 적용한다. */
-      const isStationaryDefender = s => !!(sh && s.id !== shId && s.team !== shT &&
-        (a.id === shId || b.id === shId) && Math.hypot(s.vx, s.vy) <= 1e-6);
-      const hitMass = s => s.m * holdMul(w, s, shT, isStationaryDefender(s)) * dragonDefenseMul(w, s);
+      /* 직접 맞을 때도 모든 방어력 효과가 들어감 */
+      const hitMass = s => s.m * holdMul(w, s, shT, false) * dragonDefenseMul(w, s);
       let ma = hitMass(a), mb = hitMass(b);
       if ((a.anchor > (w.shots || 0) && a.id !== shId) || (a.pillar && a.locked)) ma = 1e6;
       if ((b.anchor > (w.shots || 0) && b.id !== shId) || (b.pillar && b.locked)) mb = 1e6;
@@ -2582,6 +2584,11 @@ function step(w) {
         }
         a.vx -= jimp * ia * nx; a.vy -= jimp * ia * ny;
         b.vx += jimp * ib * nx; b.vy += jimp * ib * ny;
+        /* 반동 절반: 쏜 돌이 상대 돌에 부딪혀 뒤로 튕기는 성분만 0.5배 (앞으로 가는 경우는 그대로) */
+        if (shO && !pass) {
+          const ux = shMe === a ? nx : -nx, uy = shMe === a ? ny : -ny, vb = shMe.vx * ux + shMe.vy * uy;
+          if (vb < 0) { shMe.vx -= 0.5 * vb * ux; shMe.vy -= 0.5 * vb * uy; }
+        }
         if (shO) {
           sh.hitFoe = true;
           if (sh.crack && !sh.crk.includes(shO.id)) {   /* 균열: 처음 치면 금, 금 간 돌을 또 치면 깸 */
@@ -2764,7 +2771,7 @@ function doSplit(w, X) {
   const sp = hyp(X.vx, X.vy), ang = sp > 1 ? Math.atan2(X.vy, X.vx) : rnd() * TAU, perp = ang + Math.PI / 2;
   const r2 = X.r * A.splitR;
   const kids = [-1, 1].map(sg => Object.assign({}, X, {
-    id: w.nextId++, r: r2, m: X.m * A.splitM, rs: X.rs * A.splitR, ms: X.ms * A.splitM, gen: 1, bw: (X.bw || 0) / 2,
+    id: w.nextId++, r: r2, m: 1, kd: (X.kd || 1) * A.splitM, rs: X.rs * A.splitR, ms: X.ms * A.splitM, gen: 1, bw: (X.bw || 0) / 2,
     x: X.x + Math.cos(perp) * sg * r2 * 0.95, y: X.y + Math.sin(perp) * sg * r2 * 0.95,
     vx: Math.cos(ang + sg * 0.45) * sp * A.splitV, vy: Math.sin(ang + sg * 0.45) * sp * A.splitV
   }));
@@ -2866,7 +2873,7 @@ function breakRock(w) {
     if (!live(t)) continue;
     const dx = t.x - o.cx, dy = t.y - o.cy, d = Math.max(1, hyp(dx, dy));
     if (d > R + t.r) continue;
-    const f = (420 * (1 - Math.min(d, R) / R) + 140) / Math.sqrt(t.m);
+    const f = (420 * (1 - Math.min(d, R) / R) + 140) / Math.sqrt(t.kd || 1);
     t.vx += dx / d * f; t.vy += dy / d * f;
   }
   const sd = shardPlan(w, o);
@@ -2896,7 +2903,7 @@ function explode(w, s) {
     const dx = o.x - s.x, dy = o.y - s.y, d = Math.max(1, hyp(dx, dy));
     if (d > R + o.r) continue;
     const shT = w.shot ? w.players[w.shot.shooter].team : -1;
-    const f = (A.bombF * (1 - Math.min(d, R) / R) + A.bombBase) / Math.sqrt(o.m) * (lastAlone(w, o, shT) ? 1 - P.lastKB : 1);
+    const f = (A.bombF * (1 - Math.min(d, R) / R) + A.bombBase) / Math.sqrt(o.kd || 1) * (lastAlone(w, o, shT) ? 1 - P.lastKB : 1);
     o.vx += dx / d * f; o.vy += dy / d * f;
     if (o.team !== s.team) o.lastHit = s.id;
   }
@@ -2931,16 +2938,28 @@ function lightningForecastShrink(w, futureTurns = 1) {
 }
 /* 번개: 다음 낙뢰 자리는 처음 정해진 곳에 고정 (판이 줄어도 움직이지 않음) */
 function boltTarget(w, pid) { const c = w.boltCount[pid] || 0; return c + (A.boltEvery - (c % A.boltEvery)); }
+/* 번개 자리: 상대 돌이 1개 이하인 3×3 자리를 고름 (모두 2개 이상이면 가장 적은 곳) */
+function boltPick(w, pid, n, shrink) {
+  const team = w.players[pid].team;
+  let best = null, bc = Infinity;
+  for (let t = 0; t < 48; t++) {
+    const z = lightningZone(pid, n + t * 1009, shrink);
+    const c = w.stones.filter(s => live(s) && s.team !== team && s.x >= z.x0 && s.x <= z.x1 && s.y >= z.y0 && s.y <= z.y1).length;
+    if (c <= 1) return z;
+    if (c < bc) { bc = c; best = z; }
+  }
+  return best;
+}
 function pinBolt(w, pid) {
   const n = boltTarget(w, pid), st = String(w.bz[pid] || '').split(':');
   if (+st[0] === n) return;
-  const left = n - (w.boltCount[pid] || 0), z = lightningZone(pid, n, lightningForecastShrink(w, left * Math.max(1, w.players.length)));
+  const left = n - (w.boltCount[pid] || 0), z = boltPick(w, pid, n, lightningForecastShrink(w, left * Math.max(1, w.players.length)));
   w.bz[pid] = n + ':' + z.gx + ':' + z.gy;
 }
 function boltZone(w, pid, n = boltTarget(w, pid)) {
   const st = String(w.bz[pid] || '').split(':');
   if (+st[0] === n) { const gx = +st[1], gy = +st[2], x0 = L(gx) - GAP * 0.5, y0 = L(gy) - GAP * 0.5, x1 = L(gx + 2) + GAP * 0.5, y1 = L(gy + 2) + GAP * 0.5; return { gx, gy, x0, y0, x1, y1, x: (x0 + x1) / 2, y: (y0 + y1) / 2 }; }
-  return lightningZone(pid, n, lightningForecastShrink(w, 1));
+  return boltPick(w, pid, n, lightningForecastShrink(w, 1));
 }
 function strike(w, sh) {
   /* 낙뢰가 떨어지는 샷의 턴 종료 후 축소될 경계까지 고려해 범위를 고정 */
@@ -3169,7 +3188,7 @@ function breakStones(w, sh) {
       if (o === s || !live(o) || o.team === team) continue;
       const dx = o.x - bx, dy = o.y - by, d = Math.max(1, hyp(dx, dy));
       if (d > A.crackR + o.r) continue;
-      const f = (A.crackF * (1 - Math.min(d, A.crackR) / A.crackR) + A.crackF * 0.25) / Math.sqrt(o.m);
+      const f = (A.crackF * (1 - Math.min(d, A.crackR) / A.crackR) + A.crackF * 0.25) / Math.sqrt(o.kd || 1);
       o.vx += dx / d * f; o.vy += dy / d * f; o.lastHit = s.id;
     }
     if (w.brk[pid] >= A.crackMax) for (const o of w.stones) if (o.crack === pid) o.crack = -1;   /* 다 깼으면 금 간 돌은 원래 모습으로 */
@@ -3218,8 +3237,10 @@ function ropeStep(w, s) {
   }
 }
 /* 훈련장: 가진 증강 하나를 뺌 (고를 때 생긴 효과도 되돌림) */
+const protAug = (w, pid, id) => !!w.prot && String(w.prot[pid] || '').split(',').includes(id);   /* 오를레앙으로 상대가 받은 옥: 지울 수 없음 */
 function removeAug(w, pid, id, quiet = false) {
-  if (!w.lab && AUG[id] && AUG[id].tier === 4) return false;   /* 일반 대국에서는 초월 보호, 실험실에서는 제거 가능 */
+  if (!w.lab && AUG[id] && AUG[id].tier === 4) return false;
+  if (!w.lab && protAug(w, pid, id)) return false;   /* 일반 대국에서는 초월 보호, 실험실에서는 제거 가능 */
   const p = w.players[pid], i = p.augs.lastIndexOf(id);
   if (i < 0) return false;
   p.augs.splice(i, 1);
@@ -3487,7 +3508,7 @@ function unpackWorld(o, players) {
   for (const k of COUNTERS) for (const id in (o.c[k] || {})) w[k][id] = o.c[k][id];
   fitWalls(w);
   for (const [id, owner, x, y, rs, ms, kr, km, kv, gen, f, bw = 0, home = -1, press = -1, pg = 0, bounty = -1, brand = -1, glut = 0, kq = 0, anchor = 0, hx = -1, hy = -1, crack = -1, fishBoostCount = null, brandCdPid = -1, brandCdTurns = 0] of o.s) {
-    w.stones.push({ id, owner, team: players[owner].team, x, y, vx: 0, vy: 0, r: BASE_R, m: 1, fric: 1, rs, ms, kr, km, kv, gen,
+    w.stones.push({ id, owner, team: players[owner].team, x, y, vx: 0, vy: 0, r: BASE_R, m: 1, kd: 1, fric: 1, rs, ms, kr, km, kv, gen,
       king: !!(f & 2), sealed: !!(f & 1), clone: !!(f & 4), wedge: !!(f & 8), big: !!(f & 16), small: !!(f & 32), cloneBack: !!(f & 64), pillar: !!(f & 128), locked: !!(f & 256), fishBoost: fishBoostCount == null ? ((f & 1024) ? 1 : 0) : Math.max(0, Number(fishBoostCount)), brandCdPid, brandCdTurns, pg, bw, home, press, bounty, brand, glut, kq, anchor, hx, hy, crack, falling: 0, dead: false, lastHit: null, oiled: false });
   }
   restatAll(w);
@@ -3712,7 +3733,7 @@ function knockMargin(w, s, t) {
   if (!segClear(w, s.x, s.y, t.x, t.y, s.r, s, t)) return -Infinity;
   /* knockMargin은 정지한 표적을 가정한다. 일반 방어 증강은 제외하되,
      멈추고 연결된 표적의 대마 방어는 실제 충돌과 동일하게 반영한다. */
-  const tm = t.m * holdMul(w, t, s.team, true) * dragonDefenseMul(w, t), sm = s.m * (hasA(w, s.owner, 'hammer') ? A.hamM : 1);
+  const tm = t.m * holdMul(w, t, s.team, false) * dragonDefenseMul(w, t), sm = s.m * (hasA(w, s.owner, 'hammer') ? A.hamM : 1);
   const v1 = speedAfter(vmax, d1, sf);
   const vt = v1 * (1 + P.rest) * sm / (sm + tm);
   return travel(vt, t.fric) - e;
@@ -4015,62 +4036,62 @@ const TIER = { 1: '은', 2: '금', 3: '옥', 4: '초월' };
 let UI_LANG = 'ko';
 const MAP_ORDER = K.MAP_IDS;
 const AUG_JA = {
- iron:['鉄塊','重さ +12%','自分の石がすべて重さ+12%になります。押されにくく、ぶつかった相手を遠くへ押し出せますが、そのぶん飛距離は少し落ちます。'],
- big:['巨石','石2個のサイズ+25%・重さ+12%・威力+4%','選んですぐ自分の石を2個選び、サイズ+25%・重さ+12%・威力+4%にします。重くなって落ちる飛距離を威力で補います。自分の石が2個以下ならすぐに適用されます。'],
+ iron:['鉄塊','防御力 +14%','自分の石がすべて防御力+14%になり、相手のショットに当たっても押されにくくなります。'],
+ big:['巨石','石2個のサイズ+25%・防御力+12%・威力+4%','選んですぐ自分の石を2個選び、サイズ+25%・防御力+12%・威力+4%にします。自分の石が2個以下ならすぐに適用されます。'],
  fast:['豪速球','威力 +7%','自分の威力が7%上がります。飛距離の勝負で一歩先に届きます。'],
  reinforce:['増援','石 +1','選んですぐ、自陣に自分の石が1個増えます。増えた石は、次の強化までに数える基本石には入りません。'],
  seal:['封印','相手の石2個を封印','選んですぐ、相手の石2個を封印します。封印された石は撃てず、相手の石が1個落ちるたびに1個ずつ解けます。相手の石が全部封印されると一度に解け、相手の石が2個以下のときは候補に出ません。'],
- root:['根','防御力 +18%','自分の石の防御力が18%上がります。相手のショットに当たっても、そのぶん押されにくくなります。自分のショットには影響しません。'],
+ root:['根','中央に近いほど防御力 ↑（最大+24%）','盤の中央に近い自分の石ほど押されにくくなります。中央で防御力+24%、1マス離れるごとに8%ずつ下がり、3マスから効果はありません。'],
  aim:['精密照準','最初の衝突までの軌道を表示','狙っているあいだ、自分の石が最初にぶつかる所までの軌道と、当たった石が飛ぶ向きが見えます。相手の「手ぶれ」を受けているときは表示されません。'],
  shackle:['足枷','相手の威力 −6%','相手の威力が6%下がり、相手の飛距離がそのぶん短くなります。'],
  momentum:['勢い','落とすと次のショット威力 +25%','自分のショットで相手の石を落とすと、すぐ次のショットの威力が25%上がります。'],
  counter:['反撃','落とされると次のショット威力 +35%','相手のショットで自分の石が落ちると、すぐ次のショットの威力が35%上がります。'],
  sand:['砂','相手が撃った石の摩擦 +25%','相手が撃った石の摩擦が25%増え、あまり進まなくなります。止まっている相手の石はそのままです。'],
- star:['星','星の上で防御力 +80%','盤の星（太い点9か所）から0.8マス以内にいる自分の石は、防御力が80%上がります。盤の星が自分の色に光ります。'],
- edge:['崖','盤端で摩擦 +65%','落ちる盤端から1.6マス以内にいる自分の石は、摩擦が65%増えてすぐ止まるようになります。壁でふさがれた辺は対象外です。'],
+ star:['星','星の上で防御力 +60%','盤の星（太い点9か所）から0.8マス以内にいる自分の石は、防御力が60%上がります。盤の星が自分の色に光ります。'],
+ edge:['崖','盤端で防御力 +70%','落ちる盤端から1.6マス以内にいる自分の石は、防御力が70%上がり押されにくくなります。壁でふさがれた辺は対象外です。'],
  clay:['陶器','威力 +18%・防御力 −15%','自分の威力が18%上がります。そのかわり防御力が15%下がり、相手のショットに当たると遠くへ飛ばされます。'],
- millet:['粟','サイズ −15%・重さ −4%・威力 +10%','自分の石がすべてサイズ−15%・重さ−4%・威力+10%になり、当てられにくく遠くまで届きます。そのかわり軽いぶん、当たると押されやすく、押し出す力も弱くなります。'],
+ millet:['粟','サイズ −15%・防御力 −4%・威力 +10%','自分の石がすべてサイズ−15%・防御力−4%・威力+10%になります。当てられにくく遠くまで届きますが、当たると少し押されやすくなります。'],
  grit:['意地','外すたびに威力 +6%（最大+24%）','自分のショットが何にも当たらなかったたびに、次から威力が6%ずつ上がります（最大+24%）。相手の石に当てると元に戻ります。'],
  late:['遅咲き','25手までは威力 −5%・25手から威力 +12%','対局が25手になるまでは威力が5%弱くなりますが、25手からは威力+12%・防御力+8%になります。盤の縮小が始まるのと同じタイミングです。'],
- lone:['一匹狼','以後強化なし・威力/重さ/サイズ +10%','この局では強化をもう受け取らないかわりに、自分の石がすべて威力+10%・重さ+10%・サイズ+10%になります。この局でまだ強化を受け取れるときだけ候補に出ます。'],
+ lone:['一匹狼','以後強化なし・サイズ/防御力/威力 +20%','この局では強化をもう受け取らないかわりに、自分の石がすべてサイズ+20%・防御力+20%・威力+20%になります。この局でまだ強化を受け取れるときだけ候補に出ます。'],
  train:['修練','相手の基本石を3個落とすと金1枚','選んだときの効果はありません。自分のショットで相手の基本石を3個落とすと、金の強化3枚から1枚を追加で選べます（分裂した破片は0.5個）。相手が自滅したり地形で落ちたりした石も数えます。'],
  combo:['連打','落とすともう一度（2回）','自分のショットで相手の石を落とすと、もう一度撃てます。1手番に1回、この局で2回までです。'],
  bomb:['時限爆弾','撃った石が止まると2マス爆発','自分が撃った石が止まった瞬間に爆発し、2マス以内の石をすべて押し出します。近いほど強く飛ばされ、自分の石も例外ではありません。'],
  marks:['狙撃手','3マス以上進んで当てると衝撃 +20%','撃った石がスタート地点から3マス以上進んだあとに相手の石に当たると、最初の衝撃が20%強くなります。'],
- wedge:['楔','撃った石が止まると重さ +70%','自分が撃った石は止まった場所に打ち込まれ、次の自分の手番まで重さ+70%になります。'],
+ wedge:['楔','撃った石が止まると防御力 +70%','自分が撃った石が止まると、次の自分の手番までその石の防御力が+70%になります。'],
  wall:['鉄壁','自分の石だけを止める後ろの壁','自陣の後ろの盤端に、自分の石だけを止めるゴムの壁ができ、後ろへ押された石が跳ね返ってきます。盤が縮むと壁もついてきて、そのとき壁の外に残った自分の石を1回だけ内側へ戻します。'],
- split:['分裂','破片のサイズ・重さ −20%','強い衝撃を受けた自分の石が2つに割れます。破片はサイズと重さがそれぞれ20%小さく、基本石の破片は次の強化の条件で0.5個として数えます。'],
+ split:['分裂','破片のサイズ・防御力 −20%','強く当たった自分の石が2つに割れます。破片はサイズと防御力がそれぞれ20%低く、70%の速さで飛び出します。基本石の破片は次の強化の条件で0.5個として数えます。'],
  pierce:['堅守','最初の衝撃に力を集中・撃った石は止まる','撃った石が最初に当たった相手の石へ力をすべて伝え、撃った石はその場で止まります。'],
  thorns:['棘','ぶつかった相手の石に衝撃50%を返す','相手のショット中、自分の石にぶつかった相手の石は、衝突の強さの50%を跳ね返されて大きく弾かれます。'],
- double:['双発','同じ石で2回・威力 −32%','毎手番2回撃ちます。2回目は1回目に撃った石でしか撃てず、威力は32%下がります。'],
+ double:['双発','同じ石で2回・威力 −45%・防御力 −10%','毎手番2回撃ちます。2回目は1回目に撃った石でしか撃てません。かわりに威力が45%、防御力が10%下がります。'],
  gust:['突風','ショット後に近くの相手の石を1マス押す','自分のショットが終わると、撃った石にいちばん近い相手の石1個を、撃った石と反対の向きへ1マス押します。'],
  press:['圧迫','止まった石の周りの相手の防御力 −63%','自分が撃った石が止まった場所から2マス以内の相手の石は、次の自分のショットが終わるまで防御力が63%下がります。'],
  shock:['波紋','最初の衝撃で周りの相手の石を1.6マス押す','撃った石が最初に当たったとき、その場所から2マス以内のほかの相手の石を、いちばん近い盤端の方へ1.6マスずつ押します。'],
  chain:['連鎖','相手の石どうしの衝撃 +50%','自分のショット中に相手の石どうしがぶつかると、その衝撃が50%強くなります。固まっている相手の石をまとめて押し出せます。'],
  curve:['変化球','曲がるショット','ショットが曲がります。'],
- thrice:['三度目','3回目のショットごとに威力 +30%','自分の3回目のショットごとに、威力が30%上がります。衝撃は強くなりません。'],
+ thrice:['三度目','3回目のショットごとに威力 +30%','自分の3回目のショットごとに、威力が30%上がります。'],
  brand:['烙印','耐えた相手の石の防御力 −25%','自分の石に当たっても落ちなかった相手の石に烙印を残します。烙印の石は、自分の石にもう一度当たるまで防御力が25%下がります。もう一度当たると烙印は消えます。'],
  ice:['氷の道','通った道が4手のあいだ凍る','自分が撃った石の通り道が4手のあいだ凍ります。その上で押された相手の石は摩擦が60%減り、遠くまで滑ります。'],
- glut:['暴食','落とすたびにサイズ・重さ・威力 +6%','自分のショットで相手の石を落とすたびに、撃った石のサイズ・重さ・威力がそれぞれ6%上がります。上限なく大きくなります。'],
+ glut:['暴食','落とすたびにサイズ・防御力・威力 +6%','自分のショットで相手の石を落とすたびに、撃った石のサイズ・防御力・威力が6%ずつ上がります。上限なく大きくなります。'],
  bounty:['賞金','印の石を全体8手以内に落とすと玉1枚','相手の石1個に賞金をかけます。両者の手番を合わせて8手以内にその石を落とすと、玉の強化を1枚追加で選べます。'],
  iki:['一騎当千','1個の石で相手の基本石を3個落とすと超越1枚','自分の石1個で相手の基本石を合計3個落とすと、超越の強化2枚から1枚を選べます（分裂した破片は0.5個）。進み具合は石の上の星で表示され、その石が落ちると最初からになります。地形で落ちた石も数えます。'],
  revive:['復活','落ちた石が自陣に戻る（2〜3回）','自分の石が落ちると自陣に戻ってきます。選んだとき自分の石が3個未満なら2回、それ以外は3回まで発動します。'],
  buddy:['道連れ','落ちるとき相手の石を1個連れて行き、もう一度（1回）','自分の石が落ちると、盤上の相手の石を1個選んで一緒に落とし、自分の手番をもう一度行います。この局で1回までです。'],
- tengen:['天元','天元を守り切れば勝利・天元の上で防御力 +20%','天元に自分の石を置き、次の自分の手番まで守り切れば勝利です。天元の上にいる自分の石は防御力が20%上がります。'],
+ tengen:['天元','天元を守り切れば勝利・天元の上で防御力 +10%','天元から1マス以内に自分の石を置き、次の自分の手番まで守り切れば勝利です。天元の上にいる自分の石は防御力が10%上がります。'],
  thief:['盗賊','相手の石を1個奪う','選んですぐ相手の石を1個奪って自分の石にし、自陣へ連れてきます。奪われた基本石は相手が失った石として数えられ、相手の次の強化の条件に入ります。'],
- king:['王石','石1個のサイズ +50%・重さ +50%・威力 +40%','選んですぐ自分の石を1個選んで王石にします。王石はサイズ+50%・重さ+50%・威力+40%になります。自分の石が2個以下なら、中央に近い石にすぐ適用されます。'],
- bolt:['雷','自分の3回目のショットごとに3×3の落雷','自分の3回目のショットごとに、ランダムな場所へ3×3の雷が落ち、範囲内の石はすべて消えます。落ちる場所は最初に決まった所から動かず、場所と3・2・1のカウントは自分にだけ表示されます。'],
- last:['背水','3個以下でサイズ +15%・重さ +20%・威力 +12%','自分の石が3個以下になると、残った石がサイズ+15%・重さ+20%・威力+12%になります。'],
+ king:['王石','石1個のサイズ +50%・防御力 +50%・威力 +30%','選んですぐ自分の石を1個王石にします。王石はサイズ+50%・防御力+50%・威力+30%になります。自分の石が2個以下なら、中央に近い石にすぐ適用されます。'],
+ bolt:['雷','自分の3回目のショットごとに3×3の落雷','自分の3回目のショットごとに3×3の雷が落ち、範囲内の石はすべて消えます。落ちる場所は相手の石が1個以下の所に決まり、決まった後は動きません。場所と3・2・1のカウントは自分にだけ表示されます。'],
+ last:['背水','3個以下でサイズ +15%・防御力 +20%・威力 +12%','自分の石が3個以下になると、残った石がサイズ+15%・防御力+20%・威力+12%になります。'],
  dense:['岩石','石2個のサイズ −20%・威力 +24%','選んですぐ自分の石を2個選び、サイズ−20%・威力+24%にします。当てられにくく、遠くまで届きます。自分の石が2個以下ならすぐに適用されます。'],
  shaky:['手ぶれ','相手の照準を速く揺らす（最大15°）','相手が狙っているあいだ矢印を速く揺らし、ショットを最大15°ずらします。'],
  dragon:['大魔','つながった石1個ごとに防御力 +40%','止まっている自分の石は、2.2マス以内で数珠つなぎになった石1個ごとに防御力が40%ずつ上がります。固まるほど崩れにくくなります。'],
- wish:['念願','今の強化を捨てて、次は1ランク上を3枚すべて','選んですぐ自分の強化をすべて捨てます（超越は残ります）。次の強化選びでは、1ランク上のカード3枚をすべて受け取ります。自分の2回目の強化選びでだけ出ます。'],
- gamble:['勝負手','威力 +30%・落とせないと撃った石を失う','自分の威力が30%上がります。自分のショットで相手の石を1個も落とせないと、撃った石を失い、効果も終わります。'],
- fortune:['運勢','手番ごとに威力・防御力・重さが±7%上下する','自分の手番が始まるたびに、威力・防御力・重さがそれぞれ−7〜+7%の間で新しく決まり、次の自分の手番まで続きます。決まった値は手番の表示に出ます。'],
+ wish:['念願','今の強化を捨てて、次は1ランク上を3枚すべて（玉まで）','選んですぐ自分の強化をすべて捨てます（超越は残ります）。次の強化選びでは、1ランク上のカード3枚をすべて受け取ります。最高は玉で、超越は出ません。自分の2回目の強化選びでだけ出ます。'],
+ gamble:['勝負手','威力 +35%・落とせないと撃った石を失う','自分の威力が35%上がります。自分のショットで相手の石を1個も落とせないと、撃った石を失い、効果も終わります。'],
+ fortune:['運勢','手番ごとに威力・防御力が±10%上下する','自分の手番が始まるたびに、威力と防御力がそれぞれ−10〜+10%の間で新しく決まり、次の自分の手番まで続きます。決まった値は手番の表示に出ます。'],
  rebound:['跳ね返り','撃った石が盤端で一度跳ね返る','自分が撃った石が、落ちる盤端に初めて触れると一度だけ跳ね返ります（速さ70%）。'],
- orleans:['オルレアンのチェ・ユンジェ','今の強化を捨てて超越1枚・以後強化なし・相手に玉1枚','選んですぐ、超越以外の自分の強化をすべて捨てて、超越の強化を1枚選びます。この局ではもう強化を受け取れず、かわりに相手が玉の強化を1枚追加で選びます。'],
+ orleans:['オルレアンのチェ・ユンジェ','今の強化を捨てて超越1枚・以後強化なし・相手に玉1枚','選んですぐ、超越以外の自分の強化をすべて捨てて、超越の強化を1枚選びます。この局ではもう強化を受け取れず、かわりに相手が玉の強化を1枚追加で選びます。この強化は御命でも消せません。'],
  crack:['亀裂','当てた相手の石にひび・もう一度当てると割れる（2個）','自分のショットで相手の石に当てるとひびが入り、ひびの入った石にもう一度当てると割れて周りの相手の石を押し出します。割れると破片が3個残り、近づいた相手の石を押し返します。この局で2個まで割れます。'],
- pillar:['礎石','石1個を中央に固定・毎手 能力 +1%（最大+20%）','自分の石1個を盤の真ん中に固定します。押されず、毎手サイズ・重さ・威力がそれぞれ1%ずつ、最大20%まで上がります。ほかの自分の石がすべてなくなると固定が解けます。反転には出ません。'],
+ pillar:['礎石','石1個を中央に固定・毎手 能力 +1%（最大+20%）','自分の石1個を盤の真ん中に固定します。押されず、毎手サイズ・防御力・威力が1%ずつ、最大20%まで上がります。ほかの自分の石がすべてなくなると固定が解けます。反転には出ません。'],
  tide:['潮','自分のショットごとに相手の石を0.8マス押す','自分のショットが終わるたびに、相手の石をすべて、いちばん近い盤端の方へ0.8マスずつ押します。'],
  squirrel:['幸せなリス','落とすと2回のあいだ全員の威力 +30%','自分の石で撃ったショットで相手の石を1個でも落とすと、次の自分のショット2回のあいだ、自分の石すべての威力が30%上がります。そのあいだにまた落とすと、2回に戻ります。'],
  vortex:['渦','半径3マス・毎手0.5マス引き寄せる','撃つ前にオンにすると、止まった場所に半径3マスの渦ができます。毎手、相手の石を0.5マスずつ引き寄せ、渦の中の相手の石は防御力が50%下がります。'],
@@ -4252,7 +4273,7 @@ const JA_PARTS = [
 /* 증강 이름과 일반 낱말을 한 목록에 모아 긴 것부터 바꿈: '명사수'가 '수 '보다 먼저 바뀌어 '명사手'처럼 깨지지 않음 */
 /* v62 다듬기: 남아 있던 한국어 문구 보충 */
 const JA_EXTRA = [['진행 ','進行 '],['대국 시작','対局開始'],[' 선공',' 先攻'],['최종 승리','最終勝利'],[' 승리 (',' 勝利 ('],['동전 던지기','コイントス'],['이 나와 ','が出て '],[' 먼저 칩니다',' 先に打ちます'],['이/가',''],['흑·백 중 먼저 칠 쪽을 정하고 있습니다','黒・白のどちらが先に打つか決めています'],['동전이 떨어질 때까지','コインが落ちるまで'],['움직일 수 없습니다','動かせません'],['모두 떨어졌습니다','すべて落ちました'],['마지막 돌이 버티기 시작합니다','最後の石が踏ん張り始めます'],['최후의 돌','最後の石'],['덜 밀림','押されにくい'],['판이 줄어들어','盤面縮小で'],['탈락','脱落'],['자기 돌','自分の石'],['의 샷:','のショット:'],['금붕어가 뛰어나왔습니다','金魚が跳び出しました'],['금붕어가 연못으로 돌아갔습니다','金魚が池に戻りました'],['금붕어','金魚'],['착지한 둘레 3×3 칸의','着地点の周囲3×3マスの'],['밀어냈습니다','押し出しました'],['충전.','チャージ。'],['둘로 갈라졌습니다','2つに分かれました'],['하나가 묶였습니다','1個が封じられました'],['하나가 풀렸습니다','1個が解放されました'],['이 되었습니다','になりました'],['격파','撃破'],[' 달성 ',' 達成 '],['장을 더 고릅니다','枚を追加で選びます'],['증강을 모두 제거하고 추가 획득을 봉쇄했습니다','強化をすべて除去し、追加獲得を封じました'],['증강을 더 받지 않음','強化をこれ以上受け取らない'],['다음 증강까지','次の強化まで'],['다음 증강','次の強化'],[' 끝',' 終了'],[' 최고',' 最高'],['불러오는 중…','読み込み中…'],['돌 잠금 끄기','石ロック解除'],['돌 잠금 켜기','石ロック'],['선공 ','先攻 '],['평균 ','平均 '],['은 · 평균','銀 · 平均'],['금 · 평균','金 · 平均'],['옥 · 평균','玉 · 平均'],[' 은 증강',' 銀 強化'],[' 금 증강',' 金 強化'],[' 옥 증강',' 玉 強化'],['중간','ふつう'],['의 ','の '],['19줄 바둑판. 내 돌을 눌러 뒤로 당겼다가 놓으면 튕겨 나갑니다.','19路盤。自分の石を押して後ろへ引き、離すと弾き出します。'],['규칙 보기','ルールを見る'],['기객','棋客'],['방 이름 입력','部屋名を入力'],['방 이름','部屋名'],['배경음 고르기','BGMを選ぶ'],['소리 설정','サウンド設定'],['실험실 수 기록 및 설정','実験室の手の記録と設定'],['알 수 없는 지형','不明な地形'],['알까기 판','アルカギ盤'],['언어 변경','言語変更'],['완료한 수 기록','完了した手の記録'],['이번 수 남은 시간','この手の残り時間'],['조작 증강','操作強化'],['대국 기록','対局記録'],['새 대국','新しい対局']];
-const JA_EXTRA2 = [['적용','適用'],['(CPU 대전은 제한 없음)','（CPU対戦は制限なし）'],['상대 돌을 못 떨어뜨려 쏜 돌을 잃었습니다','相手の石を落とせず、撃った石を失いました'],['증강을 모두 버리고 다음 고르기를 기다립니다','強化をすべて捨て、次の選択を待ちます'],['를 모두 받았습니다','をすべて受け取りました'],['상대 연결이 끊겨 상대 차례를 대신 넘겼습니다','相手の接続が切れたため、相手の手番を代わりに進めました'],['상대 차례가 40초를 넘겨 대신 넘겼습니다','相手の手番が40秒を超えたため、代わりに進めました'],['상대 연결이 60초 넘게 끊겨 대국을 마칩니다','相手の接続が60秒以上切れたため、対局を終了します'],['상대 연결이 끊김','相手の接続切れ'],['의 기권','の投了'],['기권','投了'],['운수','運勢'],['염원','念願'],['승부수','勝負手'],['되튐','跳ね返り'],['가 상대 돌 하나를 빼앗았습니다','が相手の石を1個奪いました'],['이 상대 돌 하나를 빼앗았습니다','が相手の石を1個奪いました'],['상대 돌 하나를 빼앗았습니다','相手の石を1個奪いました'],['완료','達成'],['처음 하는 사람도 몇 판 안에 이길 만큼 손이 서툽니다.','初めての人でも数局で勝てるほどの腕前です。'],['수를 끝까지 읽고 센 증강만 고릅니다. 좋은 증강 없이는 이기기 어렵습니다.','手を最後まで読み、強い強化だけを選びます。良い強化なしでは勝つのが難しい相手です。'],['CPU는 다른 기객 가운데 하나로 앉습니다.','CPUは他の棋客から1人が座ります。'],['알맞게 맞서는 맞수입니다.','ちょうどよい好敵手です。'],['바꾸기','変更'],['쏠 수 없음','撃てない'],['기본 돌을 잃은 ','基本石を失った '],['잃은 다음 샷','失った次のショット'],['흑요석 바위가','黒曜石の岩が'],['個가','個が'],['장을 무작위로 얻었습니다.','枚をランダムで得ました。'],['흑요석 바위','黒曜石の岩'],['흑요석','黒曜石'],['에 금이 갔습니다','にひびが入りました'],['번 맞고 깨졌습니다','回当たって砕けました'],['기둥처럼 박혔습니다','柱のように刺さりました'],['手 뒤','手後'],['방금 친 돌로 한 번 더','今打った石でもう一度'],['한 번 더','もう一度'],['받을 돌 고르는 중','を受ける石を選択中'],['남음','残り'],['에서 ','から '],['바람문이','風門が'],['열렸습니다','開きました'],['누르면 알아서','押すと自動で'],['외 증강을 제거하고 추가 획득을 막았습니다.','以外の強化を除去し、追加獲得を封じました。'],['장을 고르세요.','枚を選んでください。'],['個를','個を'],['철벽 되돌리기','鉄壁の巻き戻し'],['블랙홀이','ブラックホールが'],['에 열렸습니다','に開きました'],['오를레앙','オルレアン'],['하나가 ','1個が '],['하나에 ','1個に '],['을 걸었습니다','を懸けました'],['이 사라졌습니다','が消えました'],['전체 ','全体 '],[' 안에)',' 以内)'],['한 판만 더! 딱 한 판만!','もう一局！あと一局だけ！'],['CPU끼리 실제 규칙대로 ','CPU同士が実際のルールで '],['판마다 지형과 판 줄어듦을 무작위로 정해 ','対局ごとに地形と盤面縮小をランダムに決めて '],['판 둔 자동 학습 모의전 결과입니다.','局打った自動学習シミュレーションの結果です。'],['대부분 끝까지 당겨 치는 수로 두었습니다.','ほとんどは最大まで引いて打ちました。'],['숫자는 그 증강을 가진 쪽의 승률이, 증강을 하나도 받지 못했을 때보다 몇 %p 높은지를 뜻합니다.','数値は、その強化を持つ側の勝率が強化なしの場合より何%p高いかを示します。'],['숫자는 그 증강을 가진 쪽의 승률이 평균적인 증강을 가졌을 때보다 몇 %p 높은지, 낮은지를 뜻합니다.','数値は、その強化を持つ側の勝率が平均的な強化の場合より何%p高い（低い）かを示します。'],["'새' 표시가 붙은 v29 새 증강 ",'「新」表示のv29新強化 '],['종은 증강 없는 상대와 짧게 맞대결한 승률에서 50%를 뺀 값이라 오차가 더 큽니다(±7%p 안팎).','種は強化なしの相手との短い対戦の勝率から50%を引いた値のため、誤差が大きめです（±7%p前後）。'],['목표는 증강 없는 상대와 맞대결했을 때 승률 은 62% · 금 68% · 옥 80%(강도 1 : 1.5 : 2.5)입니다.','目標は強化なしの相手との対戦勝率 銀62%・金68%・玉80%（強度 1 : 1.5 : 2.5）です。'],['목표는 은 −5, 금 0, 옥 +5 안팎입니다.','目標は銀 −5、金 0、玉 +5 前後です。'],['기존 증강 값은 지난 큰 조정 때 잰 것입니다.','既存強化の値は前回の大調整時に測定したものです。'],['숫자마다 ','数値ごとに '],['%p 정도의 오차가 있습니다.','%p程度の誤差があります。'],['가 먼저 칩니다','が先に打ちます'],['이 먼저 칩니다','が先に打ちます'],[')가 ',')が '],[')이 ',')が '],['상대 돌 하나를 깨뜨렸습니다','相手の石を1個割りました'],['남은 깨기','残り破壊'],['파편','破片'],['판 줄어듦으로 떨어진 돌','盤面縮小で落ちた石'],['상대가 스스로 떨어뜨린 돌','相手が自滅した石'],['금붕어에 밀려 떨어진 돌','金魚に押されて落ちた石'],['가운데 구멍이 커졌습니다','中央の穴が広がりました'],['가운데 구멍이 커집니다','中央の穴が広がります'],['밧줄이 안쪽으로 좁혀졌습니다','ロープが内側へ狭まりました'],['밧줄이 안쪽으로 좁혀집니다','ロープが内側へ狭まります'],['이제 더 바뀌지 않습니다','これ以上は変わりません'],['붉게 표시된 두 구역이','赤く表示された2区域が'],['뒤 함께 사라집니다','後に一緒に消えます'],['표시된 두 구역이 사라졌습니다','表示された2区域が消えました'],['다음 발사 힘','次の発射の威力'],['다음 발사','次の発射'],['소모','消費'],['번개까지 내 샷','雷まで自分のショット'],['반격 준비','反撃準備'],['기세 준비','勢い準備'],['패 준비','劫準備'],['그 수, 이미 읽었어요.','その手、もう読んでいますよ。'],['이 돌, 이제 내 거다!','この石、もう私のものだ！'],['한 번 겨눈 곳은 놓치지 않아.','一度狙った場所は外さない。'],['허허, 판은 길게 보는 게야.','ほほ、盤は長い目で見るものじゃ。'],['를 1칸','を1マス'],['개를 ','個を '],['에 힘','に威力'],['번 · ','回 · ']];
+const JA_EXTRA2 = [['19줄판','19路盤'],['온라인 방','オンラインルーム'],['방을 만들면 다섯 글자 방 이름이 나옵니다. 상대가 그 이름으로 들어오면 백을 잡습니다.','ルームを作ると5文字のルーム名が出ます。相手がその名前で入ると白になります。'],['방 이름 입력','ルーム名を入力'],['방 이름','ルーム名'],['입장','入室'],['흑 (방장)','黒（ホスト）'],['(방장)','（ホスト）'],['상대에게 이 방 이름을 알려 주세요. 상대가 들어오면 시작할 수 있습니다.','相手にこのルーム名を伝えてください。相手が入ると始められます。'],['방장을 기다리고 있습니다.','ホストを待っています。'],['방장을 기다리는 중','ホストを待っています'],['지형과 승리 조건은 방장이 고른 대로 진행됩니다.','地形と勝利条件はホストが選んだとおりに進みます。'],['방장이 대국을 시작하면 바로 시작됩니다.','ホストが対局を始めるとすぐに始まります。'],['방 나가기','ルームを出る'],['상대가 들어왔습니다.','相手が入室しました。'],[' (나)','（自分）'],['상대 접속','相手接続中'],['상대 없음','相手なし'],['상대 기객','相手の棋客'],['방이 가득 찼습니다. 다른 방 이름으로 들어가 주세요.','ルームが満員です。別のルーム名で入ってください。'],['방에 들어가지 못했습니다. 잠시 뒤에 다시 시도해 주세요.','ルームに入れませんでした。しばらくしてからもう一度お試しください。'],['방에 들어가고 있습니다…','ルームに入っています…'],['온라인 대전 중계소에 연결할 수 없습니다. 잠시 뒤에 새로고침해 주세요.','オンライン対戦サーバーに接続できません。しばらくしてから再読み込みしてください。'],['온라인 연결을 확인하고 있습니다.','オンライン接続を確認しています。'],['지금 화면에서는 온라인 대전을 쓸 수 없습니다. claude.ai 계정으로 들어온 상태에서 이 판을 열어야 하고, 상대는 공유 창에서 전자우편으로 초대받은 사람이어야 합니다. 공개 주소로 들어온 사람은 방에 들어올 수 없습니다.','この画面ではオンライン対戦を使えません。claude.aiアカウントでログインした状態でこの盤を開き、相手は共有画面からメールで招待された人である必要があります。公開アドレスから入った人はルームに入れません。'],['이 계정으로는 온라인 방에 들어갈 수 없습니다. 공유 창에서 전자우편으로 초대받았는지 확인해 주세요.','このアカウントではオンラインルームに入れません。共有画面からメールで招待されているか確認してください。'],['코드를 직접 선택해 복사해 주세요','コードを選択してコピーしてください'],['복사 완료','コピー完了'],[' · 방장이 고릅니다',' · ホストが選びます'],['방장이 새 대국을 열면 바로 이어집니다.','ホストが新しい対局を開くとすぐに続きます。'],['방장이 다음 국을 시작하기를 기다리고 있습니다.','ホストが次の対局を始めるのを待っています。'],[' · 방장 조작',' · ホスト操作'],['방장만 증강을 넣거나 뺄 수 있습니다','ホストだけが強化を追加・削除できます'],['온라인 대전은 방장이 흑, 참가자가 백입니다.','オンライン対戦はホストが黒、参加者が白です。'],[' 돌이 모두 떨어졌습니다','の石がすべて落ちました'],['방장','ホスト'],['판 가운데에 가까운 내 돌일수록 덜 밀립니다.','盤の中央に近い自分の石ほど押されにくくなります。'],['가운데에 가까울수록 방어력 ↑','中央に近いほど防御力 ↑'],['판 가운데 내 돌','盤中央の自分の石'],['한 칸 멀어질 때마다','1マス離れるごとに'],['적용','適用'],['(CPU 대전은 제한 없음)','（CPU対戦は制限なし）'],['상대 돌을 못 떨어뜨려 쏜 돌을 잃었습니다','相手の石を落とせず、撃った石を失いました'],['증강을 모두 버리고 다음 고르기를 기다립니다','強化をすべて捨て、次の選択を待ちます'],['를 모두 받았습니다','をすべて受け取りました'],['상대 연결이 끊겨 상대 차례를 대신 넘겼습니다','相手の接続が切れたため、相手の手番を代わりに進めました'],['상대 차례가 40초를 넘겨 대신 넘겼습니다','相手の手番が40秒を超えたため、代わりに進めました'],['상대 연결이 60초 넘게 끊겨 대국을 마칩니다','相手の接続が60秒以上切れたため、対局を終了します'],['상대 연결이 끊김','相手の接続切れ'],['의 기권','の投了'],['기권','投了'],['운수','運勢'],['염원','念願'],['승부수','勝負手'],['되튐','跳ね返り'],['가 상대 돌 하나를 빼앗았습니다','が相手の石を1個奪いました'],['이 상대 돌 하나를 빼앗았습니다','が相手の石を1個奪いました'],['상대 돌 하나를 빼앗았습니다','相手の石を1個奪いました'],['완료','達成'],['처음 하는 사람도 몇 판 안에 이길 만큼 손이 서툽니다.','初めての人でも数局で勝てるほどの腕前です。'],['수를 끝까지 읽고 센 증강만 고릅니다. 좋은 증강 없이는 이기기 어렵습니다.','手を最後まで読み、強い強化だけを選びます。良い強化なしでは勝つのが難しい相手です。'],['CPU는 다른 기객 가운데 하나로 앉습니다.','CPUは他の棋客から1人が座ります。'],['알맞게 맞서는 맞수입니다.','ちょうどよい好敵手です。'],['바꾸기','変更'],['쏠 수 없음','撃てない'],['기본 돌을 잃은 ','基本石を失った '],['잃은 다음 샷','失った次のショット'],['흑요석 바위가','黒曜石の岩が'],['個가','個が'],['장을 무작위로 얻었습니다.','枚をランダムで得ました。'],['흑요석 바위','黒曜石の岩'],['흑요석','黒曜石'],['에 금이 갔습니다','にひびが入りました'],['번 맞고 깨졌습니다','回当たって砕けました'],['기둥처럼 박혔습니다','柱のように刺さりました'],['手 뒤','手後'],['방금 친 돌로 한 번 더','今打った石でもう一度'],['한 번 더','もう一度'],['받을 돌 고르는 중','を受ける石を選択中'],['남음','残り'],['에서 ','から '],['바람문이','風門が'],['열렸습니다','開きました'],['누르면 알아서','押すと自動で'],['외 증강을 제거하고 추가 획득을 막았습니다.','以外の強化を除去し、追加獲得を封じました。'],['장을 고르세요.','枚を選んでください。'],['個를','個を'],['철벽 되돌리기','鉄壁の巻き戻し'],['블랙홀이','ブラックホールが'],['에 열렸습니다','に開きました'],['오를레앙','オルレアン'],['하나가 ','1個が '],['하나에 ','1個に '],['을 걸었습니다','を懸けました'],['이 사라졌습니다','が消えました'],['전체 ','全体 '],[' 안에)',' 以内)'],['한 판만 더! 딱 한 판만!','もう一局！あと一局だけ！'],['CPU끼리 실제 규칙대로 ','CPU同士が実際のルールで '],['판마다 지형과 판 줄어듦을 무작위로 정해 ','対局ごとに地形と盤面縮小をランダムに決めて '],['판 둔 자동 학습 모의전 결과입니다.','局打った自動学習シミュレーションの結果です。'],['대부분 끝까지 당겨 치는 수로 두었습니다.','ほとんどは最大まで引いて打ちました。'],['숫자는 그 증강을 가진 쪽의 승률이, 증강을 하나도 받지 못했을 때보다 몇 %p 높은지를 뜻합니다.','数値は、その強化を持つ側の勝率が強化なしの場合より何%p高いかを示します。'],['숫자는 그 증강을 가진 쪽의 승률이 평균적인 증강을 가졌을 때보다 몇 %p 높은지, 낮은지를 뜻합니다.','数値は、その強化を持つ側の勝率が平均的な強化の場合より何%p高い（低い）かを示します。'],["'새' 표시가 붙은 v29 새 증강 ",'「新」表示のv29新強化 '],['종은 증강 없는 상대와 짧게 맞대결한 승률에서 50%를 뺀 값이라 오차가 더 큽니다(±7%p 안팎).','種は強化なしの相手との短い対戦の勝率から50%を引いた値のため、誤差が大きめです（±7%p前後）。'],['목표는 증강 없는 상대와 맞대결했을 때 승률 은 62% · 금 68% · 옥 80%(강도 1 : 1.5 : 2.5)입니다.','目標は強化なしの相手との対戦勝率 銀62%・金68%・玉80%（強度 1 : 1.5 : 2.5）です。'],['목표는 은 −5, 금 0, 옥 +5 안팎입니다.','目標は銀 −5、金 0、玉 +5 前後です。'],['기존 증강 값은 지난 큰 조정 때 잰 것입니다.','既存強化の値は前回の大調整時に測定したものです。'],['숫자마다 ','数値ごとに '],['%p 정도의 오차가 있습니다.','%p程度の誤差があります。'],['가 먼저 칩니다','が先に打ちます'],['이 먼저 칩니다','が先に打ちます'],[')가 ',')が '],[')이 ',')が '],['상대 돌 하나를 깨뜨렸습니다','相手の石を1個割りました'],['남은 깨기','残り破壊'],['파편','破片'],['판 줄어듦으로 떨어진 돌','盤面縮小で落ちた石'],['상대가 스스로 떨어뜨린 돌','相手が自滅した石'],['금붕어에 밀려 떨어진 돌','金魚に押されて落ちた石'],['가운데 구멍이 커졌습니다','中央の穴が広がりました'],['가운데 구멍이 커집니다','中央の穴が広がります'],['밧줄이 안쪽으로 좁혀졌습니다','ロープが内側へ狭まりました'],['밧줄이 안쪽으로 좁혀집니다','ロープが内側へ狭まります'],['이제 더 바뀌지 않습니다','これ以上は変わりません'],['붉게 표시된 두 구역이','赤く表示された2区域が'],['뒤 함께 사라집니다','後に一緒に消えます'],['표시된 두 구역이 사라졌습니다','表示された2区域が消えました'],['다음 발사 힘','次の発射の威力'],['다음 발사','次の発射'],['소모','消費'],['번개까지 내 샷','雷まで自分のショット'],['반격 준비','反撃準備'],['기세 준비','勢い準備'],['패 준비','劫準備'],['그 수, 이미 읽었어요.','その手、もう読んでいますよ。'],['이 돌, 이제 내 거다!','この石、もう私のものだ！'],['한 번 겨눈 곳은 놓치지 않아.','一度狙った場所は外さない。'],['허허, 판은 길게 보는 게야.','ほほ、盤は長い目で見るものじゃ。'],['를 1칸','を1マス'],['개를 ','個を '],['에 힘','に威力'],['번 · ','回 · ']];
 JA_EXACT['새'] = '新';
 const JA_ALL = JA_EXTRA2.concat(JA_EXTRA).concat(Object.entries(AUG_JA).filter(([id]) => AUG[id]).map(([id, d]) => [AUG[id].name, d[0]])).concat(JA_PARTS.filter(([k]) => !JA_EXTRA.some(([e]) => e === k))).sort((a, b) => b[0].length - a[0].length);
 function translateJapaneseText(value) {
@@ -4344,7 +4365,6 @@ const RULE_SUM_JA = [
 ];
 const GLOSSARY = [
   ['힘', '내가 쏜 돌의 힘입니다. 셀수록 멀리, 세게 나갑니다.'],
-  ['무게', '돌의 무게입니다. 무거우면 같은 힘에 덜 나가지만 충돌 때 상대를 더 밀고 덜 밀립니다.'],
   ['방어력', '상대 샷을 맞을 때 버티는 정도입니다. 높을수록 덜 밀립니다.'],
   ['타격', '부딪힐 때 상대 돌을 튕겨 내는 세기입니다.'],
   ['크기', '돌의 지름입니다. 클수록 충돌 범위가 넓습니다.'],
@@ -4353,7 +4373,6 @@ const GLOSSARY = [
 ];
 const GLOSSARY_JA = [
  ['威力','自分が撃つ石の力です。高いほど遠く、強く飛びます。'],
- ['重さ','石の重さです。同じ威力なら重い石ほど飛びにくく、衝突では押されにくくなります。'],
  ['防御力','相手のショットを受けたときに耐える力です。高いほど押されにくくなります。'],
  ['衝撃','衝突時に相手の石を弾き飛ばす強さです。'],
  ['サイズ','石の直径です。大きいほど衝突範囲が広くなります。'],
@@ -4484,7 +4503,7 @@ const statText = value => esc(String(value));
 const statTextUI = value => esc(UI_LANG === 'ja' ? translateJapaneseText(String(value)) : String(value));
 const cleanName = v => String(v || '').replace(/[\u0000-\u001f\u007f<>"'`&\\]/g, '').replace(/\s+/g, ' ').trim().slice(0, 10);
 function loadProf(key, def) {
-  try { const o = JSON.parse(localStorage.getItem(key) || 'null'); if (o && o.c === 'sol') o.c = 'solha'; if (o && CHAR[o.c]) return { n: cleanName(o.n), c: o.c, il: o.il && typeof o.il === 'object' ? o.il : {}, st: ['stone', 'slime', 'flame', 'bean'].includes(o.st) ? o.st : 'stone', set: true }; } catch (e) {}
+  try { const o = JSON.parse(localStorage.getItem(key) || 'null'); if (o && o.c === 'sol') o.c = 'solha'; if (o && CHAR[o.c]) return { n: cleanName(o.n), c: o.c, il: o.il && typeof o.il === 'object' ? o.il : {}, st: skinOK(o.st) ? o.st : 'stone', set: true }; } catch (e) {}
   return { n: '', c: def, il: {}, st: 'stone', set: false };
 }
 function saveProf(key, pr) { try { localStorage.setItem(key, JSON.stringify({ n: pr.n, c: pr.c, il: pr.il || {}, st: pr.st || 'stone' })); } catch (e) {} }
@@ -4500,12 +4519,28 @@ const profName = pr => pr.n || charName(CHAR[pr.c]);
 const charOf = p => CHAR[(p && p.char) || 'cheongun'] || CHARS[0];
 const SKINS = ['stone', 'slime', 'flame', 'bean'];
 const SKIN_NAME = { stone: ['기본 돌', '基本の石'], slime: ['슬라임', 'スライム'], flame: ['까불이', 'カブリ'], bean: ['네콩', 'ネコン'] };
-const skinName = id => (SKIN_NAME[id] || SKIN_NAME.stone)[UI_LANG === 'ja' ? 1 : 0];
+const skinName = id => { const ja = UI_LANG === 'ja', b = String(id || 'stone').split(':'), c = SKIN_COLORS[b[1]]; return (SKIN_NAME[b[0]] || SKIN_NAME.stone)[ja ? 1 : 0] + (c ? ' · ' + c[ja ? 3 : 2] : ''); };
 const SKIN_PAL = {
   slime: [{ hi: '#6fb7a8', mid: '#24685e', lo: '#0c2c28', eye: '#08100e', mouth: '#c2463c' }, { hi: '#d9fff0', mid: '#7fe3bd', lo: '#38a982', eye: '#1d3b33', mouth: '#ee6a58' }],
   flame: [{ hi: '#ffd08a', mid: '#f7903a', lo: '#d9601a', tip: '#ffd56a', eye: '#3a1606', mouth: '#c8321c' }, { hi: '#9fd8ff', mid: '#3b97f0', lo: '#1559c8', tip: '#7fd6ff', eye: '#0c2a5a', mouth: '#0c3a8a' }],
   bean: [{ hi: '#9aa84a', mid: '#5d6c22', lo: '#2c360c', cap: '#6a3e20', eye: '#1a1408', blush: 'rgba(200,120,90,.55)', mouth: '#3a1410', tongue: '#e46a7a' }, { hi: '#ffe0e8', mid: '#f3a9bd', lo: '#d97894', cap: '#97552e', eye: '#2a1408', blush: 'rgba(240,120,130,.55)', mouth: '#5a1a20', tongue: '#f08a96' }],
 };
+/* 돌 색: 모양마다 '기본' + 색 6가지. 흑은 짙게, 백은 밝게 같은 색 계열로 맞춰 흑백 구분은 그대로 */
+const SKIN_COLORS = { red: [2, 72, '빨강', '赤'], yellow: [46, 80, '노랑', '黄'], green: [128, 52, '초록', '緑'], blue: [214, 72, '파랑', '青'], purple: [272, 52, '보라', '紫'], pink: [334, 70, '분홍', 'ピンク'] };
+const skinBase = v => String(v || 'stone').split(':')[0];
+const skinColor = v => { const c = String(v || '').split(':')[1]; return SKIN_COLORS[c] ? c : ''; };
+const skinOK = v => typeof v === 'string' && SKINS.includes(skinBase(v)) && (!v.includes(':') || (skinBase(v) !== 'stone' && !!skinColor(v)));
+const skinPalCache = {};
+function skinPal(v, team) {
+  const base = skinBase(v), c = skinColor(v), def = (SKIN_PAL[base] || SKIN_PAL.slime)[team === 0 ? 0 : 1];
+  if (!c) return def;
+  const key = v + team; if (skinPalCache[key]) return skinPalCache[key];
+  const [h, sat] = SKIN_COLORS[c], hs = (l, k = sat) => `hsl(${h},${k}%,${l}%)`;
+  const p = Object.assign({}, def, team === 0
+    ? { hi: hs(58), mid: hs(34), lo: hs(13), tip: hs(72, 90), eye: hs(7, 40) }
+    : { hi: hs(94), mid: hs(76), lo: hs(55), tip: hs(84, 90), eye: hs(16, 45) });
+  return (skinPalCache[key] = p);
+}
 /* 고른 돌 모양의 작은 그림 (얼굴 옆 돌 표시) */
 const skinIconCache = {};
 function skinIcon(skin, team) {
@@ -4518,7 +4553,7 @@ function skinIcon(skin, team) {
 }
 function avatar(p, opt = {}) {
   const ch = charOf(p), crop = opt.bust ? 'bust' : 'face', url = pixURL(ch.id, crop);
-  const sk = p.skin && p.skin !== 'stone' ? skinIcon(p.skin, p.team) : '';
+  const sk = p.skin && skinBase(p.skin) !== 'stone' ? skinIcon(p.skin, p.team) : '';
   const stone = opt.stone === false ? '' : sk ? `<span class="stone-ico skin${dotCls(p)}" style="background:url(${sk}) center/100% no-repeat"></span>` : `<span class="stone-ico ${stoneCls(p.team)}${dotCls(p)}"></span>`;
   const isrc = p.ill && p.ill !== 'base' ? illSrc(ch.id, p.ill === true ? '3d' : p.ill) : '';
   const pic = isrc ? `<span class="ill-img ${crop}" style="background-image:url(${isrc})"></span>` : url ? `<img class="pix" src="${url}" alt="">` : '';
@@ -4946,7 +4981,7 @@ const NET = { lobby: null, room: null, code: null, seat: null, seq: 0, lastStr: 
 const netOpponent = () => NET.peers.find(pr => !pr.isMe && pr.kind === 'viewer' && pr.presence && pr.presence.app === 'alk' && pr.presence.seat === 1 - NET.seat) || null;
 function netProfOf(pr) {
   const o = pr && pr.presence && pr.presence.prof;
-  return o && CHAR[o.c] ? { n: cleanName(o.n), c: o.c, il: { [o.c]: OUTFITS[o.i] || (o.i === true ? '3d' : 'base') }, st: ['stone', 'slime', 'flame', 'bean'].includes(o.s) ? o.s : 'stone' } : { n: '', c: 'hongmae', il: {}, st: 'stone' };
+  return o && CHAR[o.c] ? { n: cleanName(o.n), c: o.c, il: { [o.c]: OUTFITS[o.i] || (o.i === true ? '3d' : 'base') }, st: skinOK(o.s) ? o.s : 'stone' } : { n: '', c: 'hongmae', il: {}, st: 'stone' };
 }
 function netMarkSeats() { for (const p of G.players) { p.remote = p.id !== NET.seat; p.cpu = false; } }
 function packAll() {
@@ -5025,7 +5060,7 @@ function netAdopt(st) {
       if (st.lc != null) G.labHistoryCursor = st.lc;
       if (st.lo != null) G.labHistoryOffset = st.lo;
     }
-    st.pl.forEach((x, i) => { G.players[i].augs = x.a.slice(); G.players[i].dry = x.d; if (x.n != null) G.players[i].name = cleanName(x.n) || teamName(G.players[i].team); if (CHAR[x.c]) G.players[i].char = x.c; if (x.i != null) G.players[i].ill = OUTFITS[x.i] || 'base'; if (SKINS.includes(x.k)) G.players[i].skin = x.k; });
+    st.pl.forEach((x, i) => { G.players[i].augs = x.a.slice(); G.players[i].dry = x.d; if (x.n != null) G.players[i].name = cleanName(x.n) || teamName(G.players[i].team); if (CHAR[x.c]) G.players[i].char = x.c; if (x.i != null) G.players[i].ill = OUTFITS[x.i] || 'base'; if (skinOK(x.k)) G.players[i].skin = x.k; });
     G.world = K.unpackWorld(st.w, G.players);
     NET.wishShown = NET.wishShown || {};
     for (const q of G.players) { const v = G.world.wshIds && G.world.wshIds[q.id]; if (v && q.id !== NET.seat && NET.wishShown[q.id] !== v) { NET.wishShown[q.id] = v; const pl = q, ids = String(v).split(','); setTimeout(() => wishShow(pl, ids), 50); } }
@@ -5098,7 +5133,7 @@ function renderNetChip() {
   el.hidden = false;
   const opp = netOpponent();
   el.className = 'netchip ' + (opp ? 'on' : 'wait');
-  el.querySelector('span').textContent = `방 ${NET.code.toUpperCase()} · ${NET.seat === 0 ? '흑' : NET.seat === 1 ? '백' : '관전'} · ${opp ? '상대 접속' : '상대 없음'}`;
+  el.querySelector('span').textContent = `${UI_LANG === 'ja' ? 'ルーム' : '방'} ${NET.code.toUpperCase()} · ${NET.seat === 0 ? '흑' : NET.seat === 1 ? '백' : '관전'} · ${opp ? '상대 접속' : '상대 없음'}`;
 }
 /* 시작 단추는 '온라인 1대1'을 골랐을 때만 온라인 상태를 따릅니다 (다른 방식에서는 늘 바로 시작 가능) */
 const netMode = () => (document.querySelector('input[name="mode"]:checked') || {}).value === 'net';
@@ -5169,12 +5204,12 @@ const pc = x => Math.round(x * 100), fx = x => Math.round(x * 100) / 100, cell =
 /* CORE 내부와 별도 UI 스크립트에서 함께 쓰는 배율 표시: 1.15 → +15%, 0.8 → −20% */
 const pm = x => { const v = Math.round((x - 1) * 1000) / 10; return `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v) % 1 ? Math.abs(v).toFixed(1) : Math.abs(v)}%`; };
 const STATS = () => { const A = K.A, P = K.P; return {
-  iron: [['내 돌', '무게', `${pm(A.ironM)}`, 'up']],
-  big: [[`돌 ${A.sizeN}개`, '크기', `+${pc(A.bigR - 1)}%`, 'up'], [`돌 ${A.sizeN}개`, '무게', `${pm(A.bigM)}`, 'up'], [`돌 ${A.sizeN}개`, '힘', `+${pc(A.bigV - 1)}%`, 'up']],
+  iron: [['내 돌', '방어력', `${pm(A.ironM)}`, 'up']],
+  big: [[`돌 ${A.sizeN}개`, '크기', `+${pc(A.bigR - 1)}%`, 'up'], [`돌 ${A.sizeN}개`, '방어력', `${pm(A.bigM)}`, 'up'], [`돌 ${A.sizeN}개`, '힘', `+${pc(A.bigV - 1)}%`, 'up']],
   fast: [['내 돌', '힘', `+${pc(A.fast - 1)}%`, 'up']],
   reinforce: [['우리 진영', '돌', `+${A.reinforce}`, 'up']],
   seal: [[`상대 돌 ${A.seal}개`, '봉인', '쏠 수 없음', 'foe']],
-  root: [['내 돌', '방어력', `${pm(A.root)}`, 'up']],
+  root: [['판 가운데 내 돌', '방어력', `+${pc(A.rootMax)}%`, 'up'], ['한 칸 멀어질 때마다', '방어력', `−${pc(A.rootStep)}%`, 'down']],
   aim: [['조준', '궤적', '첫 충돌까지', 'up']],
   shackle: [['상대 돌', '힘', `−${pc(1 - A.shackle)}%`, 'foe']],
   momentum: [['떨어뜨린 다음 샷', '힘', `+${pc(A.momV - 1)}%`, 'up']],
@@ -5182,25 +5217,25 @@ const STATS = () => { const A = K.A, P = K.P; return {
   grip: [['밀리는 내 돌', '마찰', `+${pc(A.grip - 1)}%`, 'up']],
   sand: [['상대가 쏜 돌', '마찰', `+${pc(A.sand - 1)}%`, 'foe']],
   star: [['화점 위 내 돌', '방어력', `${pm(A.starM)}`, 'up']],
-  edge: [['가장자리 내 돌', '마찰', `+${pc(A.edgeF - 1)}%`, 'up']],
+  edge: [['가장자리 내 돌', '방어력', `${pm(A.edgeH)}`, 'up']],
   first: [[`고른 뒤 ${A.firstN}샷`, '타격', `+${pc(A.firstK - 1)}%`, 'up']],
   combo: [['떨어뜨리면', '한 번 더', `${A.comboRound}회`, 'up']],
   bomb: [['멈춘 자리', '폭발', `${cell(A.bombR)}칸`, 'up']],
   marks: [[`${Math.round(A.markD / K.GAP)}칸 이상 날면`, '타격', `+${pc(A.markK - 1)}%`, 'up']],
-  wedge: [['멈춘 쏜 돌', '무게', `${pm(A.wedgeM)}`, 'up']],
+  wedge: [['멈춘 쏜 돌', '방어력', `${pm(A.wedgeM)}`, 'up']],
   wall: [['우리 뒤쪽', '벽', `되돌리기 ${A.wallSave}번`, 'up']],
-  split: [['세게 맞은 내 돌', '둘로 갈라짐', `${A.splitN}회`, 'up'], ['조각', '크기', `−${pc(1 - A.splitR)}%`, 'down'], ['조각', '무게', `−${pc(1 - A.splitM)}%`, 'down']],
+  split: [['세게 맞은 내 돌', '둘로 갈라짐', `${A.splitN}회`, 'up'], ['조각', '크기', `−${pc(1 - A.splitR)}%`, 'down'], ['조각', '방어력', `−${pc(1 - A.splitM)}%`, 'down']],
   pierce: [['첫 타격', '힘', '모두 실음', 'up'], ['쏜 돌', '멈춤', '그 자리', 'down']],
   thorns: [['나와 부딪힌 상대 돌', '타격', `${pc(A.thorns)}% 되돌림`, 'foe']],
   wish: [['고르는 즉시', '내 증강', '모두 버림', 'down'], ['다음 고르기', '한 등급 위', '3장 모두', 'up']],
   gamble: [['내 돌', '힘', `+${pc(A.gambleV - 1)}%`, 'up'], ['못 떨어뜨리면', '쏜 돌', '잃음', 'down']],
-  fortune: [['내 차례마다', '힘', `±${pc(A.fortV1 - 1)}%`, 'up'], ['내 차례마다', '방어력', `±${pc(A.fortH1 - 1)}%`, 'up'], ['내 차례마다', '무게', `±${pc(A.fortM1 - 1)}%`, 'up']],
+  fortune: [['내 차례마다', '힘', `±${pc(A.fortV1 - 1)}%`, 'up'], ['내 차례마다', '방어력', `±${pc(A.fortH1 - 1)}%`, 'up']],
   rebound: [['쏜 돌', '가장자리에서 튕김', '한 번', 'up'], ['튕긴 뒤', '빠르기', `${pc(A.rebK)}%`, 'down']],
-  orleans: [['기존 증강', '초월 제외 전부 제거', '즉시', 'down'], ['보상', '초월', '1장 선택', 'up'], ['나', '추가 증강 획득', '이후 불가', 'down'], ['상대', '옥 증강', '1장 선택', 'foe']],
+  orleans: [['기존 증강', '초월 제외 전부 제거', '즉시', 'down'], ['보상', '초월', '1장 선택', 'up'], ['나', '추가 증강 획득', '이후 불가', 'down'], ['상대', '옥 증강', '1장 선택 · 지울 수 없음', 'foe']],
   crack: [['친 상대 돌', '금', '1번째', 'foe'], ['금 간 돌', '깨짐', `${A.crackMax}개`, 'foe'], ['파편', '상대 돌 튕김', `${A.shardN}개`, 'foe']],
-  double: [['매 차례', '샷', '2번', 'up'], ['내 돌', '힘', `−${pc(1 - A.doubleV)}%`, 'down']],
+  double: [['매 차례', '샷', '2번', 'up'], ['내 돌', '힘', `−${pc(1 - A.doubleV)}%`, 'down'], ['내 돌', '방어력', `${pm(A.doubleH)}`, 'down']],
   gust: [['가까운 상대 돌', '밀어냄', `${cell(A.gustD)}칸`, 'foe']],
-  hammer: [['쏜 돌', '무게', `${pm(A.hamM)}`, 'up']],
+  hammer: [['쏜 돌', '타격', `${pm(A.hamM)}`, 'up']],
   press: [['둘레 상대 돌', '방어력', `${pm(A.pressM)}`, 'foe']],
   shock: [['둘레 상대 돌', '밀어냄', `${cell(A.shockD)}칸`, 'foe']],
   chain: [['상대 돌끼리', '타격', `+${pc(A.chainK - 1)}%`, 'foe']],
@@ -5209,26 +5244,26 @@ const STATS = () => { const A = K.A, P = K.P; return {
   tengen: [[`천원 ${cell(P.tengenR)}칸`, '지키면', '승리', 'up'], ['천원 위 내 돌', '방어력', `${pm(A.tengenH)}`, 'up']],
   thief: [['상대 돌', '빼앗기', `${A.thief}개`, 'up']],
   rewind: [['상대 샷', '무르기', `${A.rewind}회`, 'up']],
-  king: [['왕돌', '크기', `+${pc(A.kingR - 1)}%`, 'up'], ['왕돌', '무게', `${pm(A.kingM)}`, 'up'], ['왕돌', '힘', `+${pc(A.kingV - 1)}%`, 'up']],
+  king: [['왕돌', '크기', `+${pc(A.kingR - 1)}%`, 'up'], ['왕돌', '방어력', `${pm(A.kingM)}`, 'up'], ['왕돌', '힘', `+${pc(A.kingV - 1)}%`, 'up']],
   bolt: [[`내 샷 ${A.boltEvery}번째마다`, '3×3 낙뢰', '범위 안 돌 제거', 'foe']],
   clone: [['분신', '돌', `+${A.clone}`, 'up'], ['분신', '되살아남', '1번', 'up']],
-  last: [[`${A.lastN}개 이하`, '크기', `+${pc(A.lastR - 1)}%`, 'up'], [`${A.lastN}개 이하`, '무게', `${pm(A.lastM)}`, 'up'], [`${A.lastN}개 이하`, '힘', `+${pc(A.lastV - 1)}%`, 'up']],
+  last: [[`${A.lastN}개 이하`, '크기', `+${pc(A.lastR - 1)}%`, 'up'], [`${A.lastN}개 이하`, '방어력', `${pm(A.lastM)}`, 'up'], [`${A.lastN}개 이하`, '힘', `+${pc(A.lastV - 1)}%`, 'up']],
   dense: [[`돌 ${A.sizeN}개`, '크기', `−${pc(1 - A.denseR)}%`, 'up'], [`돌 ${A.sizeN}개`, '힘', `+${pc(A.denseV - 1)}%`, 'up']],
   shaky: [['상대 샷', '빗나감', `최대 ${Math.round(A.shaky / 2 * 180 / Math.PI)}°`, 'foe']],
   dragon: [['이어진 돌 1개마다', '방어력', `+${pc(A.dragonStep)}%`, 'up']],
   ko: [['내 돌을 잃으면', '한 번 더', `${A.ko}회`, 'up']],
-  pillar: [['주춧돌 (매 수)', '크기·무게·힘', '+1%씩 (최대 +20%)', 'up'], ['주춧돌', '중앙 고정', '다른 아군 돌이 모두 사라지면 해제', 'down']],
+  pillar: [['주춧돌 (매 수)', '크기·방어력·힘', '+1%씩 (최대 +20%)', 'up'], ['주춧돌', '중앙 고정', '다른 아군 돌이 모두 사라지면 해제', 'down']],
   tide: [['상대 돌 모두', '밀어냄', `${Math.round(A.tideD / K.GAP * 10) / 10}칸`, 'foe']],
   clay: [['내 돌', '힘', `+${pc(A.clayV - 1)}%`, 'up'], ['내 돌', '방어력', `${pm(A.clayH)}`, 'down']],
-  millet: [['내 돌', '크기', `−${pc(1 - A.milletR)}%`, 'up'], ['내 돌', '힘', `+${pc(A.milletV - 1)}%`, 'up'], ['내 돌', '무게', `${pm(A.milletM)}`, 'down']],
+  millet: [['내 돌', '크기', `−${pc(1 - A.milletR)}%`, 'up'], ['내 돌', '힘', `+${pc(A.milletV - 1)}%`, 'up'], ['내 돌', '방어력', `${pm(A.milletM)}`, 'down']],
   grit: [['빗나간 샷마다', '힘', `+${pc(A.gritStep)}%`, 'up'], ['최대', '힘', `+${pc(A.gritStep * A.gritMax)}%`, 'up']],
   late: [[`${P.shrinkStart}수 전`, '힘', `−${pc(1 - A.lateV0)}%`, 'down'], [`${P.shrinkStart}수부터`, '힘', `+${pc(A.lateV1 - 1)}%`, 'up'], [`${P.shrinkStart}수부터`, '방어력', `${pm(A.lateH)}`, 'up']],
-  lone: [['내 돌', '힘', `+${pc(A.loneV - 1)}%`, 'up'], ['내 돌', '무게', `${pm(A.loneM)}`, 'up'], ['내 돌', '크기', `+${pc(A.loneR - 1)}%`, 'up'], ['이번 국', '증강', '더 받지 않음', 'down']],
+  lone: [['내 돌', '힘', `+${pc(A.loneV - 1)}%`, 'up'], ['내 돌', '방어력', `${pm(A.loneM)}`, 'up'], ['내 돌', '크기', `+${pc(A.loneR - 1)}%`, 'up'], ['이번 국', '증강', '더 받지 않음', 'down']],
   train: [['조건', '상대 기본 돌', `${A.trainN}개 떨어뜨리기`, 'up'], ['보상', '금', '1장 더', 'up']],
   thrice: [['세 번째 샷', '힘', `+${pc(A.thriceV - 1)}%`, 'up']],
   brand: [['낙인 대상', '방어력', '−25% (내 돌에 다시 맞을 때까지)', 'foe']],
   ice: [['쏜 돌이 지난 길의 상대 돌', '마찰', `−${pc(1 - A.iceF)}%`, 'foe']],
-  glut: [['떨어뜨린 쏜 돌', '크기', `+${pc(A.glutR - 1)}%`, 'up'], ['떨어뜨린 쏜 돌', '무게', `${pm(A.glutM)}`, 'up'], ['떨어뜨린 쏜 돌', '힘', `+${pc(A.glutV - 1)}%`, 'up']],
+  glut: [['떨어뜨린 쏜 돌', '크기', `+${pc(A.glutR - 1)}%`, 'up'], ['떨어뜨린 쏜 돌', '방어력', `${pm(A.glutM)}`, 'up'], ['떨어뜨린 쏜 돌', '힘', `+${pc(A.glutV - 1)}%`, 'up']],
   bounty: [['조건', '현상금 돌', `전체 ${A.bountyN}수 안에`, 'up'], ['현상금 돌', '방어력', `${pm(A.bountyH)}`, 'foe'], ['보상', '옥', '1장 더', 'up']],
   yi: [['다음 내 차례', '상대 돌 쏘기', `${A.yiN}차례`, 'foe'], ['처음 쓸 때만', '한 번 더', '샷 +1', 'up']],
   squirrel: [['상대 돌을 떨어뜨리면', '모든 돌 힘', `+${pc(A.sqrV - 1)}%`, 'up'], ['지속', '내 샷', `${A.sqrN}번`, 'up']],
@@ -5563,7 +5598,7 @@ function renderStrip() {
     if (G.hintNote && st === 'aim' && !p.cpu) hint = G.hintNote;
     const danger = K.onTengen(G.world, 1 - p.team) && st === 'aim' ? '<span class="alert">상대가 천원을 차지했습니다 · 밀어내지 못하면 집니다</span>' : '';
     const fo = cnt(p, 'fortune') && G.world ? K.fortuneOf(G.world, p.id) : null, sg = x => `${x >= 1 ? '+' : '−'}${Math.abs(Math.round((x - 1) * 100))}%`;
-    const fortune = fo ? `<span class="fortune-chip" title="운수">運 힘 ${sg(fo.v)} · 방어력 ${sg(fo.h)} · 무게 ${sg(fo.m)}</span>` : '';
+    const fortune = fo ? `<span class="fortune-chip" title="운수">運 힘 ${sg(fo.v)} · 방어력 ${sg(fo.h)}</span>` : '';
     void fortune;
     html = `${icon}<span class="turn-name">${esc(pSelf(p))} 차례</span>${danger}<span class="turn-hint${G.hintFlash > 0 ? ' flash' : ''}">${hint}</span>`;
   }
@@ -5906,9 +5941,9 @@ function pmeta(w, p) {
   const out = [];
   if (cnt(p, 'fortune')) {
     const f = K.fortuneOf(w, p.id), sg = x => `${x >= 1 ? '+' : '−'}${Math.abs(Math.round((x - 1) * 100))}%`, cls = x => (x >= 1 ? 'fu' : 'fd');
-    const key = [f.v, f.h, f.m].map(x => x.toFixed(3)).join('|'); G.fortKey = G.fortKey || {};
+    const key = [f.v, f.h].map(x => x.toFixed(3)).join('|'); G.fortKey = G.fortKey || {};
     const flash = G.fortKey[p.id] && G.fortKey[p.id] !== key; G.fortKey[p.id] = key;
-    out.push(`<span class="fortune-line${flash ? ' flash' : ''}">運 운수 <b class="${cls(f.v)}">힘 ${sg(f.v)}</b> <b class="${cls(f.h)}">방어력 ${sg(f.h)}</b> <b class="${cls(f.m)}">무게 ${sg(f.m)}</b></span>`);
+    out.push(`<span class="fortune-line${flash ? ' flash' : ''}">運 운수 <b class="${cls(f.v)}">힘 ${sg(f.v)}</b> <b class="${cls(f.h)}">방어력 ${sg(f.h)}</b></span>`);
   }
   const wedged = w.stones.filter(s => live(s) && s.owner === p.id && s.wedge);
   if (wedged.length) out.push(`쐐기 적용 <b>돌 ${wedged.map(s => `#${s.id}`).join(', ')} · 다음 내 샷 전까지 유지</b>`);
@@ -7044,7 +7079,7 @@ const maxPull = () => Math.min(170, VIEW * G.scale * 0.3) / G.scale;
 /* ---------- 돌 모양: 기본 바둑돌 + 젤리 슬라임·불씨 도깨비·콩새 ----------
    흑은 짙은 색, 백은 밝은 색으로 칠하고 테두리도 흑·백으로 둘러 어느 편 돌인지 늘 알아볼 수 있게 함 */
 function paintSkin(g, x, y, r, team, skin, alpha = 1) {
-  const P = (SKIN_PAL[skin] || SKIN_PAL.slime)[team === 0 ? 0 : 1];
+  const P = skinPal(skin, team); skin = skinBase(skin);
   g.save(); g.globalAlpha *= alpha;
   const body = g.createRadialGradient(x - r * 0.35, y - r * 0.42, r * 0.08, x, y, r);
   body.addColorStop(0, P.hi); body.addColorStop(0.55, P.mid); body.addColorStop(1, P.lo);
@@ -7085,7 +7120,7 @@ function paintSkin(g, x, y, r, team, skin, alpha = 1) {
   g.beginPath(); g.arc(x, y, r, 0, TAU); g.stroke();
   g.restore();
 }
-const skinOf = s => { const p = G.players[s.owner]; return p && SKINS.includes(p.skin) ? p.skin : 'stone'; };
+const skinOf = s => { const p = G.players[s.owner]; return p && skinOK(p.skin) ? p.skin : 'stone'; };
 function drawStone(s, alone) {
   const fall = s.falling > 0 ? s.falling / FALL_T : 1;
   const r = s.r * (0.5 + 0.5 * fall), alpha = fall;
@@ -7095,7 +7130,7 @@ function drawStone(s, alone) {
   ctx.fillStyle = sh; ctx.beginPath(); ctx.arc(s.x + r * 0.18, s.y + r * 0.3 + (1 - fall) * 30, r * 1.15, 0, TAU); ctx.fill();
   ctx.globalAlpha = alpha;
   const skin = skinOf(s);
-  if (skin !== 'stone') { if (G.rot) { ctx.save(); ctx.translate(s.x, s.y); ctx.rotate(-G.rot); paintSkin(ctx, 0, 0, r, s.team, skin); ctx.restore(); } else paintSkin(ctx, s.x, s.y, r, s.team, skin); }   /* 판을 돌려 봐도 얼굴은 바로 서게 */
+  if (skinBase(skin) !== 'stone') { if (G.rot) { ctx.save(); ctx.translate(s.x, s.y); ctx.rotate(-G.rot); paintSkin(ctx, 0, 0, r, s.team, skin); ctx.restore(); } else paintSkin(ctx, s.x, s.y, r, s.team, skin); }   /* 판을 돌려 봐도 얼굴은 바로 서게 */
   else {
   const g = ctx.createRadialGradient(s.x - r * 0.35, s.y - r * 0.4, r * 0.05, s.x, s.y, r);
   if (s.team === 0) { g.addColorStop(0, '#5d6168'); g.addColorStop(0.32, '#26282c'); g.addColorStop(1, '#09090b'); }
@@ -8984,7 +9019,7 @@ function paintStonePreview(cv, skin, teams = [0, 1]) {
   const n = teams.length, r = Math.min(H * 0.4, W / (n * 2.3));
   teams.forEach((t, i) => {
     const x = W * (i + 0.5) / n, y = H / 2;
-    if (skin === 'stone') { const gr = g.createRadialGradient(x - r * 0.35, y - r * 0.4, r * 0.05, x, y, r); if (t === 0) { gr.addColorStop(0, '#5d6168'); gr.addColorStop(0.32, '#26282c'); gr.addColorStop(1, '#09090b'); } else { gr.addColorStop(0, '#ffffff'); gr.addColorStop(0.5, '#f1ebdf'); gr.addColorStop(1, '#bfb5a2'); } g.fillStyle = gr; g.beginPath(); g.arc(x, y, r, 0, TAU); g.fill(); }
+    if (skinBase(skin) === 'stone') { const gr = g.createRadialGradient(x - r * 0.35, y - r * 0.4, r * 0.05, x, y, r); if (t === 0) { gr.addColorStop(0, '#5d6168'); gr.addColorStop(0.32, '#26282c'); gr.addColorStop(1, '#09090b'); } else { gr.addColorStop(0, '#ffffff'); gr.addColorStop(0.5, '#f1ebdf'); gr.addColorStop(1, '#bfb5a2'); } g.fillStyle = gr; g.beginPath(); g.arc(x, y, r, 0, TAU); g.fill(); }
     else paintSkin(g, x, y, r, t, skin);
   });
 }
@@ -8995,15 +9030,30 @@ function openSkinPick() {
   const box = document.createElement('div');
   box.className = 'ill-pick'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-label', ja ? '石の変更' : '돌 변경');
   box.innerHTML = `<div class="ill-card skin-card"><p class="eyebrow">${ja ? '石の変更' : '돌 변경'}</p>
-    <p class="ill-help">${ja ? '対局で使う自分の石の見た目を選びます。黒は濃い色、白は明るい色と縁取りで区別されます。見た目だけで、性能は同じです。' : '대국에서 쓸 내 돌 모양을 고르세요. 흑은 짙은 색, 백은 밝은 색과 테두리로 구분됩니다. 모양만 다르고 성능은 같습니다.'}</p>
-    <div class="skin-opts">${SKINS.map(k => `<button type="button" class="ill-opt${k === profSt ? ' on' : ''}" data-sk="${k}"><canvas width="168" height="84" data-prev="${k}"></canvas><b>${skinName(k)}</b></button>`).join('')}</div>
-    <div class="actions"><button type="button" class="btn-ghost" data-sk="x">${ja ? '閉じる' : '닫기'}</button></div></div>`;
+    <p class="ill-help">${ja ? '対局で使う自分の石の形と色を選びます。黒は濃く、白は明るく表示されて区別できます。見た目だけで、性能は同じです。' : '대국에서 쓸 내 돌 모양과 색을 고르세요. 흑은 짙게, 백은 밝게 보여 구분됩니다. 모양과 색만 다르고 성능은 같습니다.'}</p>
+    <div class="skin-opts"></div>
+    <p class="skin-col-h"></p><div class="skin-cols"></div>
+    <div class="actions"><button type="button" class="btn-ghost" data-sk="x">${ja ? '適用' : '적용'}</button></div></div>`;
   document.body.appendChild(box);
-  box.querySelectorAll('canvas[data-prev]').forEach(cv => paintStonePreview(cv, cv.dataset.prev));
+  let pick = skinOK(profSt) ? profSt : 'stone';
+  const draw = () => {
+    const base = skinBase(pick), col = skinColor(pick), cv0 = c => (c ? base + ':' + c : base);
+    box.querySelector('.skin-opts').innerHTML = SKINS.map(k => `<button type="button" class="ill-opt${k === base ? ' on' : ''}" data-sk="${k}"><canvas width="168" height="84" data-prev="${k === base ? pick : k}"></canvas><b>${skinName(k)}</b></button>`).join('');
+    const colH = box.querySelector('.skin-col-h'), cols = box.querySelector('.skin-cols');
+    if (base === 'stone') { colH.textContent = ja ? '基本の石は黒・白だけです。' : '기본 돌은 흑·백 한 가지입니다.'; cols.innerHTML = ''; }
+    else {
+      colH.textContent = ja ? '色' : '색';
+      cols.innerHTML = ['', ...Object.keys(SKIN_COLORS)].map(c => `<button type="button" class="ill-opt skin-col${c === col ? ' on' : ''}" data-col="${c}"><canvas width="96" height="48" data-prev="${cv0(c)}"></canvas><b>${c ? SKIN_COLORS[c][ja ? 3 : 2] : (ja ? '基本' : '기본')}</b></button>`).join('');
+    }
+    box.querySelectorAll('canvas[data-prev]').forEach(cv => paintStonePreview(cv, cv.dataset.prev));
+  };
+  draw();
   box.addEventListener('click', e => {
-    const b = e.target.closest('[data-sk]');
+    const b = e.target.closest('[data-sk],[data-col]');
     if (!b && e.target !== box) return;
-    if (b && b.dataset.sk !== 'x') { profSt = b.dataset.sk; sfx(1200, 0.25, 0.05); drawSkinMini(); }
+    if (b && b.dataset.col != null) { const base = skinBase(pick); pick = b.dataset.col ? base + ':' + b.dataset.col : base; sfx(1200, 0.25, 0.05); draw(); return; }
+    if (b && b.dataset.sk !== 'x') { pick = b.dataset.sk === skinBase(pick) ? pick : b.dataset.sk; sfx(1200, 0.25, 0.05); draw(); return; }
+    profSt = pick; drawSkinMini();
     box.remove();
   });
   const on = box.querySelector('.ill-opt.on'); if (on) on.focus({ preventScroll: true });
@@ -9016,7 +9066,7 @@ function openProfile(which, first = false) {
     <h2 id="profTitle">${UI_LANG === 'ja' ? (which === 'me' ? 'どの棋客で対局しますか？' : '同じ画面で白を担当する棋客を選んでください') : (which === 'me' ? '어느 기객으로 판에 앉으시겠습니까?' : '같은 화면에서 백을 칠 기객을 고르세요')}</h2>
     <div class="prof-main"><div class="prof-left"><div class="prof-stage" id="profStage"></div><div class="prof-acts"><button type="button" class="btn-ghost" id="btnOutfit">${UI_LANG === 'ja' ? '衣装変更' : '복장 변경'}</button><button type="button" class="btn-ghost" id="btnSkin"><canvas class="skin-mini" id="skinMini" width="44" height="44"></canvas>${UI_LANG === 'ja' ? '石の変更' : '돌 변경'}</button></div></div><div class="prof-info" id="profInfo"></div></div>
     <div class="prof-pick" role="radiogroup" aria-label="기객">${CHARS.map(c => `<input type="radio" name="pchar" id="pc-${c.id}" value="${c.id}"${c.id === profSel ? ' checked' : ''}><label for="pc-${c.id}" data-ch="${c.id}">${profFace(c)}${charName(c)}</label>`).join('')}</div>
-    <p class="prof-ill-note">${UI_LANG === 'ja' ? '肖像の下の「衣装変更」で絵（基本・立体・画報）を、「石の変更」で自分の石の見た目を変えられます。' : '초상 아래 \'복장 변경\'으로 그림(기본·입체·화보)을, \'돌 변경\'으로 내 돌 모양을 바꿀 수 있습니다.'}</p>
+    <p class="prof-ill-note">${UI_LANG === 'ja' ? '肖像の下の「衣装変更」で絵（基本・立体・画報）を、「石の変更」で自分の石の形と色を変えられます。' : '초상 아래 \'복장 변경\'으로 그림(기본·입체·화보)을, \'돌 변경\'으로 내 돌 모양과 색을 바꿀 수 있습니다.'}</p>
     <div class="prof-row"><label for="nickIn">이름</label><input class="nick-in" id="nickIn" maxlength="10" autocomplete="nickname" spellcheck="false"><button class="btn-primary" id="profOk" type="button">적용</button>${first ? '' : '<button class="btn-ghost" id="profCancel" type="button">취소</button>'}</div>
   </div>`;
   ov.hidden = false;
