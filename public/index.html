@@ -1011,6 +1011,146 @@ html, body { max-width: 100%; overflow-x: clip; }
   outline: 1px solid rgba(201,164,92,.58);
   outline-offset: -9px;
 }
+
+/* v64: 게임 화면 손질
+   넓은 화면(PC·스팀)은 스크롤 없는 한 화면: 판은 가운데, 두 기객은 양옆,
+   왼쪽 아래 대국 기록 · 오른쪽 아래 채팅, 설정은 ESC 메뉴.
+   좁은 화면(휴대폰)은 지금 배치를 그대로 씁니다. */
+body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;cursor:default}
+input,textarea,[contenteditable="true"]{-webkit-user-select:text;user-select:text}
+img,canvas{-webkit-user-drag:none}
+.side,.btn-pause{display:none}
+.btn-pause kbd{font:inherit;font-size:10.5px;letter-spacing:.06em;line-height:1.5;padding:0 5px;border:1px solid var(--hair);border-radius:3px;color:var(--muted)}
+#ovPause{z-index:35;place-items:start center;padding-top:max(40px,8vh)}
+.pause-card{width:min(100%,380px);text-align:left}
+.pause-list{display:grid;gap:7px;margin-top:14px}
+.pause-list button{display:flex;align-items:center;gap:12px;width:100%;min-height:46px;padding:0 16px;border:1px solid var(--hair);border-radius:3px;background:rgba(0,0,0,.22);color:var(--ivory);font:inherit;font-size:15px;letter-spacing:.04em;text-align:left;cursor:pointer;transition:border-color .15s,background-color .15s,color .15s}
+.pause-list button:hover,.pause-list button:focus-visible{border-color:var(--gold);background-color:rgba(201,164,92,.12);color:var(--gold-hi);outline:none}
+.pause-list button:active{transform:translateY(1px)}
+.pause-list .pa-ico{width:24px;flex:none;text-align:center;font-family:var(--font-seal);font-weight:900;font-size:16px;color:var(--gold)}
+.pause-list .pa-state{margin-left:auto;font-size:12.5px;color:var(--muted)}
+.pause-list .pa-danger:hover,.pause-list .pa-danger:focus-visible{border-color:#e0523a;background-color:rgba(224,82,58,.12);color:#ffb3a3}
+.pause-list button:disabled,.pause-list button:disabled:hover{opacity:.45;cursor:not-allowed;border-color:var(--hair);background-color:rgba(0,0,0,.22);color:var(--ivory);transform:none}
+.pause-note{margin:12px 0 0;font-size:12px;color:var(--faint);text-align:center}
+.pcard-hero{display:flex;gap:14px;align-items:center;min-width:0}
+.pcard-hero .pcard-who{gap:3px;min-width:0}
+.pcard-hero .pcard-name{font-size:19px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pcard-tags{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:5px}
+.pcard-tags .pcount{margin-left:0;font-size:12.5px}
+.pcard-tags .chip.turn.idle{display:none}
+.pcard-tags .pcount b{font-family:var(--font-display);font-size:20px;font-weight:600;color:var(--ivory);margin-left:3px;font-variant-numeric:tabular-nums}
+.ava.bust>.stone-ico{width:24px;height:24px;right:-6px;bottom:-6px}
+.chatbox{padding:13px 15px;display:flex;flex-direction:column}
+.chatbox.idle{display:none}
+.chat-log{list-style:none;margin:0 0 8px;padding:0 2px 0 0;display:flex;flex-direction:column;gap:4px;font-size:12.5px;line-height:1.5;height:132px;overflow-y:auto;overflow-x:hidden;overflow-wrap:anywhere;scrollbar-width:thin;scrollbar-color:rgba(201,164,92,.4) transparent}
+.chat-log::-webkit-scrollbar,.side .logbox #log::-webkit-scrollbar{width:6px}
+.chat-log::-webkit-scrollbar-thumb,.side .logbox #log::-webkit-scrollbar-thumb{background:rgba(201,164,92,.4);border-radius:6px}
+.chat-log li{color:var(--ivory)}
+.chat-log li b{color:var(--gold);font-weight:600;margin-right:7px}
+.chat-log li.me b{color:var(--teal)}
+.chat-log .chat-empty{color:var(--faint)}
+.chat-fail{margin-left:6px;font-size:11px;color:#e98a76}
+.chat-form{display:flex;gap:6px;margin:0}
+.chat-in{flex:1;min-width:0;height:34px;padding:0 10px;border:1px solid var(--hair);border-radius:3px;background:rgba(0,0,0,.28);color:var(--ivory);font:inherit;font-size:13px;box-sizing:border-box}
+.chat-in::placeholder{color:var(--faint)}
+.chat-in:focus{outline:none;border-color:var(--gold)}
+.chat-in:disabled,.chat-send:disabled{opacity:.55;cursor:not-allowed}
+.chat-send{height:34px;padding:0 12px;font-size:13px;flex:none}
+@media (min-width: 960px) and (min-aspect-ratio: 5/4) and (min-height: 560px){
+  html{height:100%;overflow:hidden}
+  body{height:100vh;height:100dvh;min-height:0;overflow:hidden;overscroll-behavior:none;padding:0 clamp(16px,2vw,32px);display:grid;grid-template-rows:auto minmax(0,1fr)}
+  .bar{position:relative;display:flex;flex-wrap:nowrap;align-items:center;gap:12px;max-width:none;width:100%;margin:0;padding-block:9px 8px}
+  .brand{font-size:16px;gap:10px}
+  .brand .seal-sm{width:26px;height:26px;font-size:16px}
+  .scoreboard{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);margin:0;height:34px}
+  .bar .netchip{margin-left:auto}
+  .bar-actions{margin-left:auto}
+  .bar .netchip:not([hidden]) ~ .bar-actions{margin-left:0}
+  .bar-actions > :not(.btn-pause):not(.snd-wrap){display:none !important}
+  .btn-pause{display:inline-flex;align-items:center;gap:8px}
+  .stage{display:grid;grid-template-columns:minmax(210px,1fr) auto minmax(210px,1fr);column-gap:clamp(16px,2.2vw,40px);max-width:none;width:100%;margin:0;padding:10px 0 14px;min-height:0;align-items:start}
+  .stage > .panel{display:none}
+  .table{grid-column:2;grid-row:1;width:var(--board-w,600px);min-height:0;padding-top:2px}
+  /* 캔버스 둘레의 빈 여백(돌이 떨어지는 자리)은 칸 밖으로 내보내, 판 테두리가 차례 줄·양옆 칸과 줄이 맞게 */
+  .board-box{margin:calc(-1 * var(--board-in,0px)) calc(-1 * var(--board-in,0px)) 0}
+  .turn-strip,.skill-bar,.lab-toolbar{position:relative;z-index:2}
+  /* 양옆 칸: 윗선은 차례 줄과, 아랫선은 판 아랫선과 맞춤 */
+  .side{display:flex;flex-direction:column;gap:12px;min-width:0;min-height:0;height:var(--side-h,auto);overflow:hidden;padding:2px;box-sizing:border-box;container-type:inline-size}
+  .side-l{grid-column:1;grid-row:1}
+  .side-r{grid-column:3;grid-row:1}
+  .side-top{display:flex;flex-direction:column;gap:12px;flex:0 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:rgba(201,164,92,.4) transparent}
+  .side-top::-webkit-scrollbar{width:6px}
+  .side-top::-webkit-scrollbar-thumb{background:rgba(201,164,92,.4);border-radius:6px}
+  .side-bot{margin-top:auto;flex:none;display:flex;flex-direction:column}
+  .side-bot > .card{height:clamp(176px,29vh,260px);min-height:0;display:flex;flex-direction:column}
+  .side .logbox #log{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:rgba(201,164,92,.4) transparent}
+  .side .chatbox.idle{display:flex}
+  .side .chat-log{flex:1;height:auto;min-height:0}
+  .pslot{display:flex;flex-direction:column;gap:12px}
+  .pslot:empty{display:none}
+  .side .pcard{padding:16px;gap:12px;transition:opacity .25s,box-shadow .25s,border-color .25s}
+  .side .pcard:not(.active){opacity:.8}
+  .side .pcard.active{border-color:var(--hair-strong);box-shadow:inset 0 0 0 1px rgba(232,205,142,.22),inset 0 0 26px rgba(232,205,142,.1)}
+  .side .pcard.active::before{top:16px;bottom:16px}
+}
+@container (max-width: 290px){
+  .pcard-hero{flex-direction:column;align-items:flex-start}
+}
+
+/* v65: 차례 줄 오른쪽 표시 정리 · 조작 증강 줄은 기객 칸으로 (판 크기 고정) */
+.table:has(#turnTimer[hidden]) .turn-count{right:0}
+@media (min-width: 960px) and (min-aspect-ratio: 5/4) and (min-height: 560px){
+  .side .skill-bar{height:auto;flex-wrap:wrap;overflow:visible;padding:0;gap:6px}
+  .side .skill-bar .sk,.side .skill-bar .sk-pill{max-width:100%;white-space:normal;height:auto;min-height:32px;text-align:left}
+  .side .skill-bar .sk-seg{flex:1 1 100%;flex-wrap:wrap;height:auto}
+  .side .skill-bar .sk-seg>span{flex:1 0 100%;height:32px;border-bottom:1px solid var(--hair)}
+  .side .skill-bar .sk-seg>button{flex:1;min-width:0}
+  .side .skill-bar .sk-seg>span+button{border-left:0}
+}
+
+/* v66: 물결 무늬 배경을 다시 보이게. 이전에는 html 바탕색에 가려 안 보였음 → 몸통 배경의 맨 위 겹으로 그림 */
+body::before{display:none}
+html[data-bg="wave"] body{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 360' preserveAspectRatio='none'><path fill='%23e8d9b8' fill-opacity='.035' d='M0 210 C120 150 190 90 280 120 S430 40 520 90 S700 170 790 110 S960 20 1060 80 S1260 160 1350 100 S1520 60 1600 120 V360 H0Z'/><path fill='%23e8d9b8' fill-opacity='.045' d='M0 270 C90 230 170 190 250 215 S390 150 470 195 S640 250 730 205 S880 160 980 200 S1150 260 1240 215 S1440 170 1600 225 V360 H0Z'/><path fill='%23c9a45c' fill-opacity='.05' d='M0 320 C140 295 260 270 380 290 S620 320 760 300 S1020 270 1160 295 S1420 320 1600 300 V360 H0Z'/></svg>"),radial-gradient(1200px 620px at 30% -10%,#2a211b 0%,transparent 64%),radial-gradient(900px 500px at 110% 110%,#1d1714 0%,transparent 60%);
+  background-size:100% 42vh,auto,auto;background-position:center bottom,0 0,0 0;background-attachment:fixed,scroll,scroll;background-repeat:no-repeat}
+
+/* v67: 배경 고르기 (메뉴 → 배경). 무색(기본) · 물결 · 구름 · 달밤 */
+html[data-bg="cloud"] body{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='150' viewBox='0 0 220 150'><g fill='none' stroke='%23c9a45c' stroke-opacity='.06' stroke-width='1.5' stroke-linecap='round'><g transform='translate(8 6)'><path d='M14 64c0-11 9-19 20-19 9 0 15 6 15 13 0 6-4 10-9 10-5 0-8-3-8-7 0-3 2-5 5-5'/><path d='M49 58c5-9 18-11 26-4 6 5 6 14-1 18'/><path d='M6 76h62c7 0 11-4 11-9'/></g><g transform='translate(118 72) scale(.82)'><path d='M14 64c0-11 9-19 20-19 9 0 15 6 15 13 0 6-4 10-9 10-5 0-8-3-8-7 0-3 2-5 5-5'/><path d='M49 58c5-9 18-11 26-4 6 5 6 14-1 18'/><path d='M6 76h62c7 0 11-4 11-9'/></g></g></svg>"),radial-gradient(1200px 620px at 30% -10%,#2a211b 0%,transparent 64%),radial-gradient(900px 500px at 110% 110%,#1d1714 0%,transparent 60%);background-size:220px 150px,auto,auto;background-repeat:repeat,no-repeat,no-repeat;background-attachment:fixed,scroll,scroll}
+html[data-bg="night"] body{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'><g fill='%23efe6d4' fill-opacity='.32'><circle cx='18' cy='30' r='1.1'/><circle cx='74' cy='12' r='0.7'/><circle cx='131' cy='44' r='0.9'/><circle cx='205' cy='22' r='0.6'/><circle cx='246' cy='70' r='1.0'/><circle cx='40' cy='96' r='0.6'/><circle cx='98' cy='128' r='1.2'/><circle cx='170' cy='104' r='0.7'/><circle cx='226' cy='150' r='0.8'/><circle cx='12' cy='176' r='0.9'/><circle cx='70' cy='214' r='0.6'/><circle cx='142' cy='196' r='1.0'/><circle cx='196' cy='238' r='0.7'/><circle cx='250' cy='214' r='0.6'/></g></svg>"),radial-gradient(circle at 71% 2%,rgba(240,226,190,.16) 0,rgba(240,226,190,.06) 80px,transparent 280px),linear-gradient(180deg,#151827 0%,#14131a 42%,#13100e 82%);background-size:260px 260px,auto,auto;background-repeat:repeat,no-repeat,no-repeat;background-attachment:fixed,fixed,fixed}
+.bg-pick{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;padding:2px 0 4px}
+.bg-pick button{display:flex;flex-direction:column;align-items:center;gap:6px;padding:7px 4px 6px;border:1px solid var(--hair);border-radius:3px;background:rgba(0,0,0,.22);color:var(--ivory);font:inherit;font-size:12.5px;cursor:pointer}
+.bg-pick button:hover,.bg-pick button:focus-visible{border-color:var(--gold);outline:none}
+.bg-pick button[aria-pressed="true"]{border-color:var(--gold-hi);color:var(--gold-hi);background:rgba(201,164,92,.12)}
+.bg-sw{width:100%;height:34px;border-radius:2px;border:1px solid rgba(201,164,92,.18);background-color:#13100e;background-repeat:no-repeat}
+.bg-sw.plain{background-image:radial-gradient(80px 40px at 30% -10%,#2f251e 0%,transparent 70%)}
+.bg-sw.wave{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 360' preserveAspectRatio='none'><path fill='%23e8d9b8' fill-opacity='0.158' d='M0 210 C120 150 190 90 280 120 S430 40 520 90 S700 170 790 110 S960 20 1060 80 S1260 160 1350 100 S1520 60 1600 120 V360 H0Z'/><path fill='%23e8d9b8' fill-opacity='0.202' d='M0 270 C90 230 170 190 250 215 S390 150 470 195 S640 250 730 205 S880 160 980 200 S1150 260 1240 215 S1440 170 1600 225 V360 H0Z'/><path fill='%23c9a45c' fill-opacity='0.225' d='M0 320 C140 295 260 270 380 290 S620 320 760 300 S1020 270 1160 295 S1420 320 1600 300 V360 H0Z'/></svg>");background-size:100% 100%}
+.bg-sw.cloud{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='150' viewBox='0 0 220 150'><g fill='none' stroke='%23c9a45c' stroke-opacity='.6' stroke-width='1.5' stroke-linecap='round'><g transform='translate(8 6)'><path d='M14 64c0-11 9-19 20-19 9 0 15 6 15 13 0 6-4 10-9 10-5 0-8-3-8-7 0-3 2-5 5-5'/><path d='M49 58c5-9 18-11 26-4 6 5 6 14-1 18'/><path d='M6 76h62c7 0 11-4 11-9'/></g><g transform='translate(118 72) scale(.82)'><path d='M14 64c0-11 9-19 20-19 9 0 15 6 15 13 0 6-4 10-9 10-5 0-8-3-8-7 0-3 2-5 5-5'/><path d='M49 58c5-9 18-11 26-4 6 5 6 14-1 18'/><path d='M6 76h62c7 0 11-4 11-9'/></g></g></svg>");background-size:62px 42px;background-repeat:repeat;background-position:-4px -6px}
+.bg-sw.night{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'><g fill='%23efe6d4' fill-opacity='.7'><circle cx='18' cy='30' r='1.1'/><circle cx='74' cy='12' r='0.7'/><circle cx='131' cy='44' r='0.9'/><circle cx='205' cy='22' r='0.6'/><circle cx='246' cy='70' r='1.0'/><circle cx='40' cy='96' r='0.6'/><circle cx='98' cy='128' r='1.2'/><circle cx='170' cy='104' r='0.7'/><circle cx='226' cy='150' r='0.8'/><circle cx='12' cy='176' r='0.9'/><circle cx='70' cy='214' r='0.6'/><circle cx='142' cy='196' r='1.0'/><circle cx='196' cy='238' r='0.7'/><circle cx='250' cy='214' r='0.6'/></g></svg>"),radial-gradient(circle at 82% 18%,rgba(240,226,190,.35) 0,rgba(240,226,190,.08) 9px,transparent 24px),linear-gradient(180deg,#151827 0%,#14131a 42%,#13100e 82%);background-size:90px 90px,auto,auto;background-repeat:repeat,no-repeat,no-repeat}
+
+/* v68: 기객 초상 뒤 그림을 옅게 옮긴 배경 5종 · 배경 고르기 창 */
+html[data-bg="bamboo"] body{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'><circle cx='110' cy='110' r='96' fill='%23dfeaf0' fill-opacity='0.035'/><circle cx='110' cy='110' r='46' fill='%23e6eef2' fill-opacity='0.130'/><circle cx='96' cy='98' r='9' fill='%23b9c9d2' fill-opacity='0.060'/><circle cx='124' cy='126' r='6' fill='%23b9c9d2' fill-opacity='0.050'/></svg>"),url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900' preserveAspectRatio='none'><rect x='26' y='0' width='18' height='900' fill='%2386bfb0' fill-opacity='0.080'/><rect x='24' y='96' width='22' height='4' fill='%23a9dccd' fill-opacity='0.120'/><rect x='24' y='246' width='22' height='4' fill='%23a9dccd' fill-opacity='0.120'/><rect x='24' y='396' width='22' height='4' fill='%23a9dccd' fill-opacity='0.120'/><rect x='24' y='546' width='22' height='4' fill='%23a9dccd' fill-opacity='0.120'/><rect x='24' y='696' width='22' height='4' fill='%23a9dccd' fill-opacity='0.120'/><rect x='24' y='846' width='22' height='4' fill='%23a9dccd' fill-opacity='0.120'/><rect x='78' y='0' width='13' height='900' fill='%2386bfb0' fill-opacity='0.060'/><rect x='76' y='98' width='17' height='4' fill='%23a9dccd' fill-opacity='0.090'/><rect x='76' y='248' width='17' height='4' fill='%23a9dccd' fill-opacity='0.090'/><rect x='76' y='398' width='17' height='4' fill='%23a9dccd' fill-opacity='0.090'/><rect x='76' y='548' width='17' height='4' fill='%23a9dccd' fill-opacity='0.090'/><rect x='76' y='698' width='17' height='4' fill='%23a9dccd' fill-opacity='0.090'/><rect x='76' y='848' width='17' height='4' fill='%23a9dccd' fill-opacity='0.090'/><rect x='138' y='0' width='16' height='900' fill='%2386bfb0' fill-opacity='0.070'/><rect x='136' y='108' width='20' height='4' fill='%23a9dccd' fill-opacity='0.105'/><rect x='136' y='258' width='20' height='4' fill='%23a9dccd' fill-opacity='0.105'/><rect x='136' y='408' width='20' height='4' fill='%23a9dccd' fill-opacity='0.105'/><rect x='136' y='558' width='20' height='4' fill='%23a9dccd' fill-opacity='0.105'/><rect x='136' y='708' width='20' height='4' fill='%23a9dccd' fill-opacity='0.105'/><rect x='136' y='858' width='20' height='4' fill='%23a9dccd' fill-opacity='0.105'/><rect x='300' y='0' width='8' height='900' fill='%2386bfb0' fill-opacity='0.035'/><rect x='298' y='70' width='12' height='4' fill='%23a9dccd' fill-opacity='0.053'/><rect x='298' y='220' width='12' height='4' fill='%23a9dccd' fill-opacity='0.053'/><rect x='298' y='370' width='12' height='4' fill='%23a9dccd' fill-opacity='0.053'/><rect x='298' y='520' width='12' height='4' fill='%23a9dccd' fill-opacity='0.053'/><rect x='298' y='670' width='12' height='4' fill='%23a9dccd' fill-opacity='0.053'/><rect x='298' y='820' width='12' height='4' fill='%23a9dccd' fill-opacity='0.053'/><rect x='1290' y='0' width='8' height='900' fill='%2386bfb0' fill-opacity='0.035'/><rect x='1288' y='110' width='12' height='4' fill='%23a9dccd' fill-opacity='0.053'/><rect x='1288' y='260' width='12' height='4' fill='%23a9dccd' fill-opacity='0.053'/><rect x='1288' y='410' width='12' height='4' fill='%23a9dccd' fill-opacity='0.053'/><rect x='1288' y='560' width='12' height='4' fill='%23a9dccd' fill-opacity='0.053'/><rect x='1288' y='710' width='12' height='4' fill='%23a9dccd' fill-opacity='0.053'/><rect x='1288' y='860' width='12' height='4' fill='%23a9dccd' fill-opacity='0.053'/><rect x='1452' y='0' width='16' height='900' fill='%2386bfb0' fill-opacity='0.070'/><rect x='1450' y='72' width='20' height='4' fill='%23a9dccd' fill-opacity='0.105'/><rect x='1450' y='222' width='20' height='4' fill='%23a9dccd' fill-opacity='0.105'/><rect x='1450' y='372' width='20' height='4' fill='%23a9dccd' fill-opacity='0.105'/><rect x='1450' y='522' width='20' height='4' fill='%23a9dccd' fill-opacity='0.105'/><rect x='1450' y='672' width='20' height='4' fill='%23a9dccd' fill-opacity='0.105'/><rect x='1450' y='822' width='20' height='4' fill='%23a9dccd' fill-opacity='0.105'/><rect x='1512' y='0' width='13' height='900' fill='%2386bfb0' fill-opacity='0.060'/><rect x='1510' y='82' width='17' height='4' fill='%23a9dccd' fill-opacity='0.090'/><rect x='1510' y='232' width='17' height='4' fill='%23a9dccd' fill-opacity='0.090'/><rect x='1510' y='382' width='17' height='4' fill='%23a9dccd' fill-opacity='0.090'/><rect x='1510' y='532' width='17' height='4' fill='%23a9dccd' fill-opacity='0.090'/><rect x='1510' y='682' width='17' height='4' fill='%23a9dccd' fill-opacity='0.090'/><rect x='1510' y='832' width='17' height='4' fill='%23a9dccd' fill-opacity='0.090'/><rect x='1566' y='0' width='18' height='900' fill='%2386bfb0' fill-opacity='0.080'/><rect x='1564' y='86' width='22' height='4' fill='%23a9dccd' fill-opacity='0.120'/><rect x='1564' y='236' width='22' height='4' fill='%23a9dccd' fill-opacity='0.120'/><rect x='1564' y='386' width='22' height='4' fill='%23a9dccd' fill-opacity='0.120'/><rect x='1564' y='536' width='22' height='4' fill='%23a9dccd' fill-opacity='0.120'/><rect x='1564' y='686' width='22' height='4' fill='%23a9dccd' fill-opacity='0.120'/><rect x='1564' y='836' width='22' height='4' fill='%23a9dccd' fill-opacity='0.120'/><path d='M44 190q46 -14 86 6q-46 8 -86 -6z' fill='%2386bfb0' fill-opacity='0.070'/><path d='M44 206q46 -14 86 6q-46 8 -86 -6z' fill='%2386bfb0' fill-opacity='0.070'/><path d='M44 222q46 -14 86 6q-46 8 -86 -6z' fill='%2386bfb0' fill-opacity='0.070'/><path d='M150 340q46 -14 86 6q-46 8 -86 -6z' fill='%2386bfb0' fill-opacity='0.070'/><path d='M150 356q46 -14 86 6q-46 8 -86 -6z' fill='%2386bfb0' fill-opacity='0.070'/><path d='M150 372q46 -14 86 6q-46 8 -86 -6z' fill='%2386bfb0' fill-opacity='0.070'/><path d='M92 560q46 -14 86 6q-46 8 -86 -6z' fill='%2386bfb0' fill-opacity='0.070'/><path d='M92 576q46 -14 86 6q-46 8 -86 -6z' fill='%2386bfb0' fill-opacity='0.070'/><path d='M92 592q46 -14 86 6q-46 8 -86 -6z' fill='%2386bfb0' fill-opacity='0.070'/><path d='M1470 250q-46 -14 -86 6q46 8 86 -6z' fill='%2386bfb0' fill-opacity='0.070'/><path d='M1470 266q-46 -14 -86 6q46 8 86 -6z' fill='%2386bfb0' fill-opacity='0.070'/><path d='M1470 282q-46 -14 -86 6q46 8 86 -6z' fill='%2386bfb0' fill-opacity='0.070'/><path d='M1530 470q-46 -14 -86 6q46 8 86 -6z' fill='%2386bfb0' fill-opacity='0.070'/><path d='M1530 486q-46 -14 -86 6q46 8 86 -6z' fill='%2386bfb0' fill-opacity='0.070'/><path d='M1530 502q-46 -14 -86 6q46 8 86 -6z' fill='%2386bfb0' fill-opacity='0.070'/><path d='M1458 690q-46 -14 -86 6q46 8 86 -6z' fill='%2386bfb0' fill-opacity='0.070'/><path d='M1458 706q-46 -14 -86 6q46 8 86 -6z' fill='%2386bfb0' fill-opacity='0.070'/><path d='M1458 722q-46 -14 -86 6q46 8 86 -6z' fill='%2386bfb0' fill-opacity='0.070'/></svg>"),linear-gradient(180deg,#0f191b 0%,#111613 48%,#13100e 88%);background-size:200px 200px,100% 100%,auto;background-position:24% 2%,0 0,0 0;background-repeat:no-repeat,no-repeat,no-repeat;background-attachment:fixed,fixed,fixed}
+.bg-sw.bamboo{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'><circle cx='110' cy='110' r='96' fill='%23dfeaf0' fill-opacity='0.112'/><circle cx='110' cy='110' r='46' fill='%23e6eef2' fill-opacity='0.416'/><circle cx='96' cy='98' r='9' fill='%23b9c9d2' fill-opacity='0.192'/><circle cx='124' cy='126' r='6' fill='%23b9c9d2' fill-opacity='0.160'/></svg>"),url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900' preserveAspectRatio='none'><rect x='26' y='0' width='18' height='900' fill='%2386bfb0' fill-opacity='0.256'/><rect x='24' y='96' width='22' height='4' fill='%23a9dccd' fill-opacity='0.384'/><rect x='24' y='246' width='22' height='4' fill='%23a9dccd' fill-opacity='0.384'/><rect x='24' y='396' width='22' height='4' fill='%23a9dccd' fill-opacity='0.384'/><rect x='24' y='546' width='22' height='4' fill='%23a9dccd' fill-opacity='0.384'/><rect x='24' y='696' width='22' height='4' fill='%23a9dccd' fill-opacity='0.384'/><rect x='24' y='846' width='22' height='4' fill='%23a9dccd' fill-opacity='0.384'/><rect x='78' y='0' width='13' height='900' fill='%2386bfb0' fill-opacity='0.192'/><rect x='76' y='98' width='17' height='4' fill='%23a9dccd' fill-opacity='0.288'/><rect x='76' y='248' width='17' height='4' fill='%23a9dccd' fill-opacity='0.288'/><rect x='76' y='398' width='17' height='4' fill='%23a9dccd' fill-opacity='0.288'/><rect x='76' y='548' width='17' height='4' fill='%23a9dccd' fill-opacity='0.288'/><rect x='76' y='698' width='17' height='4' fill='%23a9dccd' fill-opacity='0.288'/><rect x='76' y='848' width='17' height='4' fill='%23a9dccd' fill-opacity='0.288'/><rect x='138' y='0' width='16' height='900' fill='%2386bfb0' fill-opacity='0.224'/><rect x='136' y='108' width='20' height='4' fill='%23a9dccd' fill-opacity='0.336'/><rect x='136' y='258' width='20' height='4' fill='%23a9dccd' fill-opacity='0.336'/><rect x='136' y='408' width='20' height='4' fill='%23a9dccd' fill-opacity='0.336'/><rect x='136' y='558' width='20' height='4' fill='%23a9dccd' fill-opacity='0.336'/><rect x='136' y='708' width='20' height='4' fill='%23a9dccd' fill-opacity='0.336'/><rect x='136' y='858' width='20' height='4' fill='%23a9dccd' fill-opacity='0.336'/><rect x='300' y='0' width='8' height='900' fill='%2386bfb0' fill-opacity='0.112'/><rect x='298' y='70' width='12' height='4' fill='%23a9dccd' fill-opacity='0.168'/><rect x='298' y='220' width='12' height='4' fill='%23a9dccd' fill-opacity='0.168'/><rect x='298' y='370' width='12' height='4' fill='%23a9dccd' fill-opacity='0.168'/><rect x='298' y='520' width='12' height='4' fill='%23a9dccd' fill-opacity='0.168'/><rect x='298' y='670' width='12' height='4' fill='%23a9dccd' fill-opacity='0.168'/><rect x='298' y='820' width='12' height='4' fill='%23a9dccd' fill-opacity='0.168'/><rect x='1290' y='0' width='8' height='900' fill='%2386bfb0' fill-opacity='0.112'/><rect x='1288' y='110' width='12' height='4' fill='%23a9dccd' fill-opacity='0.168'/><rect x='1288' y='260' width='12' height='4' fill='%23a9dccd' fill-opacity='0.168'/><rect x='1288' y='410' width='12' height='4' fill='%23a9dccd' fill-opacity='0.168'/><rect x='1288' y='560' width='12' height='4' fill='%23a9dccd' fill-opacity='0.168'/><rect x='1288' y='710' width='12' height='4' fill='%23a9dccd' fill-opacity='0.168'/><rect x='1288' y='860' width='12' height='4' fill='%23a9dccd' fill-opacity='0.168'/><rect x='1452' y='0' width='16' height='900' fill='%2386bfb0' fill-opacity='0.224'/><rect x='1450' y='72' width='20' height='4' fill='%23a9dccd' fill-opacity='0.336'/><rect x='1450' y='222' width='20' height='4' fill='%23a9dccd' fill-opacity='0.336'/><rect x='1450' y='372' width='20' height='4' fill='%23a9dccd' fill-opacity='0.336'/><rect x='1450' y='522' width='20' height='4' fill='%23a9dccd' fill-opacity='0.336'/><rect x='1450' y='672' width='20' height='4' fill='%23a9dccd' fill-opacity='0.336'/><rect x='1450' y='822' width='20' height='4' fill='%23a9dccd' fill-opacity='0.336'/><rect x='1512' y='0' width='13' height='900' fill='%2386bfb0' fill-opacity='0.192'/><rect x='1510' y='82' width='17' height='4' fill='%23a9dccd' fill-opacity='0.288'/><rect x='1510' y='232' width='17' height='4' fill='%23a9dccd' fill-opacity='0.288'/><rect x='1510' y='382' width='17' height='4' fill='%23a9dccd' fill-opacity='0.288'/><rect x='1510' y='532' width='17' height='4' fill='%23a9dccd' fill-opacity='0.288'/><rect x='1510' y='682' width='17' height='4' fill='%23a9dccd' fill-opacity='0.288'/><rect x='1510' y='832' width='17' height='4' fill='%23a9dccd' fill-opacity='0.288'/><rect x='1566' y='0' width='18' height='900' fill='%2386bfb0' fill-opacity='0.256'/><rect x='1564' y='86' width='22' height='4' fill='%23a9dccd' fill-opacity='0.384'/><rect x='1564' y='236' width='22' height='4' fill='%23a9dccd' fill-opacity='0.384'/><rect x='1564' y='386' width='22' height='4' fill='%23a9dccd' fill-opacity='0.384'/><rect x='1564' y='536' width='22' height='4' fill='%23a9dccd' fill-opacity='0.384'/><rect x='1564' y='686' width='22' height='4' fill='%23a9dccd' fill-opacity='0.384'/><rect x='1564' y='836' width='22' height='4' fill='%23a9dccd' fill-opacity='0.384'/><path d='M44 190q46 -14 86 6q-46 8 -86 -6z' fill='%2386bfb0' fill-opacity='0.224'/><path d='M44 206q46 -14 86 6q-46 8 -86 -6z' fill='%2386bfb0' fill-opacity='0.224'/><path d='M44 222q46 -14 86 6q-46 8 -86 -6z' fill='%2386bfb0' fill-opacity='0.224'/><path d='M150 340q46 -14 86 6q-46 8 -86 -6z' fill='%2386bfb0' fill-opacity='0.224'/><path d='M150 356q46 -14 86 6q-46 8 -86 -6z' fill='%2386bfb0' fill-opacity='0.224'/><path d='M150 372q46 -14 86 6q-46 8 -86 -6z' fill='%2386bfb0' fill-opacity='0.224'/><path d='M92 560q46 -14 86 6q-46 8 -86 -6z' fill='%2386bfb0' fill-opacity='0.224'/><path d='M92 576q46 -14 86 6q-46 8 -86 -6z' fill='%2386bfb0' fill-opacity='0.224'/><path d='M92 592q46 -14 86 6q-46 8 -86 -6z' fill='%2386bfb0' fill-opacity='0.224'/><path d='M1470 250q-46 -14 -86 6q46 8 86 -6z' fill='%2386bfb0' fill-opacity='0.224'/><path d='M1470 266q-46 -14 -86 6q46 8 86 -6z' fill='%2386bfb0' fill-opacity='0.224'/><path d='M1470 282q-46 -14 -86 6q46 8 86 -6z' fill='%2386bfb0' fill-opacity='0.224'/><path d='M1530 470q-46 -14 -86 6q46 8 86 -6z' fill='%2386bfb0' fill-opacity='0.224'/><path d='M1530 486q-46 -14 -86 6q46 8 86 -6z' fill='%2386bfb0' fill-opacity='0.224'/><path d='M1530 502q-46 -14 -86 6q46 8 86 -6z' fill='%2386bfb0' fill-opacity='0.224'/><path d='M1458 690q-46 -14 -86 6q46 8 86 -6z' fill='%2386bfb0' fill-opacity='0.224'/><path d='M1458 706q-46 -14 -86 6q46 8 86 -6z' fill='%2386bfb0' fill-opacity='0.224'/><path d='M1458 722q-46 -14 -86 6q46 8 86 -6z' fill='%2386bfb0' fill-opacity='0.224'/></svg>"),linear-gradient(180deg,#0f191b 0%,#111613 48%,#13100e 88%);background-size:56px 56px,100% 100%,auto;background-position:16% 8%,0 0,0 0;background-repeat:no-repeat,no-repeat,no-repeat}
+html[data-bg="plum"] body{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 560 340'><g><g fill='none' stroke='%23b4646f' stroke-linecap='round' stroke-opacity='0.160'><path d='M-10 40C90 60 170 118 270 112S420 150 540 140' stroke-width='7'/><path d='M150 84C190 140 200 190 250 230' stroke-width='4'/><path d='M330 124C360 90 410 70 460 72' stroke-width='3.5'/><path d='M250 230C270 260 300 270 330 300' stroke-width='2.5'/></g><circle cx='96.9' cy='58.0' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='93.5' cy='62.7' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='88.0' cy='60.9' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='88.0' cy='55.1' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='93.5' cy='53.3' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='92' cy='58' r='2.0' fill='%23ffd7a0' fill-opacity='0.160'/><circle cx='175.6' cy='96.0' r='4.4' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='171.7' cy='101.3' r='4.4' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='165.5' cy='99.3' r='4.4' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='165.5' cy='92.7' r='4.4' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='171.7' cy='90.7' r='4.4' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='170' cy='96' r='2.2' fill='%23ffd7a0' fill-opacity='0.160'/><circle cx='209.2' cy='170.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='206.3' cy='174.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='201.6' cy='172.5' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='201.6' cy='167.5' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='206.3' cy='166.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='205' cy='170' r='1.7' fill='%23ffd7a0' fill-opacity='0.160'/><circle cx='274.3' cy='112.0' r='5.0' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='269.9' cy='118.0' r='5.0' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='262.9' cy='115.7' r='5.0' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='262.9' cy='108.3' r='5.0' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='269.9' cy='106.0' r='5.0' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='268' cy='112' r='2.5' fill='%23ffd7a0' fill-opacity='0.160'/><circle cx='250.9' cy='228.0' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='247.5' cy='232.7' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='242.0' cy='230.9' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='242.0' cy='225.1' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='247.5' cy='223.3' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='246' cy='228' r='2.0' fill='%23ffd7a0' fill-opacity='0.160'/><circle cx='334.2' cy='298.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='331.3' cy='302.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='326.6' cy='300.5' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='326.6' cy='295.5' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='331.3' cy='294.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='330' cy='298' r='1.7' fill='%23ffd7a0' fill-opacity='0.160'/><circle cx='356.9' cy='108.0' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='353.5' cy='112.7' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='348.0' cy='110.9' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='348.0' cy='105.1' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='353.5' cy='103.3' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='352' cy='108' r='2.0' fill='%23ffd7a0' fill-opacity='0.160'/><circle cx='435.6' cy='72.0' r='4.4' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='431.7' cy='77.3' r='4.4' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='425.5' cy='75.3' r='4.4' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='425.5' cy='68.7' r='4.4' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='431.7' cy='66.7' r='4.4' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='430' cy='72' r='2.2' fill='%23ffd7a0' fill-opacity='0.160'/><circle cx='474.9' cy='140.0' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='471.5' cy='144.7' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='466.0' cy='142.9' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='466.0' cy='137.1' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='471.5' cy='135.3' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='470' cy='140' r='2.0' fill='%23ffd7a0' fill-opacity='0.160'/><circle cx='524.2' cy='142.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='521.3' cy='146.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='516.6' cy='144.5' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='516.6' cy='139.5' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='521.3' cy='138.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='520' cy='142' r='1.7' fill='%23ffd7a0' fill-opacity='0.160'/></g></svg>"),url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 560 340'><g transform='translate(560 0) scale(-1 1)'><g fill='none' stroke='%23b4646f' stroke-linecap='round' stroke-opacity='0.160'><path d='M-10 40C90 60 170 118 270 112S420 150 540 140' stroke-width='7'/><path d='M150 84C190 140 200 190 250 230' stroke-width='4'/><path d='M330 124C360 90 410 70 460 72' stroke-width='3.5'/><path d='M250 230C270 260 300 270 330 300' stroke-width='2.5'/></g><circle cx='96.9' cy='58.0' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='93.5' cy='62.7' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='88.0' cy='60.9' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='88.0' cy='55.1' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='93.5' cy='53.3' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='92' cy='58' r='2.0' fill='%23ffd7a0' fill-opacity='0.160'/><circle cx='175.6' cy='96.0' r='4.4' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='171.7' cy='101.3' r='4.4' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='165.5' cy='99.3' r='4.4' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='165.5' cy='92.7' r='4.4' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='171.7' cy='90.7' r='4.4' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='170' cy='96' r='2.2' fill='%23ffd7a0' fill-opacity='0.160'/><circle cx='209.2' cy='170.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='206.3' cy='174.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='201.6' cy='172.5' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='201.6' cy='167.5' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='206.3' cy='166.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='205' cy='170' r='1.7' fill='%23ffd7a0' fill-opacity='0.160'/><circle cx='274.3' cy='112.0' r='5.0' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='269.9' cy='118.0' r='5.0' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='262.9' cy='115.7' r='5.0' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='262.9' cy='108.3' r='5.0' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='269.9' cy='106.0' r='5.0' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='268' cy='112' r='2.5' fill='%23ffd7a0' fill-opacity='0.160'/><circle cx='250.9' cy='228.0' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='247.5' cy='232.7' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='242.0' cy='230.9' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='242.0' cy='225.1' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='247.5' cy='223.3' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='246' cy='228' r='2.0' fill='%23ffd7a0' fill-opacity='0.160'/><circle cx='334.2' cy='298.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='331.3' cy='302.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='326.6' cy='300.5' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='326.6' cy='295.5' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='331.3' cy='294.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='330' cy='298' r='1.7' fill='%23ffd7a0' fill-opacity='0.160'/><circle cx='356.9' cy='108.0' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='353.5' cy='112.7' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='348.0' cy='110.9' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='348.0' cy='105.1' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='353.5' cy='103.3' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='352' cy='108' r='2.0' fill='%23ffd7a0' fill-opacity='0.160'/><circle cx='435.6' cy='72.0' r='4.4' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='431.7' cy='77.3' r='4.4' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='425.5' cy='75.3' r='4.4' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='425.5' cy='68.7' r='4.4' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='431.7' cy='66.7' r='4.4' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='430' cy='72' r='2.2' fill='%23ffd7a0' fill-opacity='0.160'/><circle cx='474.9' cy='140.0' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='471.5' cy='144.7' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='466.0' cy='142.9' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='466.0' cy='137.1' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='471.5' cy='135.3' r='3.9' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='470' cy='140' r='2.0' fill='%23ffd7a0' fill-opacity='0.160'/><circle cx='524.2' cy='142.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='521.3' cy='146.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='516.6' cy='144.5' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='516.6' cy='139.5' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='521.3' cy='138.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.130'/><circle cx='520' cy='142' r='1.7' fill='%23ffd7a0' fill-opacity='0.160'/></g></svg>"),url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='320' viewBox='0 0 300 320'><ellipse cx='30' cy='40' rx='4' ry='2.4' transform='rotate(20 30 40)' fill='%23f2a5bb' fill-opacity='0.100'/><ellipse cx='180' cy='90' rx='4' ry='2.4' transform='rotate(-30 180 90)' fill='%23f2a5bb' fill-opacity='0.100'/><ellipse cx='250' cy='230' rx='4' ry='2.4' transform='rotate(50 250 230)' fill='%23f2a5bb' fill-opacity='0.100'/><ellipse cx='90' cy='200' rx='4' ry='2.4' transform='rotate(10 90 200)' fill='%23f2a5bb' fill-opacity='0.100'/><ellipse cx='210' cy='290' rx='4' ry='2.4' transform='rotate(-15 210 290)' fill='%23f2a5bb' fill-opacity='0.100'/><ellipse cx='40' cy='300' rx='4' ry='2.4' transform='rotate(70 40 300)' fill='%23f2a5bb' fill-opacity='0.100'/></svg>"),radial-gradient(circle at 79% 5%,rgba(214,86,86,0.130) 0,rgba(214,86,86,0.130) 40px,rgba(214,86,86,0.040) 42px,transparent 150px),linear-gradient(180deg,#22101a 0%,#1a0f13 46%,#13100e 88%);background-size:560px 340px,560px 340px,300px 320px,auto,auto;background-position:0 0,100% 100%,0 0,0 0,0 0;background-repeat:no-repeat,no-repeat,repeat,no-repeat,no-repeat;background-attachment:fixed,fixed,fixed,fixed,fixed}
+.bg-sw.plum{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 560 340'><g><g fill='none' stroke='%23b4646f' stroke-linecap='round' stroke-opacity='0.512'><path d='M-10 40C90 60 170 118 270 112S420 150 540 140' stroke-width='7'/><path d='M150 84C190 140 200 190 250 230' stroke-width='4'/><path d='M330 124C360 90 410 70 460 72' stroke-width='3.5'/><path d='M250 230C270 260 300 270 330 300' stroke-width='2.5'/></g><circle cx='96.9' cy='58.0' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='93.5' cy='62.7' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='88.0' cy='60.9' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='88.0' cy='55.1' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='93.5' cy='53.3' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='92' cy='58' r='2.0' fill='%23ffd7a0' fill-opacity='0.512'/><circle cx='175.6' cy='96.0' r='4.4' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='171.7' cy='101.3' r='4.4' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='165.5' cy='99.3' r='4.4' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='165.5' cy='92.7' r='4.4' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='171.7' cy='90.7' r='4.4' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='170' cy='96' r='2.2' fill='%23ffd7a0' fill-opacity='0.512'/><circle cx='209.2' cy='170.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='206.3' cy='174.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='201.6' cy='172.5' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='201.6' cy='167.5' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='206.3' cy='166.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='205' cy='170' r='1.7' fill='%23ffd7a0' fill-opacity='0.512'/><circle cx='274.3' cy='112.0' r='5.0' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='269.9' cy='118.0' r='5.0' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='262.9' cy='115.7' r='5.0' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='262.9' cy='108.3' r='5.0' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='269.9' cy='106.0' r='5.0' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='268' cy='112' r='2.5' fill='%23ffd7a0' fill-opacity='0.512'/><circle cx='250.9' cy='228.0' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='247.5' cy='232.7' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='242.0' cy='230.9' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='242.0' cy='225.1' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='247.5' cy='223.3' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='246' cy='228' r='2.0' fill='%23ffd7a0' fill-opacity='0.512'/><circle cx='334.2' cy='298.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='331.3' cy='302.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='326.6' cy='300.5' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='326.6' cy='295.5' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='331.3' cy='294.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='330' cy='298' r='1.7' fill='%23ffd7a0' fill-opacity='0.512'/><circle cx='356.9' cy='108.0' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='353.5' cy='112.7' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='348.0' cy='110.9' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='348.0' cy='105.1' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='353.5' cy='103.3' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='352' cy='108' r='2.0' fill='%23ffd7a0' fill-opacity='0.512'/><circle cx='435.6' cy='72.0' r='4.4' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='431.7' cy='77.3' r='4.4' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='425.5' cy='75.3' r='4.4' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='425.5' cy='68.7' r='4.4' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='431.7' cy='66.7' r='4.4' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='430' cy='72' r='2.2' fill='%23ffd7a0' fill-opacity='0.512'/><circle cx='474.9' cy='140.0' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='471.5' cy='144.7' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='466.0' cy='142.9' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='466.0' cy='137.1' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='471.5' cy='135.3' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='470' cy='140' r='2.0' fill='%23ffd7a0' fill-opacity='0.512'/><circle cx='524.2' cy='142.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='521.3' cy='146.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='516.6' cy='144.5' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='516.6' cy='139.5' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='521.3' cy='138.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='520' cy='142' r='1.7' fill='%23ffd7a0' fill-opacity='0.512'/></g></svg>"),url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 560 340'><g transform='translate(560 0) scale(-1 1)'><g fill='none' stroke='%23b4646f' stroke-linecap='round' stroke-opacity='0.512'><path d='M-10 40C90 60 170 118 270 112S420 150 540 140' stroke-width='7'/><path d='M150 84C190 140 200 190 250 230' stroke-width='4'/><path d='M330 124C360 90 410 70 460 72' stroke-width='3.5'/><path d='M250 230C270 260 300 270 330 300' stroke-width='2.5'/></g><circle cx='96.9' cy='58.0' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='93.5' cy='62.7' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='88.0' cy='60.9' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='88.0' cy='55.1' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='93.5' cy='53.3' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='92' cy='58' r='2.0' fill='%23ffd7a0' fill-opacity='0.512'/><circle cx='175.6' cy='96.0' r='4.4' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='171.7' cy='101.3' r='4.4' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='165.5' cy='99.3' r='4.4' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='165.5' cy='92.7' r='4.4' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='171.7' cy='90.7' r='4.4' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='170' cy='96' r='2.2' fill='%23ffd7a0' fill-opacity='0.512'/><circle cx='209.2' cy='170.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='206.3' cy='174.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='201.6' cy='172.5' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='201.6' cy='167.5' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='206.3' cy='166.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='205' cy='170' r='1.7' fill='%23ffd7a0' fill-opacity='0.512'/><circle cx='274.3' cy='112.0' r='5.0' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='269.9' cy='118.0' r='5.0' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='262.9' cy='115.7' r='5.0' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='262.9' cy='108.3' r='5.0' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='269.9' cy='106.0' r='5.0' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='268' cy='112' r='2.5' fill='%23ffd7a0' fill-opacity='0.512'/><circle cx='250.9' cy='228.0' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='247.5' cy='232.7' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='242.0' cy='230.9' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='242.0' cy='225.1' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='247.5' cy='223.3' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='246' cy='228' r='2.0' fill='%23ffd7a0' fill-opacity='0.512'/><circle cx='334.2' cy='298.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='331.3' cy='302.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='326.6' cy='300.5' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='326.6' cy='295.5' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='331.3' cy='294.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='330' cy='298' r='1.7' fill='%23ffd7a0' fill-opacity='0.512'/><circle cx='356.9' cy='108.0' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='353.5' cy='112.7' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='348.0' cy='110.9' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='348.0' cy='105.1' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='353.5' cy='103.3' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='352' cy='108' r='2.0' fill='%23ffd7a0' fill-opacity='0.512'/><circle cx='435.6' cy='72.0' r='4.4' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='431.7' cy='77.3' r='4.4' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='425.5' cy='75.3' r='4.4' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='425.5' cy='68.7' r='4.4' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='431.7' cy='66.7' r='4.4' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='430' cy='72' r='2.2' fill='%23ffd7a0' fill-opacity='0.512'/><circle cx='474.9' cy='140.0' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='471.5' cy='144.7' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='466.0' cy='142.9' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='466.0' cy='137.1' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='471.5' cy='135.3' r='3.9' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='470' cy='140' r='2.0' fill='%23ffd7a0' fill-opacity='0.512'/><circle cx='524.2' cy='142.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='521.3' cy='146.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='516.6' cy='144.5' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='516.6' cy='139.5' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='521.3' cy='138.0' r='3.3' fill='%23f2a5bb' fill-opacity='0.416'/><circle cx='520' cy='142' r='1.7' fill='%23ffd7a0' fill-opacity='0.512'/></g></svg>"),url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='320' viewBox='0 0 300 320'><ellipse cx='30' cy='40' rx='4' ry='2.4' transform='rotate(20 30 40)' fill='%23f2a5bb' fill-opacity='0.320'/><ellipse cx='180' cy='90' rx='4' ry='2.4' transform='rotate(-30 180 90)' fill='%23f2a5bb' fill-opacity='0.320'/><ellipse cx='250' cy='230' rx='4' ry='2.4' transform='rotate(50 250 230)' fill='%23f2a5bb' fill-opacity='0.320'/><ellipse cx='90' cy='200' rx='4' ry='2.4' transform='rotate(10 90 200)' fill='%23f2a5bb' fill-opacity='0.320'/><ellipse cx='210' cy='290' rx='4' ry='2.4' transform='rotate(-15 210 290)' fill='%23f2a5bb' fill-opacity='0.320'/><ellipse cx='40' cy='300' rx='4' ry='2.4' transform='rotate(70 40 300)' fill='%23f2a5bb' fill-opacity='0.320'/></svg>"),radial-gradient(circle at 78% 22%,rgba(214,86,86,0.416) 0,rgba(214,86,86,0.416) 11px,rgba(214,86,86,0.128) 12px,transparent 34px),linear-gradient(180deg,#22101a 0%,#1a0f13 46%,#13100e 88%);background-size:120px 73px,120px 73px,90px 96px,auto,auto;background-position:0 0,100% 100%,0 0,0 0,0 0;background-repeat:no-repeat,no-repeat,repeat,no-repeat,no-repeat}
+html[data-bg="mount"] body{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 440 200'><g stroke='%2386b39c' stroke-linecap='round' fill='none' stroke-opacity='0.150'><path d='M430 20C360 40 300 70 230 80S120 120 60 150' stroke-width='6'/><path d='M300 66C290 100 300 130 280 160' stroke-width='3'/><path d='M70 146l-32 -12' stroke-width='2'/><path d='M70 146l-27 -21' stroke-width='2'/><path d='M70 146l-19 -28' stroke-width='2'/><path d='M70 146l-9 -33' stroke-width='2'/><path d='M70 146l1 -34' stroke-width='2'/><path d='M70 146l12 -32' stroke-width='2'/><path d='M70 146l21 -27' stroke-width='2'/><path d='M70 146l28 -19' stroke-width='2'/><path d='M70 146l33 -9' stroke-width='2'/><path d='M150 112l-32 -12' stroke-width='2'/><path d='M150 112l-27 -21' stroke-width='2'/><path d='M150 112l-19 -28' stroke-width='2'/><path d='M150 112l-9 -33' stroke-width='2'/><path d='M150 112l1 -34' stroke-width='2'/><path d='M150 112l12 -32' stroke-width='2'/><path d='M150 112l21 -27' stroke-width='2'/><path d='M150 112l28 -19' stroke-width='2'/><path d='M150 112l33 -9' stroke-width='2'/><path d='M232 80l-32 -12' stroke-width='2'/><path d='M232 80l-27 -21' stroke-width='2'/><path d='M232 80l-19 -28' stroke-width='2'/><path d='M232 80l-9 -33' stroke-width='2'/><path d='M232 80l1 -34' stroke-width='2'/><path d='M232 80l12 -32' stroke-width='2'/><path d='M232 80l21 -27' stroke-width='2'/><path d='M232 80l28 -19' stroke-width='2'/><path d='M232 80l33 -9' stroke-width='2'/><path d='M282 158l-32 -12' stroke-width='2'/><path d='M282 158l-27 -21' stroke-width='2'/><path d='M282 158l-19 -28' stroke-width='2'/><path d='M282 158l-9 -33' stroke-width='2'/><path d='M282 158l1 -34' stroke-width='2'/><path d='M282 158l12 -32' stroke-width='2'/><path d='M282 158l21 -27' stroke-width='2'/><path d='M282 158l28 -19' stroke-width='2'/><path d='M282 158l33 -9' stroke-width='2'/><path d='M360 46l-32 -12' stroke-width='2'/><path d='M360 46l-27 -21' stroke-width='2'/><path d='M360 46l-19 -28' stroke-width='2'/><path d='M360 46l-9 -33' stroke-width='2'/><path d='M360 46l1 -34' stroke-width='2'/><path d='M360 46l12 -32' stroke-width='2'/><path d='M360 46l21 -27' stroke-width='2'/><path d='M360 46l28 -19' stroke-width='2'/><path d='M360 46l33 -9' stroke-width='2'/></g></svg>"),url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 400' preserveAspectRatio='xMidYMax slice'><path d='M0 250 L0 211 L123 161 L283 245 L410 194 L574 208 L705 188 L873 245 L1008 166 L1180 210 L1319 214 L1495 241 L1600 250 V400 H0Z' fill='%23b4d8c6' fill-opacity='0.035'/><path d='M0 300 L0 279 L149 290 L265 279 L418 201 L538 287 L695 284 L819 271 L980 212 L1108 293 L1273 269 L1405 266 L1574 232 L1600 300 V400 H0Z' fill='%239ccab3' fill-opacity='0.050'/><path d='M0 350 L0 347 L175 299 L317 327 L496 331 L642 344 L755 286 L905 331 L1022 341 L1176 339 L1297 280 L1455 337 L1580 343 L1600 350 V400 H0Z' fill='%237fae96' fill-opacity='0.070'/></svg>"),radial-gradient(circle at 21% 6%,rgba(236,140,82,0.170) 0,rgba(236,140,82,0.170) 26px,rgba(236,140,82,0.040) 28px,transparent 110px),linear-gradient(180deg,#141a17 0%,#121512 50%,#13100e 88%);background-size:440px 200px,100% auto,auto,auto;background-position:100% 0,center bottom,0 0,0 0;background-repeat:no-repeat,no-repeat,no-repeat,no-repeat;background-attachment:fixed,fixed,fixed,fixed}
+.bg-sw.mount{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 440 200'><g stroke='%2386b39c' stroke-linecap='round' fill='none' stroke-opacity='0.480'><path d='M430 20C360 40 300 70 230 80S120 120 60 150' stroke-width='6'/><path d='M300 66C290 100 300 130 280 160' stroke-width='3'/><path d='M70 146l-32 -12' stroke-width='2'/><path d='M70 146l-27 -21' stroke-width='2'/><path d='M70 146l-19 -28' stroke-width='2'/><path d='M70 146l-9 -33' stroke-width='2'/><path d='M70 146l1 -34' stroke-width='2'/><path d='M70 146l12 -32' stroke-width='2'/><path d='M70 146l21 -27' stroke-width='2'/><path d='M70 146l28 -19' stroke-width='2'/><path d='M70 146l33 -9' stroke-width='2'/><path d='M150 112l-32 -12' stroke-width='2'/><path d='M150 112l-27 -21' stroke-width='2'/><path d='M150 112l-19 -28' stroke-width='2'/><path d='M150 112l-9 -33' stroke-width='2'/><path d='M150 112l1 -34' stroke-width='2'/><path d='M150 112l12 -32' stroke-width='2'/><path d='M150 112l21 -27' stroke-width='2'/><path d='M150 112l28 -19' stroke-width='2'/><path d='M150 112l33 -9' stroke-width='2'/><path d='M232 80l-32 -12' stroke-width='2'/><path d='M232 80l-27 -21' stroke-width='2'/><path d='M232 80l-19 -28' stroke-width='2'/><path d='M232 80l-9 -33' stroke-width='2'/><path d='M232 80l1 -34' stroke-width='2'/><path d='M232 80l12 -32' stroke-width='2'/><path d='M232 80l21 -27' stroke-width='2'/><path d='M232 80l28 -19' stroke-width='2'/><path d='M232 80l33 -9' stroke-width='2'/><path d='M282 158l-32 -12' stroke-width='2'/><path d='M282 158l-27 -21' stroke-width='2'/><path d='M282 158l-19 -28' stroke-width='2'/><path d='M282 158l-9 -33' stroke-width='2'/><path d='M282 158l1 -34' stroke-width='2'/><path d='M282 158l12 -32' stroke-width='2'/><path d='M282 158l21 -27' stroke-width='2'/><path d='M282 158l28 -19' stroke-width='2'/><path d='M282 158l33 -9' stroke-width='2'/><path d='M360 46l-32 -12' stroke-width='2'/><path d='M360 46l-27 -21' stroke-width='2'/><path d='M360 46l-19 -28' stroke-width='2'/><path d='M360 46l-9 -33' stroke-width='2'/><path d='M360 46l1 -34' stroke-width='2'/><path d='M360 46l12 -32' stroke-width='2'/><path d='M360 46l21 -27' stroke-width='2'/><path d='M360 46l28 -19' stroke-width='2'/><path d='M360 46l33 -9' stroke-width='2'/></g></svg>"),url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 400' preserveAspectRatio='xMidYMax slice'><path d='M0 250 L0 211 L123 161 L283 245 L410 194 L574 208 L705 188 L873 245 L1008 166 L1180 210 L1319 214 L1495 241 L1600 250 V400 H0Z' fill='%23b4d8c6' fill-opacity='0.112'/><path d='M0 300 L0 279 L149 290 L265 279 L418 201 L538 287 L695 284 L819 271 L980 212 L1108 293 L1273 269 L1405 266 L1574 232 L1600 300 V400 H0Z' fill='%239ccab3' fill-opacity='0.160'/><path d='M0 350 L0 347 L175 299 L317 327 L496 331 L642 344 L755 286 L905 331 L1022 341 L1176 339 L1297 280 L1455 337 L1580 343 L1600 350 V400 H0Z' fill='%237fae96' fill-opacity='0.224'/></svg>"),radial-gradient(circle at 20% 24%,rgba(236,140,82,0.544) 0,rgba(236,140,82,0.544) 8px,rgba(236,140,82,0.128) 9px,transparent 26px),linear-gradient(180deg,#141a17 0%,#121512 50%,#13100e 88%);background-size:96px 44px,100% auto,auto,auto;background-position:100% 0,center bottom,0 0,0 0;background-repeat:no-repeat,no-repeat,no-repeat,no-repeat}
+html[data-bg="study"] body{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 470'><rect x='22' y='14' width='96' height='440' fill='%23efe2c4' fill-opacity='0.050'/><rect x='12' y='6' width='116' height='10' rx='4' fill='%23c9a45c' fill-opacity='0.120'/><rect x='12' y='452' width='116' height='10' rx='4' fill='%23c9a45c' fill-opacity='0.120'/><text x='70' y='118' text-anchor='middle' font-family='serif' font-size='66' font-weight='700' fill='%23efe2c4' fill-opacity='0.120'>天</text><rect x='56' y='392' width='28' height='28' fill='%23b5402e' fill-opacity='0.140'/></svg>"),url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='96' height='128' viewBox='0 0 96 128'><g fill='none' stroke='%23dcbf82' stroke-opacity='0.050' stroke-width='2'><path d='M0 1H96M0 65H96M1 0V128M49 0V128'/></g></svg>"),radial-gradient(900px 420px at 50% -8%,rgba(236,196,128,0.070) 0,transparent 70%),linear-gradient(180deg,#1d160e 0%,#18120d 50%,#13100e 90%);background-size:140px 470px,96px 128px,auto,auto;background-position:96% 3%,0 0,0 0,0 0;background-repeat:no-repeat,repeat,no-repeat,no-repeat;background-attachment:fixed,fixed,fixed,fixed}
+.bg-sw.study{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 470'><rect x='22' y='14' width='96' height='440' fill='%23efe2c4' fill-opacity='0.160'/><rect x='12' y='6' width='116' height='10' rx='4' fill='%23c9a45c' fill-opacity='0.384'/><rect x='12' y='452' width='116' height='10' rx='4' fill='%23c9a45c' fill-opacity='0.384'/><text x='70' y='118' text-anchor='middle' font-family='serif' font-size='66' font-weight='700' fill='%23efe2c4' fill-opacity='0.384'>天</text><rect x='56' y='392' width='28' height='28' fill='%23b5402e' fill-opacity='0.448'/></svg>"),url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='96' height='128' viewBox='0 0 96 128'><g fill='none' stroke='%23dcbf82' stroke-opacity='0.160' stroke-width='2'><path d='M0 1H96M0 65H96M1 0V128M49 0V128'/></g></svg>"),radial-gradient(900px 420px at 50% -8%,rgba(236,196,128,0.224) 0,transparent 70%),linear-gradient(180deg,#1d160e 0%,#18120d 50%,#13100e 90%);background-size:26px 88px,30px 40px,auto,auto;background-position:90% 0,0 0,0 0,0 0;background-repeat:no-repeat,repeat,no-repeat,no-repeat}
+html[data-bg="market"] body{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 160' preserveAspectRatio='xMidYMin slice'><path d='M0 26Q400 96 800 40T1600 40' fill='none' stroke='%23c9a45c' stroke-width='2' stroke-opacity='0.120'/><circle cx='90' cy='70' r='46' fill='%23ff7a4a' fill-opacity='0.045'/><line x1='90' y1='40' x2='90' y2='50' stroke='%23c9a45c' stroke-opacity='0.200' stroke-width='2'/><rect x='81' y='49' width='18' height='5' fill='%23c9a45c' fill-opacity='0.250'/><ellipse cx='90' cy='70' rx='15' ry='17' fill='%23d9483a' fill-opacity='0.320'/><rect x='81' y='86' width='18' height='5' fill='%23c9a45c' fill-opacity='0.250'/><circle cx='260' cy='88' r='46' fill='%23ff7a4a' fill-opacity='0.045'/><line x1='260' y1='58' x2='260' y2='68' stroke='%23c9a45c' stroke-opacity='0.200' stroke-width='2'/><rect x='251' y='67' width='18' height='5' fill='%23c9a45c' fill-opacity='0.250'/><ellipse cx='260' cy='88' rx='15' ry='17' fill='%23d9483a' fill-opacity='0.320'/><rect x='251' y='104' width='18' height='5' fill='%23c9a45c' fill-opacity='0.250'/><circle cx='430' cy='95' r='46' fill='%23ff7a4a' fill-opacity='0.045'/><line x1='430' y1='65' x2='430' y2='75' stroke='%23c9a45c' stroke-opacity='0.200' stroke-width='2'/><rect x='421' y='74' width='18' height='5' fill='%23c9a45c' fill-opacity='0.250'/><ellipse cx='430' cy='95' rx='15' ry='17' fill='%23d9483a' fill-opacity='0.320'/><rect x='421' y='111' width='18' height='5' fill='%23c9a45c' fill-opacity='0.250'/><circle cx='620' cy='89' r='46' fill='%23ff7a4a' fill-opacity='0.045'/><line x1='620' y1='59' x2='620' y2='69' stroke='%23c9a45c' stroke-opacity='0.200' stroke-width='2'/><rect x='611' y='68' width='18' height='5' fill='%23c9a45c' fill-opacity='0.250'/><ellipse cx='620' cy='89' rx='15' ry='17' fill='%23d9483a' fill-opacity='0.320'/><rect x='611' y='105' width='18' height='5' fill='%23c9a45c' fill-opacity='0.250'/><circle cx='980' cy='50' r='46' fill='%23ff7a4a' fill-opacity='0.045'/><line x1='980' y1='20' x2='980' y2='30' stroke='%23c9a45c' stroke-opacity='0.200' stroke-width='2'/><rect x='971' y='29' width='18' height='5' fill='%23c9a45c' fill-opacity='0.250'/><ellipse cx='980' cy='50' rx='15' ry='17' fill='%23d9483a' fill-opacity='0.320'/><rect x='971' y='66' width='18' height='5' fill='%23c9a45c' fill-opacity='0.250'/><circle cx='1170' cy='42' r='46' fill='%23ff7a4a' fill-opacity='0.045'/><line x1='1170' y1='12' x2='1170' y2='22' stroke='%23c9a45c' stroke-opacity='0.200' stroke-width='2'/><rect x='1161' y='21' width='18' height='5' fill='%23c9a45c' fill-opacity='0.250'/><ellipse cx='1170' cy='42' rx='15' ry='17' fill='%23d9483a' fill-opacity='0.320'/><rect x='1161' y='58' width='18' height='5' fill='%23c9a45c' fill-opacity='0.250'/><circle cx='1350' cy='46' r='46' fill='%23ff7a4a' fill-opacity='0.045'/><line x1='1350' y1='16' x2='1350' y2='26' stroke='%23c9a45c' stroke-opacity='0.200' stroke-width='2'/><rect x='1341' y='25' width='18' height='5' fill='%23c9a45c' fill-opacity='0.250'/><ellipse cx='1350' cy='46' rx='15' ry='17' fill='%23d9483a' fill-opacity='0.320'/><rect x='1341' y='62' width='18' height='5' fill='%23c9a45c' fill-opacity='0.250'/><circle cx='1520' cy='60' r='46' fill='%23ff7a4a' fill-opacity='0.045'/><line x1='1520' y1='30' x2='1520' y2='40' stroke='%23c9a45c' stroke-opacity='0.200' stroke-width='2'/><rect x='1511' y='39' width='18' height='5' fill='%23c9a45c' fill-opacity='0.250'/><ellipse cx='1520' cy='60' rx='15' ry='17' fill='%23d9483a' fill-opacity='0.320'/><rect x='1511' y='76' width='18' height='5' fill='%23c9a45c' fill-opacity='0.250'/></svg>"),url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 300' preserveAspectRatio='xMidYMax slice'><path d='M-40 214Q110.0 184 260 214L246 224H-26Z' fill='%233a2c58' fill-opacity='0.450'/><rect x='-16' y='224' width='252' height='120' fill='%232a2142' fill-opacity='0.400'/><rect x='98.0' y='242' width='24' height='18' fill='%23f2b347' fill-opacity='0.100'/><path d='M230 244Q350.0 214 470 244L456 254H244Z' fill='%233a2c58' fill-opacity='0.450'/><rect x='254' y='254' width='192' height='90' fill='%232a2142' fill-opacity='0.400'/><path d='M440 194Q600.0 164 760 194L746 204H454Z' fill='%233a2c58' fill-opacity='0.450'/><rect x='464' y='204' width='272' height='140' fill='%232a2142' fill-opacity='0.400'/><rect x='588.0' y='222' width='24' height='18' fill='%23f2b347' fill-opacity='0.100'/><path d='M740 234Q870.0 204 1000 234L986 244H754Z' fill='%233a2c58' fill-opacity='0.450'/><rect x='764' y='244' width='212' height='100' fill='%232a2142' fill-opacity='0.400'/><path d='M980 204Q1145.0 174 1310 204L1296 214H994Z' fill='%233a2c58' fill-opacity='0.450'/><rect x='1004' y='214' width='282' height='130' fill='%232a2142' fill-opacity='0.400'/><rect x='1133.0' y='232' width='24' height='18' fill='%23f2b347' fill-opacity='0.100'/><path d='M1290 239Q1415.0 209 1540 239L1526 249H1304Z' fill='%233a2c58' fill-opacity='0.450'/><rect x='1314' y='249' width='202' height='95' fill='%232a2142' fill-opacity='0.400'/><path d='M1520 214Q1620.0 184 1720 214L1706 224H1534Z' fill='%233a2c58' fill-opacity='0.450'/><rect x='1544' y='224' width='152' height='120' fill='%232a2142' fill-opacity='0.400'/><rect x='1608.0' y='242' width='24' height='18' fill='%23f2b347' fill-opacity='0.100'/></svg>"),url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'><g fill='%23efe6d4' fill-opacity='0.220'><circle cx='18' cy='30' r='1.1'/><circle cx='74' cy='12' r='0.7'/><circle cx='131' cy='44' r='0.9'/><circle cx='205' cy='22' r='0.6'/><circle cx='246' cy='70' r='1.0'/><circle cx='40' cy='96' r='0.6'/><circle cx='98' cy='128' r='1.2'/><circle cx='170' cy='104' r='0.7'/><circle cx='226' cy='150' r='0.8'/><circle cx='12' cy='176' r='0.9'/><circle cx='70' cy='214' r='0.6'/><circle cx='142' cy='196' r='1.0'/><circle cx='196' cy='238' r='0.7'/><circle cx='250' cy='214' r='0.6'/></g></svg>"),linear-gradient(180deg,#1b1230 0%,#161021 46%,#13100e 88%);background-size:100% auto,100% auto,260px 260px,auto;background-position:center top,center bottom,0 0,0 0;background-repeat:no-repeat,no-repeat,repeat,no-repeat;background-attachment:fixed,fixed,fixed,fixed}
+.bg-sw.market{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 160' preserveAspectRatio='xMidYMin slice'><path d='M0 26Q400 96 800 40T1600 40' fill='none' stroke='%23c9a45c' stroke-width='2' stroke-opacity='0.384'/><circle cx='90' cy='70' r='46' fill='%23ff7a4a' fill-opacity='0.144'/><line x1='90' y1='40' x2='90' y2='50' stroke='%23c9a45c' stroke-opacity='0.640' stroke-width='2'/><rect x='81' y='49' width='18' height='5' fill='%23c9a45c' fill-opacity='0.800'/><ellipse cx='90' cy='70' rx='15' ry='17' fill='%23d9483a' fill-opacity='1.000'/><rect x='81' y='86' width='18' height='5' fill='%23c9a45c' fill-opacity='0.800'/><circle cx='260' cy='88' r='46' fill='%23ff7a4a' fill-opacity='0.144'/><line x1='260' y1='58' x2='260' y2='68' stroke='%23c9a45c' stroke-opacity='0.640' stroke-width='2'/><rect x='251' y='67' width='18' height='5' fill='%23c9a45c' fill-opacity='0.800'/><ellipse cx='260' cy='88' rx='15' ry='17' fill='%23d9483a' fill-opacity='1.000'/><rect x='251' y='104' width='18' height='5' fill='%23c9a45c' fill-opacity='0.800'/><circle cx='430' cy='95' r='46' fill='%23ff7a4a' fill-opacity='0.144'/><line x1='430' y1='65' x2='430' y2='75' stroke='%23c9a45c' stroke-opacity='0.640' stroke-width='2'/><rect x='421' y='74' width='18' height='5' fill='%23c9a45c' fill-opacity='0.800'/><ellipse cx='430' cy='95' rx='15' ry='17' fill='%23d9483a' fill-opacity='1.000'/><rect x='421' y='111' width='18' height='5' fill='%23c9a45c' fill-opacity='0.800'/><circle cx='620' cy='89' r='46' fill='%23ff7a4a' fill-opacity='0.144'/><line x1='620' y1='59' x2='620' y2='69' stroke='%23c9a45c' stroke-opacity='0.640' stroke-width='2'/><rect x='611' y='68' width='18' height='5' fill='%23c9a45c' fill-opacity='0.800'/><ellipse cx='620' cy='89' rx='15' ry='17' fill='%23d9483a' fill-opacity='1.000'/><rect x='611' y='105' width='18' height='5' fill='%23c9a45c' fill-opacity='0.800'/><circle cx='980' cy='50' r='46' fill='%23ff7a4a' fill-opacity='0.144'/><line x1='980' y1='20' x2='980' y2='30' stroke='%23c9a45c' stroke-opacity='0.640' stroke-width='2'/><rect x='971' y='29' width='18' height='5' fill='%23c9a45c' fill-opacity='0.800'/><ellipse cx='980' cy='50' rx='15' ry='17' fill='%23d9483a' fill-opacity='1.000'/><rect x='971' y='66' width='18' height='5' fill='%23c9a45c' fill-opacity='0.800'/><circle cx='1170' cy='42' r='46' fill='%23ff7a4a' fill-opacity='0.144'/><line x1='1170' y1='12' x2='1170' y2='22' stroke='%23c9a45c' stroke-opacity='0.640' stroke-width='2'/><rect x='1161' y='21' width='18' height='5' fill='%23c9a45c' fill-opacity='0.800'/><ellipse cx='1170' cy='42' rx='15' ry='17' fill='%23d9483a' fill-opacity='1.000'/><rect x='1161' y='58' width='18' height='5' fill='%23c9a45c' fill-opacity='0.800'/><circle cx='1350' cy='46' r='46' fill='%23ff7a4a' fill-opacity='0.144'/><line x1='1350' y1='16' x2='1350' y2='26' stroke='%23c9a45c' stroke-opacity='0.640' stroke-width='2'/><rect x='1341' y='25' width='18' height='5' fill='%23c9a45c' fill-opacity='0.800'/><ellipse cx='1350' cy='46' rx='15' ry='17' fill='%23d9483a' fill-opacity='1.000'/><rect x='1341' y='62' width='18' height='5' fill='%23c9a45c' fill-opacity='0.800'/><circle cx='1520' cy='60' r='46' fill='%23ff7a4a' fill-opacity='0.144'/><line x1='1520' y1='30' x2='1520' y2='40' stroke='%23c9a45c' stroke-opacity='0.640' stroke-width='2'/><rect x='1511' y='39' width='18' height='5' fill='%23c9a45c' fill-opacity='0.800'/><ellipse cx='1520' cy='60' rx='15' ry='17' fill='%23d9483a' fill-opacity='1.000'/><rect x='1511' y='76' width='18' height='5' fill='%23c9a45c' fill-opacity='0.800'/></svg>"),url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 300' preserveAspectRatio='xMidYMax slice'><path d='M-40 214Q110.0 184 260 214L246 224H-26Z' fill='%233a2c58' fill-opacity='1.000'/><rect x='-16' y='224' width='252' height='120' fill='%232a2142' fill-opacity='1.000'/><rect x='98.0' y='242' width='24' height='18' fill='%23f2b347' fill-opacity='0.320'/><path d='M230 244Q350.0 214 470 244L456 254H244Z' fill='%233a2c58' fill-opacity='1.000'/><rect x='254' y='254' width='192' height='90' fill='%232a2142' fill-opacity='1.000'/><path d='M440 194Q600.0 164 760 194L746 204H454Z' fill='%233a2c58' fill-opacity='1.000'/><rect x='464' y='204' width='272' height='140' fill='%232a2142' fill-opacity='1.000'/><rect x='588.0' y='222' width='24' height='18' fill='%23f2b347' fill-opacity='0.320'/><path d='M740 234Q870.0 204 1000 234L986 244H754Z' fill='%233a2c58' fill-opacity='1.000'/><rect x='764' y='244' width='212' height='100' fill='%232a2142' fill-opacity='1.000'/><path d='M980 204Q1145.0 174 1310 204L1296 214H994Z' fill='%233a2c58' fill-opacity='1.000'/><rect x='1004' y='214' width='282' height='130' fill='%232a2142' fill-opacity='1.000'/><rect x='1133.0' y='232' width='24' height='18' fill='%23f2b347' fill-opacity='0.320'/><path d='M1290 239Q1415.0 209 1540 239L1526 249H1304Z' fill='%233a2c58' fill-opacity='1.000'/><rect x='1314' y='249' width='202' height='95' fill='%232a2142' fill-opacity='1.000'/><path d='M1520 214Q1620.0 184 1720 214L1706 224H1534Z' fill='%233a2c58' fill-opacity='1.000'/><rect x='1544' y='224' width='152' height='120' fill='%232a2142' fill-opacity='1.000'/><rect x='1608.0' y='242' width='24' height='18' fill='%23f2b347' fill-opacity='0.320'/></svg>"),url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'><g fill='%23efe6d4' fill-opacity='0.704'><circle cx='18' cy='30' r='1.1'/><circle cx='74' cy='12' r='0.7'/><circle cx='131' cy='44' r='0.9'/><circle cx='205' cy='22' r='0.6'/><circle cx='246' cy='70' r='1.0'/><circle cx='40' cy='96' r='0.6'/><circle cx='98' cy='128' r='1.2'/><circle cx='170' cy='104' r='0.7'/><circle cx='226' cy='150' r='0.8'/><circle cx='12' cy='176' r='0.9'/><circle cx='70' cy='214' r='0.6'/><circle cx='142' cy='196' r='1.0'/><circle cx='196' cy='238' r='0.7'/><circle cx='250' cy='214' r='0.6'/></g></svg>"),linear-gradient(180deg,#1b1230 0%,#161021 46%,#13100e 88%);background-size:100% auto,100% auto,80px 80px,auto;background-position:center top,center bottom,0 0,0 0;background-repeat:no-repeat,no-repeat,repeat,no-repeat}
+#ovBg{z-index:40}
+.bg-card{width:min(100%,720px)}
+.bg-card h2{margin:4px 0 6px;font-family:var(--font-display);font-size:24px}
+.bg-note{margin:0 0 14px;color:var(--muted);font-size:13px}
+.bg-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:560px){.bg-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.bg-grid button .bg-sw{height:64px}}
+.bg-grid button{display:flex;flex-direction:column;gap:7px;padding:8px 8px 9px;border:1px solid var(--hair);border-radius:3px;background:rgba(0,0,0,.22);color:var(--ivory);font:inherit;font-size:13.5px;text-align:left;cursor:pointer;transition:border-color .15s,background-color .15s}
+.bg-grid button:hover,.bg-grid button:focus-visible{border-color:var(--gold);outline:none}
+.bg-grid button[aria-pressed="true"]{border-color:var(--gold-hi);background:rgba(201,164,92,.12);color:var(--gold-hi)}
+.bg-grid .bg-sw{height:84px}
+.bg-grid .bg-nm{display:flex;align-items:baseline;justify-content:space-between;gap:6px}
+.bg-grid .bg-nm small{color:var(--faint);font-size:11.5px}
+.bg-grid button[aria-pressed="true"] .bg-nm small{color:var(--gold)}
+.bg-card .actions{justify-content:flex-end;margin-top:16px}
 </style>
 
 <header class="bar">
@@ -1018,12 +1158,12 @@ html, body { max-width: 100%; overflow-x: clip; }
   <div class="scoreboard" id="scoreboard"></div>
   <span class="netchip" id="netChip" hidden><i></i><span></span></span>
   <div class="bar-actions">
-    <button class="btn-ghost" id="btnStoneLock" type="button" aria-pressed="false">돌 잠금 끄기</button>
     <div class="snd-wrap">
       <button class="btn-ghost" id="btnSound" type="button" aria-expanded="false" aria-controls="sndPanel">소리</button>
     </div>
     <button class="btn-ghost" id="btnResign" type="button" hidden>기권</button>
     <button class="btn-ghost" id="btnMenu" type="button">새 대국</button>
+    <button class="btn-ghost btn-pause" id="btnPause" type="button" aria-label="메뉴 열기 (ESC)">메뉴<kbd>ESC</kbd></button>
   </div>
 </header>
 
@@ -1040,6 +1180,7 @@ html, body { max-width: 100%; overflow-x: clip; }
 
 <div class="aug-tip" id="augTip" role="tooltip" hidden></div>
 <main class="stage">
+  <aside class="side side-l" id="sideL" aria-label="기객 정보"><div class="side-top" id="sideTopL"><div class="pslot" id="pslotL"></div></div><div class="side-bot" id="sideBotL"></div></aside>
   <section class="table" aria-label="알까기 판">
     <div class="lab-toolbar" id="labToolbar" hidden aria-label="실험실 수 기록 및 설정">
       <div class="lab-tools">
@@ -1058,13 +1199,22 @@ html, body { max-width: 100%; overflow-x: clip; }
     <div class="skill-bar" id="skillBar" hidden aria-label="조작 증강"></div>
     <div class="board-box" id="boardBox"><canvas id="board" aria-label="19줄 바둑판. 내 돌을 눌러 뒤로 당겼다가 놓으면 튕겨 나갑니다."></canvas></div>
   </section>
+  <aside class="side side-r" id="sideR" aria-label="기객 정보"><div class="side-top" id="sideTopR"><div class="pslot" id="pslotR"></div></div><div class="side-bot" id="sideBotR"></div></aside>
   <aside class="panel">
     <div class="mapcard card" id="mapCard"></div>
     <div class="lab-card card" id="labCard" hidden></div>
     <div id="players"></div>
-    <section class="card logbox">
+    <section class="card logbox" id="logBox">
       <h2 class="box-title">대국 기록</h2>
       <ol id="log"></ol>
+    </section>
+    <section class="card chatbox idle" id="chatBox">
+      <h2 class="box-title">채팅</h2>
+      <ol class="chat-log" id="chatLog" aria-live="polite"></ol>
+      <form class="chat-form" id="chatForm" autocomplete="off">
+        <input class="chat-in" id="chatIn" maxlength="60" aria-label="채팅 입력" placeholder="온라인 대국 전용" disabled>
+        <button class="btn-ghost chat-send" id="chatSend" type="submit" disabled>보내기</button>
+      </form>
     </section>
     <details class="rules">
       <summary>증강 설명표</summary>
@@ -1088,6 +1238,23 @@ html, body { max-width: 100%; overflow-x: clip; }
 <div class="overlay" id="ovBook" hidden></div>
 <div class="overlay" id="ovRank" hidden></div>
 <div class="overlay" id="ovRules" hidden></div>
+<div class="overlay" id="ovBg" hidden>
+  <div class="ov-card bg-card" role="dialog" aria-modal="true" aria-labelledby="bgTitle">
+    <p class="eyebrow">背景</p>
+    <h2 id="bgTitle">배경</h2>
+    <p class="bg-note">고르면 바로 바뀌고, 다음에 열어도 그대로입니다.</p>
+    <div class="bg-grid" id="bgGrid"></div>
+    <div class="actions"><button class="btn-ghost" id="bgClose" type="button">닫기</button></div>
+  </div>
+</div>
+<div class="overlay" id="ovPause" hidden>
+  <div class="ov-card mini-card pause-card" role="dialog" aria-modal="true" aria-labelledby="pauseTitle">
+    <p class="eyebrow">ESC</p>
+    <h2 id="pauseTitle">메뉴</h2>
+    <div class="pause-list" id="pauseList"></div>
+    <p class="pause-note" id="pauseNote"></p>
+  </div>
+</div>
 <div class="aug-tip rank-tip" id="rankTip" role="tooltip" hidden></div>
 <div class="overlay" id="ovTut" hidden>
   <div class="ov-card mini-card" role="dialog" aria-modal="true" aria-labelledby="tutTitle">
@@ -2273,6 +2440,7 @@ function pendingPick(w) {
 function canTake(w, p, id) {
   const a = AUG[id];
   if (id === 'pillar' && teamCount(w, p.team) <= 1) return false;
+  if (id === 'orleans' && !w.lab) return false;   /* v67: 대국에서는 제안하지 않음 (훈련장에서는 고를 수 있음) */
   const orleansReward = !!(w.orl && w.orl[p.id] > 0 && a && a.tier === 4);
   if (w.noAug && w.noAug[p.id] && !orleansReward) return false;
   if (cnt(p, id) > 0 || (!w.lab && gotAug(w, p.id, id))) return false;   /* 한 번 얻은 증강은 버려지거나 지워져도 그 국 안에서 다시 나오지 않습니다 */
@@ -4025,6 +4193,15 @@ const SERIF = '"Noto Serif KR", "Nanum Myeongjo", serif';
 const SANS = '"IBM Plex Sans KR", system-ui, sans-serif';
 const HANJI_RGB = [242, 236, 223], INJU_RGB = [207, 63, 46];
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const WIDE_MQ = matchMedia('(min-width: 960px) and (min-aspect-ratio: 5/4) and (min-height: 560px)');   /* v63: 넓은 화면 게임 배치 */
+const PAUSE = { open: false, bgOpen: false };
+const BG_LIST = [['plain', '무색'], ['wave', '물결'], ['cloud', '구름'], ['night', '달밤'], ['bamboo', '대숲', '청운'], ['plum', '홍매화', '홍매'], ['mount', '산수', '백운'], ['study', '서당', '솔하'], ['market', '장터', '돌이']];   /* v67·v68: 배경 (셋째 값은 그 배경의 기객) */
+let BG = 'plain';
+try { const v = localStorage.getItem('alk-bg'); if (BG_LIST.some(b => b[0] === v)) BG = v; } catch (e) {}
+document.documentElement.dataset.bg = BG;
+function setBg(v) { if (!BG_LIST.some(b => b[0] === v)) return; BG = v; document.documentElement.dataset.bg = v; try { localStorage.setItem('alk-bg', v); } catch (e) {} }
+const deg = x => Math.round(x * 180 / Math.PI);   /* v65: 변화구 단추가 쓰는 각도 표시 (엔진 안에만 있어 화면 쪽에서 오류가 났음) */
+const CHAT = { list: [], seen: {}, n: 0, lastAt: 0, ver: 0, drawn: -1, on: null, mine: null };   /* v64: 온라인 채팅 */
 const rnd = Math.random, hyp = Math.hypot;
 const pick = a => a[Math.floor(rnd() * a.length)];
 const $ = id => document.getElementById(id);
@@ -4299,7 +4476,7 @@ function translateTree(root) {
   while (walker.nextNode()) nodes.push(walker.currentNode);
   for (const node of nodes) {
     const parent = node.parentElement;
-    if (parent && /^(SCRIPT|STYLE|TEXTAREA)$/.test(parent.tagName)) continue;
+    if (parent && (/^(SCRIPT|STYLE|TEXTAREA)$/.test(parent.tagName) || (parent.closest && parent.closest('[data-notr]')))) continue;
     if (!textOriginals.has(node) || (textWritten.has(node) && node.nodeValue !== textWritten.get(node))) textOriginals.set(node, node.nodeValue);
     const original = textOriginals.get(node);
     const next = UI_LANG === 'ja' ? translateJapaneseText(original) : original;
@@ -4572,7 +4749,6 @@ function josa(word, pair) {
 }
 
 /* ---------- state ---------- */
-let stoneLockEnabled = false; // 선택 잠금은 기본 꺼짐
 const G = {
   mode: '1v1', cpu: false, cpuLevel: 'normal', target: 3, mapSet: 'flat', players: [], score: [0, 0], round: 0, world: null,
   state: 'menu', current: 0, lastLoser: null, teamPtr: [0, 0], aim: null, cpuAnim: null,
@@ -5004,7 +5180,11 @@ function netPublish(extra) {
   const st = Object.assign({ q: NET.seq, ph: NET.ph, ctl: NET.ctl, lg: NET.outLog.slice(-6) }, body);
   NET.outLog = [];
   let doc = { app: 'alk', seat: NET.seat, st };
-  if (JSON.stringify(doc).length > 3900) { st.lg = []; doc = { app: 'alk', seat: NET.seat, st }; }
+  /* v64: 방 상태는 합쳐서 UTF-8 4KiB 안(claude.ai). 이름·샷·채팅 몫을 남기고, 넘치면 기록부터 줄이고 그래도 크면 채팅 한 마디를 비움 */
+  const bytes = o => new TextEncoder().encode(JSON.stringify(o)).length, LIM = window.__ALK_WEB__ ? 15000 : 4000;
+  const rest = () => 420 + (CHAT.mine ? bytes(CHAT.mine) : 0);
+  if (bytes(doc) + rest() > LIM) { st.lg = st.lg.slice(-2); if (bytes(doc) + rest() > LIM) st.lg = []; }
+  if (bytes(doc) + rest() > LIM && CHAT.mine) { CHAT.mine = null; NET.room.presence({ cm: null }).catch(() => {}); }
   NET.room.presence(doc).catch(() => {});
 }
 function netSync(ph, ctl) {
@@ -5024,6 +5204,7 @@ function netShot(pid, id, ang, pw, o) {
 }
 function netOnPeers(ch) {
   NET.peers = ch.peers;
+  chatPeers(ch.peers);
   const opp = netOpponent();
   renderNetChip(); if (!$('ovMenu').hidden) renderNetPanel();
   if (!opp || !opp.presence) return;
@@ -5108,6 +5289,19 @@ function netAdopt(st) {
   if (st.ph === 'aim') { if (mine) { if (G.state !== 'aim') resetOpt(); G.state = 'aim'; G.aim = null; return renderAll(); } NET.waitKind = 'aim'; NET.waitPid = st.ctl; G.state = 'remote'; return renderAll(); }
   renderAll();
 }
+/* v65: 글자 복사 (누른 순간에 불러야 함). 안 되면 숨긴 글상자로 한 번 더 */
+function copyText(value) {
+  const legacy = () => {
+    const t = document.createElement('textarea'); t.value = value; t.setAttribute('readonly', '');
+    t.style.position = 'fixed'; t.style.opacity = '0'; document.body.appendChild(t); t.select();
+    let ok = false; try { ok = document.execCommand('copy'); } catch (e) {} finally { t.remove(); }
+    return ok;
+  };
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(value).then(() => true, () => legacy());
+  } catch (e) {}
+  return Promise.resolve(legacy());
+}
 const CODE_ABC = 'abcdefghjkmnpqrstuvwxyz23456789';
 const newCode = () => Array.from({ length: 5 }, () => CODE_ABC[Math.floor(Math.random() * CODE_ABC.length)]).join('');
 async function netJoin(code, seat) {
@@ -5116,7 +5310,7 @@ async function netJoin(code, seat) {
   try {
     if (NET.room) { try { NET.unPeers && NET.unPeers(); await NET.room.leave(); } catch (e) {} }
     NET.room = await NET.lobby.join('alk-' + code);
-    NET.code = code; NET.seq = 0; NET.lastStr = ''; NET.actSeen = 0; NET.pend = null;
+    NET.code = code; NET.seq = 0; NET.lastStr = ''; NET.actSeen = 0; NET.pend = null; chatReset();
     NET.seat = seat;
     NET.unPeers = NET.room.onPeers(netOnPeers, () => { NET.status = 'lost'; renderNetPanel(); renderNetChip(); });
     await NET.room.presence({ app: 'alk', seat, prof: { n: PROF.me.n, c: PROF.me.c, i: OUTFITS.indexOf(illOn(PROF.me, PROF.me.c)), s: PROF.me.st || 'stone' } });
@@ -5134,6 +5328,7 @@ async function netJoin(code, seat) {
   renderNetPanel(); renderNetChip();
 }
 function renderNetChip() {
+  renderChat();
   const el = $('netChip');
   if (!NET.room) { el.hidden = true; return; }
   el.hidden = false;
@@ -5164,7 +5359,7 @@ function renderNetPanel() {
       <input class="code-in" id="netCode" maxlength="5" placeholder="방 이름 입력" autocomplete="off" aria-label="방 이름"><button class="btn-ghost" id="netEnter" type="button">입장</button></div>
       ${NET.status === 'denied' ? `<p class="net-msg">${WEB ? '방이 가득 찼습니다. 다른 방 이름으로 들어가 주세요.' : '이 계정으로는 온라인 방에 들어갈 수 없습니다. 공유 창에서 전자우편으로 초대받았는지 확인해 주세요.'}</p>` : ''}
       ${NET.status === 'error' ? '<p class="net-msg">방에 들어가지 못했습니다. 잠시 뒤에 다시 시도해 주세요.</p>' : ''}`;
-    $('netCreate').onclick = () => netJoin(newCode(), 0);
+    $('netCreate').onclick = () => { const c = newCode(); NET.autoCopy = null; copyText(c.toUpperCase()).then(ok => { NET.autoCopy = ok ? c : null; if (NET.code === c) renderNetPanel(); }); netJoin(c, 0); };
     $('netEnter').onclick = () => { const c = $('netCode').value.trim().toLowerCase(); if (/^[a-z0-9]{5}$/.test(c)) netJoin(c, 1); else $('netCode').focus(); };
     if (netMode()) { $('btnStart').disabled = true; $('btnStart').textContent = '대국 시작'; }
     return;
@@ -5172,18 +5367,12 @@ function renderNetPanel() {
   const seatTxt = NET.seat === 0 ? '흑 (방장)' : NET.seat === 1 ? '백' : '관전';
   el.innerHTML = `<div class="row net-code-row"><span class="code">${NET.code.toUpperCase()}</span><button class="btn-ghost net-copy" id="netCopy" type="button">방 코드 복사</button><span class="meta">${seatTxt}</span></div>
     ${opp ? `<div class="who-chip">${avatar({ team: NET.seat === 0 ? 1 : 0, char: netProfOf(opp).c, ill: illOn(netProfOf(opp), netProfOf(opp).c), skin: netProfOf(opp).st, dot: '' })}<span class="who-txt"><span class="tag">상대 기객</span><b>${esc(profName(netProfOf(opp)))}</b><small>${charTitle(CHAR[netProfOf(opp).c])}</small></span></div>` : ''}
-    <p class="${opp ? 'net-msg' : ''}">${opp ? '상대가 들어왔습니다.' : (NET.seat === 0 ? '상대에게 이 방 이름을 알려 주세요. 상대가 들어오면 시작할 수 있습니다.' : '방장을 기다리고 있습니다.')}</p>
+    <p class="${opp ? 'net-msg' : ''}">${opp ? '상대가 들어왔습니다.' : (NET.seat === 0 ? (NET.autoCopy === NET.code ? '방 코드를 복사했습니다. 상대에게 붙여 넣어 보내 주세요.' : '상대에게 이 방 이름을 알려 주세요. 상대가 들어오면 시작할 수 있습니다.') : '방장을 기다리고 있습니다.')}</p>
     ${NET.seat === 0 ? '<p>지형과 승리 조건은 방장이 고른 대로 진행됩니다.</p>' : '<p>방장이 대국을 시작하면 바로 시작됩니다.</p>'}
     <div class="row"><button class="btn-ghost" id="netLeave" type="button">방 나가기</button></div>`;
   $('netCopy').onclick = async () => {
     const value = NET.code.toUpperCase(), b = $('netCopy');
-    let copied = false;
-    try { if (navigator.clipboard && navigator.clipboard.writeText) { await navigator.clipboard.writeText(value); copied = true; } } catch (e) {}
-    if (!copied) {
-      const t = document.createElement('textarea'); t.value = value; t.setAttribute('readonly', '');
-      t.style.position = 'fixed'; t.style.opacity = '0'; document.body.appendChild(t); t.select();
-      try { copied = document.execCommand('copy'); } finally { t.remove(); }
-    }
+    const copied = await copyText(value);
     if (copied) {
       b.textContent = '복사 완료'; b.classList.add('copied');
       setTimeout(() => { if (b.isConnected) { b.textContent = '방 코드 복사'; b.classList.remove('copied'); } }, 1600);
@@ -5592,7 +5781,7 @@ function renderStrip() {
     else if (st === 'remote') hint = NET.waitKind === 'pick' || NET.waitKind === 'pick2' ? '상대가 증강을 고르고 있습니다' : '상대가 조준하고 있습니다';
     else if (p.cpu) hint = G.thinking ? '수를 읽고 있습니다' : '조준하고 있습니다';
     else {
-      hint = stoneLockEnabled && G.sel != null ? '돌을 고정 했습니다. 돌을 다시 눌러 해제하거나 판 어디서든 끌어서 쏘세요.' : '점선으로 표시된 내 돌을 눌러 뒤로 당겼다가 놓으세요';
+      hint = G.sel != null ? '돌을 골랐습니다. 판 어디서든 끌어서 쏘세요' : '점선으로 표시된 내 돌을 눌러 뒤로 당겼다가 놓으세요';
       if (G.mode === '2v2') hint = `${p.dot === 'a' ? '금색' : '청색'} 점이 있는 돌이 내 돌입니다. ` + hint;
       if (enemyHas(p, 'shaky')) hint += ' · 손떨림에 걸려 있습니다';
     }
@@ -5628,7 +5817,7 @@ function renderSkills() {
   if (!bar) return;
   const w = G.world, bpP = G.state === 'buffpick' && G.buffPick ? G.players[G.buffPick.pid] : null, p = bpP || (G.started && w ? skillOwner() : null);
   if (!p || (openingDraftHidden() && !bpP) || !SKILL_IDS.some(id => cnt(p, id)) || G.state === 'roundEnd' || G.state === 'matchEnd') {
-    if (!bar.hidden) { bar.hidden = true; bar.innerHTML = ''; resize(); }
+    if (!bar.hidden) { bar.hidden = true; bar.innerHTML = ''; bar.dataset.html = ''; if (!WIDE_MQ.matches) resize(); }
     return;
   }
   const A = K.A, mine = !!bpP || (G.state === 'aim' && G.players[G.current] === p && !coinBusy() && !G.aim), parts = [];
@@ -5657,7 +5846,15 @@ function renderSkills() {
   if (cnt(p, 'late')) parts.push(`<span class="sk-pill">${sl('晩')}${w.shots >= K.P.shrinkStart ? '늦바람 <b>강해짐</b>' : `늦바람 <b>${K.P.shrinkStart - w.shots}수 뒤</b>`}</span>`);
   const html = parts.join('');
   if (bar.dataset.html !== html) { bar.innerHTML = html; bar.dataset.html = html; }
-  if (bar.hidden) { bar.hidden = false; resize(); }
+  placeSkillBar(p);
+  if (bar.hidden) { bar.hidden = false; if (!WIDE_MQ.matches) resize(); }
+}
+function placeSkillBar(p) {
+  const bar = $('skillBar'), box = $('boardBox');
+  if (!WIDE_MQ.matches) { if (bar.nextElementSibling !== box) box.before(bar); return; }
+  const lt = G.online && NET.seat != null && G.players[NET.seat] ? G.players[NET.seat].team : 0;
+  const host = p && p.team !== lt ? $('pslotR') : $('pslotL');
+  if (bar.previousElementSibling !== host) host.after(bar);
 }
 /* ---------- 온라인 순위표: 온라인 대국이 끝날 때마다 방장 쪽이 한 판의 기록을 남기고, 닉네임별로 모아 보여 줌 ----------
    claude.ai에서는 공유 데이터베이스(db), 웹판에서는 서버의 /api/matches 를 씀 */
@@ -5926,22 +6123,37 @@ $('labCard').addEventListener('click', e => {
   if (G.online) netSync('aim', G.current);
 });
 function renderPlayers() {
-  const w = G.world, privateOpening = openingDraftHidden();
+  const w = G.world, privateOpening = openingDraftHidden(), wide = WIDE_MQ.matches;
   const list = G.started ? G.players : makePlayers('1v1', false);
-  $('players').innerHTML = list.map(p => {
+  const cards = list.map(p => {
     const n = w ? w.stones.filter(s => live(s) && s.owner === p.id).length : 0;
     const active = G.started && !coinBusy() && (G.state === 'aim' || G.state === 'moving' || G.state === 'remote' || G.state === 'replay') && p.id === G.current;
     const items = privateOpening ? '' : uniq(p.augs).map(id => {
       const c = cnt(p, id), a = AUG[id], text = augCopyDisplay(id);
       return `<li class="tier-${a.tier}"><span class="seal seal-xs">${a.seal}</span><div class="aug-line" data-aug="${id}" tabindex="0"><b><i class="tier-dot">${displayTier(a.tier)}</i>${displayAugName(id)}${c > 1 ? ` ×${c}` : ''}${questTagHTML(id, p)}</b> <span class="aug-summary">${statTextUI(text.keyword)}</span></div></li>`;
     }).join('');
-    return `<div class="pcard card${active ? ' active' : ''}">
-      <div class="pcard-head">${avatar(p)}<span class="pcard-who"><span class="pcard-name">${esc(pSelf(p))}</span><small>${teamName(p.team)} · ${charTitle(charOf(p))}</small></span>${p.cpu ? `<span class="chip">CPU ${LVL_NAME[G.cpuLevel] || ''}</span>` : ''}<span class="chip turn${active ? '' : ' idle'}">차례</span><span class="pcount">돌 ${n}</span></div>
+    const cpuChip = p.cpu ? `<span class="chip">CPU ${LVL_NAME[G.cpuLevel] || ''}</span>` : '', turnChip = `<span class="chip turn${active ? '' : ' idle'}">차례</span>`;
+    /* 넓은 화면: 큰 초상과 남은 돌 수를 크게 */
+    const head = wide
+      ? `<div class="pcard-hero">${avatar(p, { bust: true })}<span class="pcard-who"><span class="pcard-name">${esc(pSelf(p))}</span><small>${teamName(p.team)} · ${charTitle(charOf(p))}</small><span class="pcard-tags">${turnChip}<span class="pcount">돌 <b>${n}</b></span></span></span></div>`
+      : `<div class="pcard-head">${avatar(p)}<span class="pcard-who"><span class="pcard-name">${esc(pSelf(p))}</span><small>${teamName(p.team)} · ${charTitle(charOf(p))}</small></span>${cpuChip}${turnChip}<span class="pcount">돌 ${n}</span></div>`;
+    return { team: p.team, html: `<div class="pcard card${active ? ' active' : ''}" data-pid="${p.id}">
+      ${head}
       ${privateOpening ? `<p class="empty">${UI_LANG === 'ja' ? '初回強化の選択完了後に公開' : '첫 증강 선택 완료 후 공개'}</p>` : items ? `<ul class="aug-list">${items}</ul>` : '<p class="empty">아직 증강이 없습니다</p>'}
       ${!privateOpening && K.synOf(p).length ? `<div class="syn-list">${K.synOf(p).map(y => `<span class="syn-chip" data-syn="${y.id}" tabindex="0">조합 <b>${y.name}</b></span>`).join('')}</div>` : ''}
       ${G.started && w && !privateOpening ? `<div class="pmeta">${pmeta(w, p)}</div>` : ''}
-    </div>`;
-  }).join('');
+    </div>` };
+  });
+  if (wide) {
+    /* 왼쪽은 내 편: 온라인은 내 자리, 그 밖에는 흑 */
+    const lt = G.online && NET.seat != null && G.players[NET.seat] ? G.players[NET.seat].team : 0;
+    $('pslotL').innerHTML = cards.filter(c => c.team === lt).map(c => c.html).join('');
+    $('pslotR').innerHTML = cards.filter(c => c.team !== lt).map(c => c.html).join('');
+    $('players').innerHTML = '';
+  } else {
+    $('players').innerHTML = cards.map(c => c.html).join('');
+    $('pslotL').innerHTML = ''; $('pslotR').innerHTML = '';
+  }
 }
 function pmeta(w, p) {
   const out = [];
@@ -5989,8 +6201,8 @@ function showAugTip(el, id) {
   const pc = el.closest('.pcard');
   let owner = null;
   if (pc && G.started) {
-    const idx = [...document.querySelectorAll('#players .pcard')].indexOf(pc);
-    if (idx >= 0) owner = G.players[idx] || null;
+    if (pc.dataset.pid != null) owner = G.players[+pc.dataset.pid] || null;
+    else { const idx = [...document.querySelectorAll('#players .pcard')].indexOf(pc); if (idx >= 0) owner = G.players[idx] || null; }
   }
   tip.innerHTML = buildAugTipV22(id, owner);
   tip.hidden = false;
@@ -7072,12 +7284,32 @@ function resize() {
   const W = box.clientWidth;
   const top = box.getBoundingClientRect().top + window.scrollY;
   const narrow = matchMedia('(max-width: 860px)').matches;
-  let side = narrow ? Math.min(W, Math.max(300, window.innerHeight - 120)) : Math.min(W, window.innerHeight - top - 20);
-  side = Math.max(260, Math.floor(Math.min(side, W)));
+  let side;
+  if (WIDE_MQ.matches) {
+    /* v64: 판 테두리(캔버스 둘레 여백을 뺀 부분)를 기준으로 크기를 정함.
+       테두리 윗선은 차례 줄 바로 아래, 아랫선은 화면 아래 여백선, 좌우는 양옆 칸과 같은 간격 */
+    const st = document.querySelector('.stage'), gap = parseFloat(getComputedStyle(st).columnGap) || 24;
+    const sr = st.getBoundingClientRect(), pb = parseFloat(getComputedStyle(st).paddingBottom) || 0;
+    const root = document.documentElement.style, inCur = parseFloat(root.getPropertyValue('--board-in')) || 0;
+    const ft = box.getBoundingClientRect().top + inCur;   /* 판 테두리 윗선 (스크롤 위치와 상관없음) */
+    const fw = Math.max(240, Math.floor(Math.min(st.clientWidth - 2 * 210 - 2 * gap, sr.bottom - pb - ft - 1)));
+    side = Math.round(fw * VIEW / (S + 60));
+    const inset = Math.round(40 * side / VIEW), frame = side - 2 * inset;
+    root.setProperty('--board-w', frame + 'px');
+    root.setProperty('--board-in', inset + 'px');
+    /* 양옆 칸은 차례 줄 윗선에서 판 테두리 아랫선까지 (아래 기록·채팅 칸이 판 아랫선에 맞음) */
+    const tb = document.querySelector('.stage > .table');
+    if (tb) root.setProperty('--side-h', Math.max(200, Math.round(ft + frame - tb.getBoundingClientRect().top + 2)) + 'px');
+  } else {
+    side = narrow ? Math.min(W, Math.max(300, window.innerHeight - 120)) : Math.min(W, window.innerHeight - top - 20);
+    side = Math.max(260, Math.floor(Math.min(side, W)));
+  }
   cv.style.width = side + 'px'; cv.style.height = side + 'px';
   dpr = Math.min(2, window.devicePixelRatio || 1);
-  cv.width = Math.round(side * dpr); cv.height = Math.round(side * dpr);
+  const pw = Math.round(side * dpr), changed = cv.width !== pw || cv.height !== pw;
+  if (changed) { cv.width = pw; cv.height = pw; }   /* v63: 크기가 같으면 캔버스를 비우지 않음 */
   G.scale = side / VIEW;
+  if (changed) { try { if (typeof lastT === 'number') render(performance.now()); } catch (e) {} }   /* 크기가 바뀌면 바로 다시 그려 빈 판이 비치지 않게 */
 }
 const maxPull = () => Math.min(170, VIEW * G.scale * 0.3) / G.scale;
 
@@ -7154,7 +7386,6 @@ function drawStone(s, alone) {
   ctx.lineWidth = 1.2; ctx.strokeStyle = s.team === 0 ? 'rgba(0,0,0,.7)' : 'rgba(120,108,88,.5)';
   ctx.beginPath(); ctx.arc(s.x, s.y, r, 0, TAU); ctx.stroke();
   }
-  if (stoneLockEnabled && G.sel === s.id && !s.falling) { ctx.save(); ctx.strokeStyle = '#ed493f'; ctx.lineWidth = 4; ctx.shadowColor = '#ed493f'; ctx.shadowBlur = 9; ctx.beginPath(); ctx.arc(s.x, s.y, r + 7, 0, TAU); ctx.stroke(); ctx.restore(); }
   if (s.clone && !s.falling) {
     ctx.save(); ctx.globalAlpha = alpha * 0.55; ctx.strokeStyle = s.team === 0 ? 'rgba(232,205,142,.8)' : 'rgba(120,96,60,.7)';
     ctx.lineWidth = 2; ctx.setLineDash([4, 5]); ctx.beginPath(); ctx.arc(s.x, s.y, r * 0.62, 0, TAU); ctx.stroke(); ctx.restore();
@@ -8061,6 +8292,15 @@ function drawFx(f) {
 /* ---------- loop ---------- */
 let lastT = performance.now(), acc = 0;
 function frame(now) {
+  if (PAUSE.open && !G.online) {   /* v63: ESC 메뉴를 연 동안 판·시간·CPU를 멈춤 (온라인은 계속 흐름) */
+    const d = now - lastT; lastT = now;
+    if (G.turnT0 != null) G.turnT0 += d;
+    if (G.cpuAnim) G.cpuAnim.t0 += d;
+    if (G.coinUntil && G.coinUntil > now) G.coinUntil += d;
+    render(now);
+    requestAnimationFrame(frame);
+    return;
+  }
   const dt = Math.min(0.05, (now - lastT) / 1000);
   lastT = now;
   const w = G.world;
@@ -8171,39 +8411,23 @@ cv.addEventListener('pointerdown', e => {
     return;
   }
   const pickOK = s => (G.opt.yi ? K.canYi(G.world, p, s) : myStoneOK(s, p));
-  let locked = stoneLockEnabled && G.sel != null ? K.byId(G.world, G.sel) : null;
-  if (!stoneLockEnabled) G.sel = null;
-  if (G.sel != null && (!locked || !live(locked))) { G.sel = null; locked = null; }
-  let touched = null, td = Infinity;
+  /* 예전 방식: 내 돌을 누르면 그 돌을 고르고, 고른 돌이 있으면 판 어디서든 끌어서 쏨 */
+  if (G.sel != null) { const ss = K.byId(G.world, G.sel); if (!ss || !live(ss) || !pickOK(ss)) G.sel = null; }
+  let best = null, bd = Infinity;
   for (const s of G.world.stones) {
-    if (!live(s)) continue;
+    if (!pickOK(s)) continue;
     const d = hyp(s.x - pt.x, s.y - pt.y);
-    if (d < s.r + slop && d < td) { td = d; touched = s; }
+    if (d < s.r + slop && d < bd) { bd = d; best = s; }
   }
-  if (locked) {
-    if (touched && touched.id !== locked.id) { e.preventDefault(); return; } /* 선택 고정 중에는 다른 돌 터치를 무시 */
-    if (touched && touched.id === locked.id) {
-      if (!pickOK(locked)) { G.sel = null; G.predKey = ''; renderStrip(); e.preventDefault(); return; }
-      /* 같은 돌을 다시 누르면 짧은 탭으로 선택을 해제할 수 있습니다. */
-      G.aim = { id: locked.id, px: pt.x, py: pt.y, downX: pt.x, downY: pt.y, toggleOnTap: true, pointer: e.pointerId, free: false, t0: performance.now() };
-    } else {
-      if (!pickOK(locked)) { e.preventDefault(); return; }
-      /* 선택된 돌은 유지하고 판의 빈 곳에서 끌어 조준할 수 있습니다. */
-      G.aim = { id: locked.id, ox: pt.x, oy: pt.y, px: pt.x, py: pt.y, pointer: e.pointerId, free: true, t0: performance.now() };
-    }
-  } else {
-    let best = null, bd = Infinity;
-    for (const s of G.world.stones) {
-      if (!pickOK(s)) continue;
-      const d = hyp(s.x - pt.x, s.y - pt.y);
-      if (d < s.r + slop && d < bd) { bd = d; best = s; }
-    }
-    if (best) {
-      /* pull straight back from the stone */
-      G.aim = { id: best.id, px: pt.x, py: pt.y, downX: pt.x, downY: pt.y, pointer: e.pointerId, free: false, t0: performance.now() };
-      G.sel = best.id;
-    } else { G.hintFlash = 1.4; renderStrip(); return; }
-  }
+  if (best) {
+    /* pull straight back from the stone */
+    G.aim = { id: best.id, px: pt.x, py: pt.y, downX: pt.x, downY: pt.y, pointer: e.pointerId, free: false, t0: performance.now() };
+    if (G.sel !== best.id) G.predKey = '';
+    G.sel = best.id;
+  } else if (G.sel != null) {
+    /* 고른 돌이 있으면 손가락 아래에서 고무줄이 시작되듯 판 어디서든 당김 */
+    G.aim = { id: G.sel, ox: pt.x, oy: pt.y, px: pt.x, py: pt.y, pointer: e.pointerId, free: true, t0: performance.now() };
+  } else { G.hintFlash = 1.4; renderStrip(); return; }
   stoneTap(0.12, 2600);
   showAimHint(e.pointerType);
   bowLast = 0;
@@ -8237,10 +8461,8 @@ function releaseAim(e, cancel) {
   if (!G.aim || e.pointerId !== G.aim.pointer) return;
   const activeAim = G.aim, a = aimInfo(), held = performance.now() - (activeAim.t0 || 0);
   const tapSlop = Math.max(2, 8 / G.scale);
-  const tappedSelectedAgain = !!activeAim.toggleOnTap && hyp((activeAim.px || 0) - activeAim.downX, (activeAim.py || 0) - activeAim.downY) <= tapSlop;
   G.aim = null; hideAimHint();
   cv.classList.remove('dragging');
-  if (!cancel && tappedSelectedAgain && stoneLockEnabled) { G.sel = null; G.predKey = ''; renderStrip(); return; }
   /* 누르자마자 놓은 샷은 쏘지 않음 (조작 실수 방지) */
   if (!cancel && a && a.pw >= 0.05 && held < AIM_HOLD) {
     G.hintNote = '조금 더 천천히 당겼다가 놓아 주세요'; G.hintFlash = 1.2;
@@ -8278,7 +8500,7 @@ function drawMysteryThumb(c) {
 drawMysteryThumb($('mapPick').querySelector('canvas[data-random]'));
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawMysteryThumb($('mapPick').querySelector('canvas[data-random]')));
 const sumHTML = () => (UI_LANG === 'ja' ? RULE_SUM_JA : RULE_SUM).map(([k, t]) => `<li><b>${k}</b>${t}</li>`).join('');
-$('howto').innerHTML = sumHTML() + (UI_LANG === 'ja' ? '<li class="howto-more">詳しいルールは対局画面右下の「ルール」にあります。</li>' : '<li class="howto-more">자세한 규칙은 대국 화면 오른쪽 아래 \'규칙\'에 있습니다.</li>');
+$('howto').innerHTML = sumHTML() + (UI_LANG === 'ja' ? '<li class="howto-more">詳しいルールは「ルール」で確認できます。</li>' : '<li class="howto-more">자세한 규칙은 \'규칙\'에서 볼 수 있습니다.</li>');
 const QUICK_RULES = [
   ['조작', ['돌을 누르고 뒤로 당겼다 놓으면 반대 방향으로 발사됩니다.', `한 수 제한 시간은 ${TURN_SEC}초입니다(CPU 대전은 제한 없음). 시간이 끝나면 차례가 넘어갑니다.`]],
   ['승리', ['상대 돌을 모두 판 밖으로 떨어뜨리면 승리합니다.', '양쪽 마지막 돌이 함께 떨어지면 부활·길동무 잔여 횟수가 많은 쪽이 승리하고, 같으면 쏜 쪽이 패배합니다.']],
@@ -8724,7 +8946,7 @@ function applyLanguage(lang) {
   if (typeof renderMapCard === 'function') renderMapCard();
   if (typeof renderGuide === 'function') renderGuide();
   if (typeof showTut === 'function' && !$('ovTut').hidden) showTut(tutIdx);
-  if ($('howto')) $('howto').innerHTML = sumHTML() + (UI_LANG === 'ja' ? '<li class=\"howto-more\">詳しいルールは対局画面右下の「ルール」にあります。</li>' : '<li class=\"howto-more\">자세한 규칙은 대국 화면 오른쪽 아래 \'규칙\'에 있습니다.</li>');
+  if ($('howto')) $('howto').innerHTML = sumHTML() + (UI_LANG === 'ja' ? '<li class=\"howto-more\">詳しいルールは「ルール」で確認できます。</li>' : '<li class=\"howto-more\">자세한 규칙은 \'규칙\'에서 볼 수 있습니다.</li>');
   if ($('rulesList')) $('rulesList').innerHTML = `<div class=\"rule-card\"><p class=\"rule-h\">${UI_LANG === 'ja' ? 'かんたんルール' : '빠른 규칙'}</p>${(UI_LANG === 'ja' ? QUICK_RULES_JA : QUICK_RULES).map(([h, list]) => `<section class=\"quick-rule\"><b>${h}</b><ul>${list.map(r => `<li>${r}</li>`).join('')}</ul></section>`).join('')}</div>`;
   translateTree(document.body);
   refreshAugSurfaces();
@@ -9123,7 +9345,6 @@ function toggleSnd(btn) {
   pn.hidden = false; btn.setAttribute('aria-expanded', 'true'); renderSnd();
   pn.style.right = Math.round(Math.max(16, Math.min(innerWidth - r.right, innerWidth - 16 - pn.offsetWidth))) + 'px';   /* 좁은 화면에서도 화면 안에 */
 }
-$('btnStoneLock').addEventListener('click', () => { stoneLockEnabled = !stoneLockEnabled; $('btnStoneLock').textContent = `돌 잠금 ${stoneLockEnabled ? '켬' : '끄기'}`; $('btnStoneLock').setAttribute('aria-pressed', String(stoneLockEnabled)); if (!stoneLockEnabled) { G.sel = null; G.predKey = ''; renderStrip(); } });
 $('btnSound').addEventListener('click', e => { e.stopPropagation(); toggleSnd($('btnSound')); });
 $('btnSound2').addEventListener('click', e => { e.stopPropagation(); toggleSnd($('btnSound2')); });
 addEventListener('resize', closeSnd);
@@ -9158,8 +9379,180 @@ document.addEventListener('keydown', e => {
 });
 
 if (window.__ALK_TEST__) window.__alk = { pack: () => JSON.stringify(packAll()), G, NET, endRound, drainEvents, K, roundTitle, renderAll, renderDraft, aimPw: () => { const a = G.aim && aimInfo(); return a ? a.pw : null; }, snd: { sfxHit, statSnd, flickSnd, powerOf, ac: () => AC, reset: () => { lastHitT = -1; }, bgm: () => ({ cur: bgmCur, want: bgmWant(), els: Object.fromEntries(Object.entries(bgmEl).map(([k, v]) => [k, { paused: v.el.paused, t: +v.el.currentTime.toFixed(2), g: +v.g.gain.value.toFixed(2) }])), sfx: SFX_G && +SFX_G.gain.value.toFixed(3), bg: BGM_G && +BGM_G.gain.value.toFixed(3), SND: Object.assign({}, SND) }) } };
+/* ---------- v64: 넓은 화면 배치 · 기록·채팅 칸 · ESC 메뉴 · 브라우저 티 막기 ---------- */
+let layoutWide = null;
+function applyLayout() {
+  const wide = WIDE_MQ.matches;
+  if (wide === layoutWide) return;
+  layoutWide = wide;
+  if (wide) window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  const panel = document.querySelector('.stage > .panel');
+  if (wide) {
+    $('sideTopL').appendChild($('labCard')); $('sideTopR').appendChild($('mapCard'));
+    $('sideBotL').appendChild($('logBox')); $('sideBotR').appendChild($('chatBox'));
+  } else {
+    panel.insertBefore($('labCard'), panel.firstChild); panel.insertBefore($('mapCard'), panel.firstChild);
+    $('players').after($('logBox')); $('logBox').after($('chatBox'));
+  }
+  renderPlayers();
+  if (!wide) placeSkillBar(null); else { try { renderSkills(); } catch (e) {} }
+  resize();
+  CHAT.drawn = -1; renderChat();
+}
+
+/* 채팅: 내 방 상태에 마지막 한 마디(cm)를 올리고, 상대의 cm이 바뀌면 새 말로 받음 */
+const cleanChat = v => String(v || '').replace(/[\u0000-\u001f\u007f-\u009f​-‏‪-‮⁠-⁯﻿]/g, '').replace(/\s+/g, ' ').trim().slice(0, 60);
+const charNm = c => (CHAR[c] ? CHAR[c].name : '');
+function chatName(pr) {
+  if (!pr.presence || !pr.presence.prof) return '상대';
+  const pf = netProfOf(pr);
+  return pf.n || charNm(pf.c) || '상대';
+}
+function renderChat() {
+  const box = $('chatBox'); if (!box) return;
+  const on = !!NET.room, inp = $('chatIn');
+  if (CHAT.on !== on) {
+    CHAT.on = on;
+    box.classList.toggle('idle', !on);
+    inp.disabled = !on; $('chatSend').disabled = !on;
+    inp.placeholder = on ? '메시지를 입력하세요' : '온라인 대국 전용';
+    CHAT.ver++;
+  }
+  if (CHAT.drawn === CHAT.ver) return;
+  CHAT.drawn = CHAT.ver;
+  const log = $('chatLog');
+  log.innerHTML = CHAT.list.length
+    ? CHAT.list.map(m => `<li${m.me ? ' class="me"' : ''}><b><span data-notr>${esc(m.name)}</span>${m.spec ? ' (관전)' : ''}</b><span data-notr>${esc(m.text)}</span>${m.fail ? '<small class="chat-fail">보내지 못했어요</small>' : ''}</li>`).join('')
+    : `<li class="chat-empty">${on ? '아직 대화가 없습니다' : '온라인 대국에서 상대와 대화할 수 있어요'}</li>`;
+  log.scrollTop = log.scrollHeight;
+}
+function pushChat(m) {
+  CHAT.list.push(m);
+  if (CHAT.list.length > 40) CHAT.list.splice(0, CHAT.list.length - 40);
+  CHAT.ver++; renderChat();
+  if (!m.me) { try { stoneTap(0.06, 3400); } catch (e) {} }
+}
+function sendChat() {
+  const inp = $('chatIn'), t = cleanChat(inp.value);
+  if (!NET.room) return;
+  if (!t) { inp.value = ''; return; }
+  const now = Date.now();
+  if (now - CHAT.lastAt < 1000) return;   /* 1초에 한 마디까지 */
+  CHAT.lastAt = now; CHAT.n++;
+  const cm = { i: `${CHAT.n}.${now.toString(36)}`, t }, m = { name: cleanName(PROF.me.n) || charNm(PROF.me.c) || '나', spec: NET.seat === -1, text: t, me: true };
+  CHAT.mine = cm;
+  NET.room.presence({ cm }).catch(() => { if (CHAT.mine === cm) CHAT.mine = null; m.fail = true; CHAT.ver++; renderChat(); });
+  inp.value = '';
+  pushChat(m);
+}
+function chatPeers(peers) {
+  for (const pr of peers || []) {
+    if (pr.isMe || pr.kind !== 'viewer' || !pr.presence || pr.presence.app !== 'alk') continue;
+    const cm = pr.presence.cm;
+    if (!cm || typeof cm !== 'object' || typeof cm.i !== 'string' || typeof cm.t !== 'string') continue;
+    if (CHAT.seen[pr.peer] === cm.i) continue;
+    CHAT.seen[pr.peer] = cm.i;
+    const t = cleanChat(cm.t);
+    if (!t) continue;
+    const seat = pr.presence.seat;
+    pushChat({ name: chatName(pr), spec: !(seat === 0 || seat === 1), text: t, me: false });
+  }
+}
+function chatReset() { CHAT.list = []; CHAT.seen = {}; CHAT.mine = null; CHAT.ver++; renderChat(); }
+$('chatForm').addEventListener('submit', e => { e.preventDefault(); sendChat(); });
+
+/* ESC 메뉴: 계속하기 · 증강 설명표 · 기권 · 새 대국 */
+const PAUSE_BLOCK = ['ovMenu', 'ovDraft', 'ovRound', 'ovProfile', 'ovBook', 'ovRank', 'ovRules', 'ovTut', 'ovIntro'];
+const pauseOpenable = () => G.started && PAUSE_BLOCK.every(id => !$(id) || $(id).hidden) && !document.querySelector('.ill-pick');
+function renderPause() {
+  const canResign = !$('btnResign').hidden;
+  const rows = [['resume', '續', '계속하기'], ['book', '增', '증강 설명표'], ['bg', '景', '배경', (BG_LIST.find(b => b[0] === BG) || BG_LIST[0])[1]],
+    ['resign', '降', '기권', canResign ? '' : '지금은 할 수 없음', 'pa-danger', !canResign], ['new', '新', '새 대국']];
+  $('pauseList').innerHTML = rows.map(([k, ico, label, state, cls, off]) =>
+    `<button type="button" data-pa="${k}"${cls ? ` class="${cls}"` : ''}${off ? ' disabled' : ''}><span class="pa-ico" aria-hidden="true">${ico}</span><span>${label}</span>${state ? `<span class="pa-state">${state}</span>` : ''}</button>${k === 'bg' && PAUSE.bgOpen ? bgPickHTML() : ''}`).join('');
+  $('pauseNote').textContent = G.online ? '온라인 대국은 메뉴를 열어도 시간이 흐릅니다' : '메뉴를 여는 동안 대국이 멈춥니다';
+}
+let pauseFrom = null;
+function openPause() {
+  if (!pauseOpenable()) return;
+  closeSnd();
+  if (G.aim) cancelAim();
+  pauseFrom = document.activeElement;
+  PAUSE.bgOpen = false;
+  renderPause();
+  $('ovPause').hidden = false; PAUSE.open = true;
+  ensureAudio(); stoneTap(0.1, 1900);
+  const f = $('pauseList').querySelector('button'); if (f) f.focus({ preventScroll: true });
+}
+function closePause() {
+  if ($('ovPause').hidden) return;
+  closeSnd();
+  $('ovPause').hidden = true; PAUSE.open = false;
+  if (pauseFrom && pauseFrom.isConnected && pauseFrom.focus && pauseFrom.id !== 'chatIn') pauseFrom.focus({ preventScroll: true });
+  pauseFrom = null;
+}
+const bgPickHTML = () => `<div class="bg-pick" role="group" aria-label="배경">${BG_LIST.map(([v, name]) =>
+  `<button type="button" data-bgv="${v}" aria-pressed="${v === BG}"><span class="bg-sw ${v}" aria-hidden="true"></span><span>${name}</span></button>`).join('')}</div>`;
+function renderBg() {
+  $('bgGrid').innerHTML = BG_LIST.map(([v, name, who]) =>
+    `<button type="button" data-bgv="${v}" aria-pressed="${v === BG}"><span class="bg-sw ${v}" aria-hidden="true"></span><span class="bg-nm"><span>${name}</span></span></button>`).join('');
+}
+function openBg() { renderBg(); $('ovBg').hidden = false; const f = $('bgGrid').querySelector('[aria-pressed="true"]'); if (f) f.focus({ preventScroll: true }); }
+function closeBg() {
+  if ($('ovBg').hidden) return;
+  $('ovBg').hidden = true;
+  if (!$('ovPause').hidden) { renderPause(); const nb = $('pauseList').querySelector('[data-pa="bg"]'); if (nb) nb.focus({ preventScroll: true }); }
+}
+$('ovBg').addEventListener('click', e => {
+  if (e.target === $('ovBg') || e.target.closest('#bgClose')) { closeBg(); return; }
+  const b = e.target.closest('[data-bgv]'); if (!b) return;
+  ensureAudio(); stoneTap(0.1, 1900);
+  setBg(b.dataset.bgv); renderBg();
+  const nb = $('bgGrid').querySelector(`[data-bgv="${b.dataset.bgv}"]`); if (nb) nb.focus({ preventScroll: true });
+});
+$('btnPause').addEventListener('click', e => { e.stopPropagation(); openPause(); });
+$('ovPause').addEventListener('click', e => {
+  if (e.target === $('ovPause')) { closePause(); return; }
+  const bv = e.target.closest('[data-bgv]');
+  if (bv) { ensureAudio(); stoneTap(0.1, 1900); setBg(bv.dataset.bgv); renderPause(); const nb = $('pauseList').querySelector(`[data-bgv="${bv.dataset.bgv}"]`); if (nb) nb.focus({ preventScroll: true }); return; }
+  const b = e.target.closest('[data-pa]'); if (!b || b.disabled) return;
+  ensureAudio(); stoneTap(0.1, 1900);
+  const k = b.dataset.pa;
+  if (k === 'resume') closePause();
+  else if (k === 'book') $('btnBook').click();
+  else if (k === 'bg') openBg();
+  else if (k === 'resign') { closePause(); askResign(); }
+  else if (k === 'new') { closePause(); openMenu(); }
+});
+/* ESC: 채팅 입력 중이면 입력만 끝내고, 위에 뜬 창은 기존처럼 닫고, 조준 중이면 조준 취소, 그 밖에는 메뉴를 열고 닫음 */
+window.addEventListener('keydown', e => {
+  if (e.key !== 'Escape' || e.repeat) return;
+  if (e.target && e.target.id === 'chatIn') { e.preventDefault(); e.stopImmediatePropagation(); e.target.blur(); return; }
+  if (!$('ovBg').hidden) { e.preventDefault(); e.stopImmediatePropagation(); closeBg(); return; }
+  if (['ovRules', 'ovRank', 'ovBook'].some(id => !$(id).hidden) || !$('sndPanel').hidden || document.querySelector('.ill-pick')) return;
+  if (!$('ovPause').hidden) { e.preventDefault(); e.stopImmediatePropagation(); closePause(); return; }
+  if (G.aim && G.state === 'aim') { e.preventDefault(); cancelAim(); return; }
+  if (pauseOpenable()) { e.preventDefault(); openPause(); }
+}, true);
+/* 브라우저 티 막기: 우클릭 메뉴, 그림 끌기, (넓은 화면) Ctrl+휠·Ctrl+± 확대 */
+document.addEventListener('contextmenu', e => { if (!(e.target.closest && e.target.closest('input, textarea, [contenteditable="true"]'))) e.preventDefault(); });
+document.addEventListener('dragstart', e => { const t = e.target; if (t && (t.tagName === 'IMG' || t.tagName === 'CANVAS')) e.preventDefault(); });
+addEventListener('wheel', e => { if (e.ctrlKey && WIDE_MQ.matches) e.preventDefault(); }, { passive: false });
+addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && WIDE_MQ.matches && ['+', '-', '=', '_', '0'].includes(e.key)) e.preventDefault(); });
+Object.assign(JA_EXACT, {
+  '메뉴': 'メニュー', '계속하기': '続ける', '기권': '投了', '지금은 할 수 없음': '今はできません',
+  '메뉴 열기 (ESC)': 'メニューを開く (ESC)', '기객 정보': '棋客情報',
+  '온라인 대국은 메뉴를 열어도 시간이 흐릅니다': 'オンライン対局ではメニューを開いても時間が進みます',
+  '메뉴를 여는 동안 대국이 멈춥니다': 'メニューを開いている間は対局が止まります',
+  "자세한 규칙은 '규칙'에서 볼 수 있습니다.": '詳しいルールは「ルール」で確認できます。', '조준을 취소했습니다': '照準をキャンセルしました',
+  '채팅': 'チャット', '보내기': '送信', '채팅 입력': 'チャット入力', '메시지를 입력하세요': 'メッセージを入力',
+  '온라인 대국에서 상대와 대화할 수 있어요': 'オンライン対局で相手と会話できます', '아직 대화가 없습니다': 'まだ会話はありません', '온라인 대국 전용': 'オンライン対局専用', '배경': '背景', '무색': '無地', '물결': '波', '구름': '雲', '달밤': '月夜', '대숲': '竹林', '홍매화': '紅梅', '산수': '山水', '서당': '書堂', '장터': '市場', '고르면 바로 바뀌고, 다음에 열어도 그대로입니다.': '選ぶとすぐに変わり、次に開いてもそのままです。', '방 코드를 복사했습니다. 상대에게 붙여 넣어 보내 주세요.': 'ルームコードをコピーしました。相手に貼り付けて送ってください。', '보내지 못했어요': '送信できませんでした'
+});
+
 /* ---------- boot ---------- */
 G.world = K.newWorld(makePlayers('1v1', false), '1v1', 'flat');
+applyLayout();
+WIDE_MQ.addEventListener('change', applyLayout);
 new ResizeObserver(resize).observe($('boardBox'));
 window.addEventListener('resize', resize);
 resize();
