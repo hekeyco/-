@@ -1250,6 +1250,19 @@ html[data-bg="market"] body{background-image:url("data:image/svg+xml,<svg xmlns=
 
 /* v88: 상대(오른쪽) 칸의 '차례' 표시는 '돌 N' 오른쪽에 */
 @media (min-width: 960px) and (min-aspect-ratio: 5/4) and (min-height: 560px){ .side-r .pcard-tags .chip.turn{order:1} }
+
+/* v91: 제한 시간과 진행 N수의 아랫선을 맞춤 (둘 다 차례 줄 아래에서 3px 위), 진행 N수는 제한 시간 바로 왼쪽 */
+@media (min-width: 561px){ .turn-timer{top:calc(var(--strip-top,0px) + 28px) !important} .table:not(:has(#turnTimer[hidden])) .turn-strip .turn-count{right:92px} }
+
+/* v92: '진행 N수'는 늘 차례 줄 오른쪽 위(제한 시간 자리 바로 위, 6px 띄움)에 고정, 오른쪽 끝은 판 테두리에 맞춤. 조준 취소 안내는 그 왼쪽 */
+@media (min-width: 561px){
+  .turn-strip{overflow:visible}
+  .table .turn-strip .turn-count{top:-7px !important;bottom:auto !important;right:0 !important;margin:0 !important}
+  .aim-hint{top:calc(var(--strip-top,0px) - 7px) !important;right:72px !important}
+}
+
+/* v93: 조준 취소 안내는 늘 제한 시간 칸 왼쪽(10px 띄움)에, 제한 시간 칸과 세로 가운데를 맞춤 — 제한 시간이 없는 대국도 같은 자리 */
+@media (min-width: 561px){ .aim-hint{top:calc(var(--strip-top,0px) + 31px) !important;right:92px !important} }
 </style>
 
 <header class="bar">
