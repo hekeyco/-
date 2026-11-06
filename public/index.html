@@ -1477,15 +1477,15 @@ const A = {
   revive: 3, buddy: 1, thief: 1, frostN: 3, rewind: 2, kingR: 1.5, kingM: 1.5, kingV: 1.3, boltEvery: 3, boltN: 4, boltV: 620,
   clone: 1, cloneK: 1.0, buddyD: 500, lastN: 3, lastR: 1.15, lastM: 1.2, lastV: 1.12, tideD: 0.75 * GAP,
   /* 새 증강 */
-  momV: 1.25, ctrV: 1.30, grip: 1.12, sand: 1.25, starM: 1.6, starD: 0.8 * GAP, edgeH: 1.7, edgeD: 1.6 * GAP, firstK: 1.8, firstN: 2,
+  momV: 1.25, ctrV: 1.30, grip: 1.12, sand: 1.25, starM: 1.6, starD: 0.8 * GAP, edgeH: 1.7, edgeV: 1.2, edgeD: 1.6 * GAP, firstK: 1.8, firstN: 2,
   gustD: 1.0 * GAP, hamM: 1.16, pressD: 2 * GAP, pressM: 0.40, shockR: 2 * GAP, shockD: 1.6 * GAP, chainK: 1.5,
   dragonN: 1, dragonD: 2.2 * GAP, dragonH: 2.0, dragonStep: 0.4, ko: 3, pillarR: 1.01, pillarM: 1.01, pillarV: 1.01, pillarCap: 20, pillarFree: 3,
   /* v29 새 증강 */
   clayV: 1.18, clayH: 0.85, milletR: 0.85, milletM: 0.96, milletV: 1.10, gritStep: 0.08, gritMax: 3, lateV0: 0.95, lateV1: 1.12, lateH: 1.08,
   loneV: 1.2, loneM: 1.2, loneR: 1.2, trainN: 3,
-  curveA: 30 * Math.PI / 180, curveB: 60 * Math.PI / 180, thriceV: 1.30, thriceK: 1.0, brandK: 1.0, iceF: 0.4,
+  curveA: 30 * Math.PI / 180, curveB: 60 * Math.PI / 180, thriceV: 1.33, thriceK: 1.0, brandK: 1.0, iceF: 0.4,
   glutR: 1.06, glutM: 1.06, glutV: 1.06, glutN: Infinity, bountyN: 8, bountyIn: 2 * GAP, bountyH: 0.6,
-  yiN: 3, shardHs: 0.3 * GAP, portalZ: 3 * GAP, tengenH: 1.1, gambleV: 1.35, fortV0: 0.9, fortV1: 1.1, fortH0: 0.9, fortH1: 1.1, rebK: 1.2, revH0: 2 * GAP, revStep: 0.5 * GAP, revMax: 5 * GAP, ropeRest: 1.8, ropePushK: 1.5, ropeMaxV: 2200, revGrowN: 2, revShrinkN: 3, crackMax: 2, crackR: 2 * GAP, crackF: 1400, shardN: 3, shardR: 0.3 * GAP, shardBack: 0.85, frogEvery: 5, frogAir: 1.1, fishStay: 1, frogBox: 1.8 * GAP, frogPush: GAP, fishLeapMin: 2.8, fishLeapSpan: 2.6, fishCatch: 0.62 * GAP, fishPower: 1.10, sqrV: 1.3, sqrN: 2, heavenRow: 3 * GAP, vortexN: 3, vortexR: 3 * GAP, vortexPull: 0.5 * GAP, vortexH: 0.5, ikiN: 4, orlJade: 2, pajukN: 2, pajukTurns: 12, holeR: 8 * GAP, holePull: 1 * GAP, holeKill: 0.5 * GAP, lianV: 0.75, landW: 1 * GAP, landF: 4.5, passK: 0.75, passF: 5
+  yiN: 3, shardHs: 0.3 * GAP, portalZ: 3 * GAP, tengenH: 1.1, gambleV: 1.35, fortV0: 0.88, fortV1: 1.12, fortH0: 0.88, fortH1: 1.12, rebK: 1.2, revH0: 2 * GAP, revStep: 0.5 * GAP, revMax: 5 * GAP, ropeRest: 1.8, ropePushK: 1.5, ropeMaxV: 2200, revGrowN: 2, revShrinkN: 3, crackMax: 2, crackR: 2 * GAP, crackF: 1400, shardN: 3, shardR: 0.3 * GAP, shardBack: 0.85, frogEvery: 5, frogAir: 1.1, fishStay: 1, frogBox: 1.8 * GAP, frogPush: GAP, fishLeapMin: 2.8, fishLeapSpan: 2.6, fishCatch: 0.62 * GAP, fishPower: 1.10, sqrV: 1.3, sqrN: 2, heavenRow: 3 * GAP, vortexN: 3, vortexR: 3 * GAP, vortexPull: 0.5 * GAP, vortexH: 0.5, ikiN: 4, orlJade: 2, pajukN: 2, pajukTurns: 12, holeR: 8 * GAP, holePull: 1 * GAP, holeKill: 0.5 * GAP, lianV: 0.75, landW: 1 * GAP, landF: 4.5, passK: 0.75, passF: 5
 };
 /* tier odds per pick: [silver, gold, prism]; always silver > gold > prism, a little richer on later picks */
 const TIER_ODDS = [[60, 30, 10], [50, 33, 17], [45, 35, 20]];
@@ -1560,8 +1560,8 @@ const AUG = {
     desc: () => `상대가 쏜 돌의 마찰이 ${pct(A.sand - 1)}% 늘어 덜 나갑니다. 멈춰 있는 상대 돌의 마찰은 그대로입니다.` },
   star:      { name: '화점', seal: '星', tier: 1, max: 1, short: () => `화점 위 방어력 ${pm(A.starM)}`,
     desc: () => `바둑판 화점(굵은 점 9곳)에서 ${f1(A.starD / GAP)}칸 안에 있는 내 돌의 방어력이 ${pm(A.starM)}가 됩니다. 판의 화점이 우리 편 색으로 빛납니다.` },
-  edge:      { name: '벼랑', seal: '崖', tier: 1, max: 1, short: () => `가장자리 방어력 ${pm(A.edgeH)}`,
-    desc: () => `떨어질 수 있는 가장자리에서 ${f1(A.edgeD / GAP)}칸 안에 있는 내 돌은 방어력이 ${pm(A.edgeH)}가 되어 덜 밀립니다. 벽으로 막힌 가장자리는 빠집니다.` },
+  edge:      { name: '벼랑', seal: '崖', tier: 1, max: 1, short: () => `가장자리 방어력 ${pm(A.edgeH)} · 힘 +${pct(A.edgeV - 1)}%`,
+    desc: () => `떨어질 수 있는 가장자리에서 ${f1(A.edgeD / GAP)}칸 안에 있는 내 돌은 방어력이 ${pm(A.edgeH)}가 되어 덜 밀리고, 그 돌을 쏠 때 힘이 ${pct(A.edgeV - 1)}% 세집니다. 벽으로 막힌 가장자리는 빠집니다.` },
   first:     { name: '선제', seal: '先', tier: 1, max: 1, short: () => `고른 뒤 ${A.firstN}샷 동안 첫 타격 +${pct(A.firstK - 1)}%`,
     desc: () => `이 증강을 고른 뒤 내 샷 ${A.firstN}번 동안, 쏜 돌의 첫 타격이 ${pct(A.firstK - 1)}% 세집니다.` },
   clay:      { name: '질그릇', seal: '陶', tier: 1, max: 1, short: () => `힘 +${pct(A.clayV - 1)}% · 방어력 ${pm(A.clayH)}`,
@@ -1607,8 +1607,8 @@ const AUG = {
     desc: () => `내 샷 동안 상대 돌끼리 부딪히면 그 타격이 ${pct(A.chainK - 1)}% 세집니다. 몰려 있는 상대 돌을 줄줄이 밀어낼 수 있습니다.` },
   curve:     { name: '변화구', seal: '曲', tier: 2, max: 1, ctrl: true, short: () => `휘어 들어가는 샷`,
     desc: () => `쏘기 전 판 위 단추로 방향(왼쪽·오른쪽)과 휨(약 ${deg(A.curveA)}°·강 ${deg(A.curveB)}°)을 고르면, 쏜 돌이 날아가며 휘어 들어갑니다. 처음 무언가에 닿으면 더 휘지 않습니다. 바위·바람문·다른 돌 뒤에 숨은 돌을 노릴 수 있습니다.` },
-  thrice:    { name: '삼세번', seal: '三', tier: 2, max: 1, short: () => `세 번째 샷마다 힘 +30%`,
-    desc: () => '내 세 번째 샷마다 발사 힘이 30% 증가합니다.' },
+  thrice:    { name: '삼세번', seal: '三', tier: 2, max: 1, short: () => `세 번째 샷마다 힘 +${pct(A.thriceV - 1)}%`,
+    desc: () => `내 세 번째 샷마다 발사 힘이 ${pct(A.thriceV - 1)}% 증가합니다.` },
   brand:     { name: '낙인', seal: '烙', tier: 2, max: 1, short: () => '맞고 버틴 상대 돌의 방어력 −25%',
     desc: () => '내 돌에 맞고 살아남은 상대 돌에 낙인을 남깁니다. 낙인 대상은 내 돌에 다시 맞기 전까지 방어력이 25% 낮아집니다. 다시 맞으면 낙인이 사라집니다.' },
   ice:       { name: '빙판길', seal: '氷', tier: 2, max: 1, short: () => `내가 지나간 길이 판에 계속 얼어붙음 · 얼음 위 ${A.frostN}수 연속 상대 돌 동상`,
@@ -1701,7 +1701,7 @@ const AUG_SUMMARY = {
   grip: () => `상대 샷에 밀려 움직이는 내 돌의 마찰이 ${pct(A.grip - 1)}% 증가해 덜 밀립니다.`,
   sand: () => `상대가 쏜 돌의 마찰이 ${pct(A.sand - 1)}% 증가해 이동 거리가 짧아집니다.`,
   star: () => `바둑판 화점 가까이에 있는 내 돌의 방어력이 ${pm(A.starM)} 증가합니다.`,
-  edge: () => `떨어질 수 있는 가장자리 가까이에 있는 내 돌은 방어력이 ${pm(A.edgeH)} 올라 덜 밀립니다.`,
+  edge: () => `떨어질 수 있는 가장자리 가까이에 있는 내 돌은 방어력이 ${pm(A.edgeH)} 올라 덜 밀리고, 쏠 때 힘이 ${pct(A.edgeV - 1)}% 세집니다.`,
   first: () => `획득 후 내 샷 ${A.firstN}번 동안 첫 타격이 ${pct(A.firstK - 1)}% 강해집니다.`,
   clay: () => `내 발사 힘은 ${pct(A.clayV - 1)}% 증가하지만 방어력은 ${pm(A.clayH)} 낮아집니다.`,
   millet: () => `내 돌이 작아지고 방어력이 조금 낮아지는 대신 힘이 ${pct(A.milletV - 1)}% 오릅니다.`,
@@ -1724,7 +1724,7 @@ const AUG_SUMMARY = {
   shock: () => `내 첫 타격이 발생하면 주변 ${f1(A.shockR / GAP)}칸 안의 다른 상대 돌도 가장자리 쪽으로 밀려납니다.`,
   chain: () => `내 샷 중 상대 돌끼리 부딪힐 때 타격이 ${pct(A.chainK - 1)}% 증가합니다.`,
   curve: () => '약 30° 또는 60°로 좌우 휘어 쏘며, 조준 중 실제 예상 궤적을 보여 줍니다.',
-  thrice: () => '내 세 번째 샷마다 발사 힘이 30% 증가합니다.',
+  thrice: () => `내 세 번째 샷마다 발사 힘이 ${pct(A.thriceV - 1)}% 증가합니다.`,
   brand: () => '내 돌에 맞고 살아남은 상대 돌은 다시 맞기 전까지 방어력이 25% 낮아집니다.',
   ice: () => `내가 쏜 돌이 지나간 길은 판에 계속 얼어, 그 위의 상대 돌이 더 멀리 미끄러집니다. 얼음 위에 ${A.frostN}수 연속 서 있는 상대 돌은 동상에 걸려 1수 동안 쏠 수 없습니다.`,
   glut: () => `내 샷으로 상대 돌을 떨어뜨릴 때마다 쏜 돌의 크기·방어력·힘이 ${pct(A.glutR - 1)}%씩 오릅니다.`,
@@ -1847,7 +1847,8 @@ function fortuneOf(w, pid, forDefense = false) {
   return { v: A.fortV0 + (A.fortV1 - A.fortV0) * seedRand(g, pid, 1), h: A.fortH0 + (A.fortH1 - A.fortH0) * seedRand(g, pid, 2) };
 }
 /* 무게는 없음: 모든 돌의 질량은 1이고, 예전 무게 증강은 방어력(s.kd)으로 바뀜 → 사거리에는 영향 없음 */
-const vmaxOf = (w, s, pid = s.owner) => maxV(w, w.players[pid]) * (1 + Math.max(0, Number(s.fishBoost || 0))) * s.kv;
+const vmaxOf = (w, s, pid = s.owner) => maxV(w, w.players[pid]) * (1 + Math.max(0, Number(s.fishBoost || 0))) * s.kv
+  * (w.players[pid] && cnt(w.players[pid], 'edge') && s.owner === pid && nearEdge(w, s) ? A.edgeV : 1);   /* v90 벼랑: 가장자리 가까운 내 돌은 쏠 때 힘도 +20% */
 /* 연마(내가 쏜 돌)·모래(상대가 쏜 돌): 쏜 돌의 바닥 마찰 배수 */
 function shotFric(w, pid) {
   const p = w.players[pid];
@@ -4375,7 +4376,7 @@ const AUG_JA = {
  grip:['踏ん張り','押されたとき摩擦 +12%','相手のショットで押された自分の石の摩擦が12%増え、押されにくくなります。'],
  sand:['砂','相手が撃った石の摩擦 +25%','相手が撃った石の摩擦が25%増え、進む距離が短くなります。'],
  star:['星','星の上で防御力 +60%','盤の星の近くにいる自分の石の防御力が60%上がります。'],
- edge:['崖','盤端で防御力 +70%','落ちる盤端の近くにいる自分の石は防御力が70%上がり、押されにくくなります。'],
+ edge:['崖','盤端で防御力 +70%・威力 +20%','落ちる盤端の近くにいる自分の石は防御力が70%上がって押されにくくなり、撃つときの威力が20%上がります。'],
  first:['先制','選んだ後2ショットの間 最初の衝撃 +80%','獲得後、自分のショット2回の間、最初の衝撃が80%強くなります。'],
  clay:['陶器','威力 +18%・防御力 −15%','自分の威力は18%上がりますが、防御力は15%下がります。'],
  millet:['粟','サイズ −15%・防御力 −4%・威力 +10%','自分の石が小さくなり防御力が少し下がるかわりに、威力が10%上がります。'],
@@ -4398,7 +4399,7 @@ const AUG_JA = {
  shock:['波紋','最初の衝撃で周りの相手の石を1.6マス押し出す','最初の衝撃が起きると、周り2マス以内のほかの相手の石も盤端の方へ押し出されます。'],
  chain:['連鎖','相手の石どうしの衝撃 +50%','自分のショット中、相手の石どうしがぶつかると衝撃が50%上がります。'],
  curve:['変化球','曲がって入るショット','約30°または60°で左右に曲げて撃て、狙っている間に予想軌道を見せます。'],
- thrice:['三度目','3回目のショットごとに威力 +30%','自分の3回目のショットごとに威力が30%上がります。'],
+ thrice:['三度目','3回目のショットごとに威力 +33%','自分の3回目のショットごとに威力が33%上がります。'],
  brand:['烙印','当たって残った相手の石の防御力 −25%','自分の石に当たって残った相手の石は、もう一度当たるまで防御力が25%下がります。'],
  ice:['氷の道','通った道が盤上にずっと凍る・氷の上に3手続けていた相手の石が凍傷','自分が撃った石が通った道は盤上にずっと凍り、その上の相手の石がより遠くへ滑ります。氷の上に3手続けて立つ相手の石は凍傷になり、相手の次の1手の間その石を撃てません。解けた次の手からまた最初から数えます。'],
  glut:['暴食','落とすたびにサイズ・防御力・威力 +6%','自分のショットで相手の石を落とすたびに、撃った石のサイズ・防御力・威力が6%ずつ上がります。'],
@@ -4419,7 +4420,7 @@ const AUG_JA = {
  ko:['劫','石を失うと次の手番にもう一度（3回）','相手のショットで自分の石が落ちると、次の自分の手番にもう一度撃てます（1局3回）。'],
  wish:['念願','今の強化をすべて捨て、次は1ランク上を3枚すべて（玉まで）','選んですぐ自分の強化をすべて捨て、次の選択で1ランク上のカード3枚をすべて受け取ります（玉まで）。'],
  gamble:['勝負手','威力 +35%・落とせないと撃った石を失う','威力が35%上がりますが、相手の石を落とせなかったショットでは撃った石を失い、効果も終わります。'],
- fortune:['運勢','手番ごとに威力・防御力が±10%上下','自分の手番ごとに威力と防御力が少しずつ上下し、次の自分の手番まで続きます。'],
+ fortune:['運勢','手番ごとに威力・防御力が±12%上下','自分の手番ごとに威力と防御力が少しずつ上下し、次の自分の手番まで続きます。'],
  rebound:['跳ね返り','撃った石が盤端で一度跳ね返る','自分が撃った石が盤端に初めて触れると、一度跳ね返ってきます。'],
  orleans:['オルレアンのチェ・ユンジェ','今の強化を除去・超越1枚・以後獲得不可・相手に玉2枚','選んですぐ超越以外の自分の強化をすべてなくし、超越の強化を1枚選びます。以後この局では強化を受け取れず、相手は玉の強化を2枚追加で選びます。'],
  crack:['亀裂','打った相手の石にひび・ひびの入った石をまた打つと割れる（2個）','自分のショットで相手の石にひびを入れ、もう一度当てると割って周りを押し出します（1局最大2個）。'],
@@ -5565,7 +5566,7 @@ const STATS = () => { const A = K.A, P = K.P; return {
   grip: [['밀리는 내 돌', '마찰', `+${pc(A.grip - 1)}%`, 'up']],
   sand: [['상대가 쏜 돌', '마찰', `+${pc(A.sand - 1)}%`, 'foe']],
   star: [['화점 위 내 돌', '방어력', `${pm(A.starM)}`, 'up']],
-  edge: [['가장자리 내 돌', '방어력', `${pm(A.edgeH)}`, 'up']],
+  edge: [['가장자리 내 돌', '방어력', `${pm(A.edgeH)}`, 'up'], ['가장자리 내 돌', '힘', `+${pc(A.edgeV - 1)}%`, 'up']],
   first: [[`고른 뒤 ${A.firstN}샷`, '타격', `+${pc(A.firstK - 1)}%`, 'up']],
   combo: [['떨어뜨리면', '한 번 더', `${A.comboRound}회`, 'up']],
   bomb: [['멈춘 자리', '폭발', `${cell(A.bombR)}칸`, 'up']],
@@ -5993,7 +5994,7 @@ function renderSkills() {
   if (cnt(p, 'pajuk')) parts.push(`<span class="sk-pill quest">${sl(AUG.pajuk.seal)}${w.tq[p.id] ? '<b>파죽지세 끝</b>' : `파죽지세 <b>${Math.round(Math.min(2, w.pajukKills[p.id] || 0) * 10) / 10}/2</b> · ${Math.max(0, A.pajukTurns - (w.pajukShots[p.id] || 0))}수 남음`}</span>`);
   if (cnt(p, 'train')) parts.push(`<span class="sk-pill quest">${sl('修')}${(w.trn[p.id] || 0) >= 99 ? '<b>수련 완료</b>' : `수련 <b>${Math.round(Math.min(A.trainN, w.trn[p.id] || 0) * 10) / 10}/${A.trainN}</b>`}</span>`);
   if (cnt(p, 'bounty')) parts.push(`<span class="sk-pill quest">${sl('賞')}${(w.bty[p.id] || 0) > 0 ? `현상금 <b>전체 ${w.bty[p.id]}수</b> 남음` : '현상금 끝'}</span>`);
-  if (cnt(p, 'thrice')) parts.push(`<span class="sk-pill">${sl('三')}${K.thriceOn(w, p.id) ? '<b>이번 샷 힘 +30%</b>' : `힘 +30%까지 <b>${2 - ((w.thr[p.id] || 0) % 3)}샷</b>`}</span>`);
+  if (cnt(p, 'thrice')) parts.push(`<span class="sk-pill">${sl('三')}${K.thriceOn(w, p.id) ? `<b>이번 샷 힘 +${Math.round((K.A.thriceV - 1) * 100)}%</b>` : `힘 +${Math.round((K.A.thriceV - 1) * 100)}%까지 <b>${2 - ((w.thr[p.id] || 0) % 3)}샷</b>`}</span>`);
   if (cnt(p, 'grit')) parts.push(`<span class="sk-pill">${sl('傲')}오기 <b>힘 +${Math.round(A.gritStep * (w.grt[p.id] || 0) * 100)}%</b></span>`);
   if (cnt(p, 'squirrel')) parts.push(`<span class="sk-pill">${sl('鼠')}${(w.sqr[p.id] || 0) > 0 ? `다람쥐 <b>힘 +${Math.round((A.sqrV - 1) * 100)}% · ${w.sqr[p.id]}샷</b>` : '다람쥐 <b>떨어뜨리면 힘 오름</b>'}</span>`);
   if (cnt(p, 'late')) parts.push(`<span class="sk-pill">${sl('晩')}${w.shots >= K.P.shrinkStart ? '늦바람 <b>강해짐</b>' : `늦바람 <b>${K.P.shrinkStart - w.shots}수 뒤</b>`}</span>`);
@@ -6335,7 +6336,7 @@ function pmeta(w, p) {
   else if (w.picks[p.id] > 0) out.push(K.baseLeft(w, p.team, p.id) < left ? '다음 증강 <b>없음</b>' : `다음 증강까지 <b>기본 돌 ${Math.round(left * 10) / 10}개</b>`);
   if (cnt(p, 'train')) out.push((w.trn[p.id] || 0) >= 99 ? '<b>수련 완료</b>' : `수련 <b>${Math.round(Math.min(K.A.trainN, w.trn[p.id] || 0) * 10) / 10}/${K.A.trainN}</b>`);
   if (cnt(p, 'bounty') && (w.bty[p.id] || 0) > 0) out.push(`현상금 <b>전체 ${w.bty[p.id]}수</b> 남음`);
-  if (cnt(p, 'thrice')) out.push(K.thriceOn(w, p.id) ? '<b>삼세번 힘 +30% 적용 차례</b>' : `삼세번 힘 +30%까지 <b>${2 - ((w.thr[p.id] || 0) % 3)}샷</b>`);
+  if (cnt(p, 'thrice')) out.push(K.thriceOn(w, p.id) ? `<b>삼세번 힘 +${Math.round((K.A.thriceV - 1) * 100)}% 적용 차례</b>` : `삼세번 힘 +${Math.round((K.A.thriceV - 1) * 100)}%까지 <b>${2 - ((w.thr[p.id] || 0) % 3)}샷</b>`);
   if (cnt(p, 'grit') && w.grt[p.id]) out.push(`오기 <b>힘 +${Math.round(K.A.gritStep * w.grt[p.id] * 100)}%</b>`);
   if (cnt(p, 'squirrel') && (w.sqr[p.id] || 0) > 0) out.push(`행복한 다람쥐 <b>힘 +${Math.round((K.A.sqrV - 1) * 100)}% · ${w.sqr[p.id]}샷</b>`);
   for (const s of w.stones) if (live(s) && s.owner === p.id && (s.fishBoost || 0) > 0) out.push(`돌 #${s.id} <b>금붕어 다음 발사 힘 +${Math.round(s.fishBoost * 1000) / 10}% (1회 소모)</b>`);
